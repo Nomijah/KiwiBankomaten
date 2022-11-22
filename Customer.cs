@@ -19,5 +19,16 @@ namespace KiwiBankomaten
             };
         }
 
+        public Customer(string username, string password)
+        {
+            int newId = DataBase.CustomerList.Last().Key;
+            Id = newId;
+            UserName = username;
+            Password = password;
+            Accounts = new List<Account>()
+            {
+                new Account("Bankkonto", "SEK", 1m)
+            };
+        }
     }
 }
