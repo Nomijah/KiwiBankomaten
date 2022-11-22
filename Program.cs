@@ -17,7 +17,9 @@ namespace KiwiBankomaten
             int userName = int.Parse(Console.ReadLine());
             int pinCode = int.Parse(Console.ReadLine());
 
+            
 
+            
         }
     }
 }
