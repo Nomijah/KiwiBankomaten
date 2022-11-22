@@ -4,9 +4,9 @@ using System.Text;
 
 namespace KiwiBankomaten
 {
-    class DataBase
+    public class DataBase
     {
-
+        
 
 
     }
