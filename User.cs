@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KiwiBankomaten
 {
-    internal class User
+    internal abstract class User
     {
     }
 }
