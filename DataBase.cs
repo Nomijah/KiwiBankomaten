@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KiwiBankomaten
 {
-    public class DataBase
+    class DataBase
     {
         public static Dictionary<int, User> CustomerList = 
             new Dictionary<int, User>()
