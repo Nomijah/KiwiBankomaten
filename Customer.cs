@@ -6,6 +6,9 @@ namespace KiwiBankomaten
 {
     internal class Customer : User
     {
-        Console.WriteLine("Hello from the customer class");
+        Customer()
+        {
+            Console.WriteLine("Hello from the customer class");
+        }
     }
 }
