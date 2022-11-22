@@ -21,8 +21,15 @@ namespace KiwiBankomaten
 
         public Customer(string username, string password)
         {
+            if (DataBase.CustomerList == null)
+            {
+                Id = 1;
+            }
+            else
+            {
             int newId = DataBase.CustomerList.Last().Key + 1;
             Id = newId;
+            }
             UserName = username;
             Password = password;
             Accounts = new List<Account>()
