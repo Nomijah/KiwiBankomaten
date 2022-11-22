@@ -6,6 +6,12 @@ namespace KiwiBankomaten
 {
     internal abstract class User
     {
+
+        private string _userName;
+        private string _password;
+        private int _id;
+
+        
     }
 
 
