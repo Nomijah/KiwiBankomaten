@@ -1,14 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace KiwiBankomaten
 {
     internal class Customer : User
     {
-        Customer()
+        private List<Account> Accounts;
+        public Customer(int id, string username, string password)
         {
-            Console.WriteLine("Hello from the customer class");
+            Id = id;
+            UserName = username;
+            Password = password;
+            Accounts = new List<Account>()
+            {
+                new Account("Bankkonto", "SEK", 1m)
+            };
         }
+
     }
 }
