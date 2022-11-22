@@ -6,9 +6,13 @@ namespace KiwiBankomaten
 {
     internal class Customer : User
     {
-        Customer()
+        List<Accounts> Accounts;
+        public Customer(int id, string username, string password, List<Accounts> accList)
         {
-            Console.WriteLine("Hello from the customer class");
+            ID = id;
+            UserName = username;
+            Password = password;
+            Accounts = accList;
         }
     }
 }
