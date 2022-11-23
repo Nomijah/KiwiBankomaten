@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace KiwiBankomaten
 {
@@ -7,14 +8,32 @@ namespace KiwiBankomaten
     {
         static void Main(string[] args)
         {
-            LogIn();
+            RunProgram();
         }
-
-        //  och menu Runprogram Exitprogram     sparar jag nu så masterbranch
-
-
-
-        public static int LogIn()
+        public static void RunProgram()
+        {
+            do   //looping menu  
+            {
+                Console.WriteLine("Enter a number as input to navigate in the menu:");
+                Console.WriteLine("-1) Login\n-2) Exit");
+                string choice = Console.ReadLine();
+                switch (choice)
+                {
+                    case "1":
+                        LogIn();
+                        break;
+                    case "2"://Exit program
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        Console.WriteLine("Wrong input, enter available choice only!");
+                        break;
+                }
+                Thread.Sleep(2000);//leaves eventual message readable for 2 sec
+                Console.Clear();// clearing console, 
+            } while (true);
+        }
+        public static void LogIn()
         {
             int userKey = 0;
             bool loggedIn = false;
