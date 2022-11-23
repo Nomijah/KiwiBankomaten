@@ -14,29 +14,49 @@ namespace KiwiBankomaten
 
 
 
-        public static void LogIn()
+        public static int LogIn()
         {
+            int userKey = 0;
+            bool loggedIn = false;
+            
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
-            string userName = (Console.ReadLine());
+            string userName = Console.ReadLine();
             foreach (KeyValuePair<int, User> item in DataBase.UserDict)
             {
                 if (userName == item.Value.UserName)
                 {
-                    int userKey = item.Key;
-                    CheckPassWord(userKey);
+                    userKey = item.Key;
+                    
+                    if (loggedIn = CheckPassWord(userKey))
+                    {
+                        return userKey;
+                    }
                 }
             }
+            return 0;
         }
-        public static void CheckPassWord(int userKey)
+        public static bool CheckPassWord(int userKey)
         {
             Console.WriteLine("Enter your password");
             string userPassWord = (Console.ReadLine());
 
             if (userPassWord == DataBase.UserDict[userKey].Password)
             {
-                Console.WriteLine("congratz petter was right");
+                Console.WriteLine("Sucessfully logged in");
+                return true;
             }
+            else
+            {
+                Console.WriteLine("Wrong password");
+                return false;
+            }
+        }
+
+        public static void LogOut() 
+        {
+            LogIn(); //Tänker att om man kör Logoutmetoden så ska man komma tillbaka till loginskärmen
+
         }
     }
 }
