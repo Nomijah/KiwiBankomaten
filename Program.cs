@@ -22,13 +22,13 @@ namespace KiwiBankomaten
                     case "1":
                         LogIn();
                         break;
-                    case "2"://menuchoise slot available
+                    case "2"://menuchoice slot available
 
                         break;
-                    case "3"://menuchoise slot available
+                    case "3"://menuchoice slot available
 
                         break;
-                    case "4"://menuchoise slot available
+                    case "4"://menuchoice slot available
 
                         break;
                     case "5"://Exit program
