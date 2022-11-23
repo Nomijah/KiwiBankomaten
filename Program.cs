@@ -15,23 +15,14 @@ namespace KiwiBankomaten
             do   //looping menu  
             {
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
-                Console.WriteLine("-1) Login\n-2) Bla\n-3) Bla\n-4) Bla\n-5) Exit");
+                Console.WriteLine("-1) Login\n-2) Exit");
                 string choice = Console.ReadLine();
                 switch (choice)
                 {
                     case "1":
                         LogIn();
                         break;
-                    case "2"://menuchoice slot available
-
-                        break;
-                    case "3"://menuchoice slot available
-
-                        break;
-                    case "4"://menuchoice slot available
-
-                        break;
-                    case "5"://Exit program
+                    case "2"://Exit program
                         Environment.Exit(0);
                         break;
                     default:
