@@ -6,7 +6,7 @@ namespace KiwiBankomaten
 {
     class DataBase
     {
-        public static Dictionary<int, User> CustomerList = 
+        public static Dictionary<int, User> UserDict = 
             new Dictionary<int, User>()
         {
                 {1, new Customer(1, "Anas", "Core3.1") },

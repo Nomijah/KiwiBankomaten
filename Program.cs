@@ -47,7 +47,7 @@ namespace KiwiBankomaten
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
             string userName = (Console.ReadLine());
-            foreach (KeyValuePair<int, User> item in DataBase.CustomerList)
+            foreach (KeyValuePair<int, User> item in DataBase.UserDict)
             {
                 if (userName == item.Value.UserName)
                 {
@@ -61,7 +61,7 @@ namespace KiwiBankomaten
             Console.WriteLine("Enter your password");
             string userPassWord = (Console.ReadLine());
 
-            if (userPassWord == DataBase.CustomerList[userKey].Password)
+            if (userPassWord == DataBase.UserDict[userKey].Password)
             {
                 Console.WriteLine("congratz petter was right");
             }
