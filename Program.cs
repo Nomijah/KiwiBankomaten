@@ -33,7 +33,7 @@ namespace KiwiBankomaten
                 Console.Clear();// clearing console, 
             } while (true);
         }
-        public static void LogIn()
+        public static int LogIn()
         {
             int userKey = 0;
             bool loggedIn = false;
