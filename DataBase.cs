@@ -6,6 +6,7 @@ namespace KiwiBankomaten
 {
     class DataBase
     {
+        // Dictionary for saving users. With 6 test users created
         public static Dictionary<int, User> UserDict = 
             new Dictionary<int, User>()
         {

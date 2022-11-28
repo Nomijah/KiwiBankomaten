@@ -7,15 +7,15 @@ namespace KiwiBankomaten
 {
     internal class Customer : User
     {
-        private List<Account> Accounts;
+        private List<BankAccount> BankAccounts;
         public Customer(int id, string username, string password)
         {
             Id = id;
             UserName = username;
             Password = password;
-            Accounts = new List<Account>()
+            BankAccounts = new List<BankAccount>()
             {
-                new Account("Bankkonto", "SEK", 1m)
+                new BankAccount("Bankkonto", "SEK", 1m)
             };
         }
 
@@ -32,9 +32,9 @@ namespace KiwiBankomaten
             }
             UserName = username;
             Password = password;
-            Accounts = new List<Account>()
+            BankAccounts = new List<BankAccount>()
             {
-                new Account("Bankkonto", "SEK", 1m)
+                new BankAccount("Bankkonto", "SEK", 1m)
             };
         }
     }
