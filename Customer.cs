@@ -8,6 +8,8 @@ namespace KiwiBankomaten
     internal class Customer : User
     {
         private List<BankAccount> BankAccounts;
+
+        // Used for creating test users
         public Customer(int id, string username, string password)
         {
             Id = id;
@@ -15,10 +17,11 @@ namespace KiwiBankomaten
             Password = password;
             BankAccounts = new List<BankAccount>()
             {
-                new BankAccount("Bankkonto", "SEK", 1m)
+                new BankAccount("Lönekonto", "SEK", 1m)
             };
         }
 
+        // Use this when creating users in program
         public Customer(string username, string password)
         {
             if (DataBase.UserDict == null)
@@ -34,7 +37,7 @@ namespace KiwiBankomaten
             Password = password;
             BankAccounts = new List<BankAccount>()
             {
-                new BankAccount("Bankkonto", "SEK", 1m)
+                new BankAccount("Lönekonto", "SEK", 1m)
             };
         }
     }

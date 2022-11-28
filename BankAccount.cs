@@ -17,6 +17,7 @@ namespace KiwiBankomaten
         public string Currency { get => _currency; set => _currency = value; }
         public decimal Interest { get => _interest; set => _interest = value; }
 
+        // For testing, to give value to accounts
         public BankAccount(string _accountName, decimal _value, string _currency,
             decimal _interest)
         {
@@ -26,6 +27,7 @@ namespace KiwiBankomaten
             this._interest = _interest;
         }
 
+        // Use this constructor for users
         public BankAccount(string _name, string _currency, decimal _interest)
         {
             this._accountName = _name;
