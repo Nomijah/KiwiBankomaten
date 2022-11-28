@@ -15,23 +15,14 @@ namespace KiwiBankomaten
             do   //looping menu  
             {
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
-                Console.WriteLine("-1) Login\n-2) Bla\n-3) Bla\n-4) Bla\n-5) Exit");
+                Console.WriteLine("-1) Login\n-2) Exit");
                 string choice = Console.ReadLine();
                 switch (choice)
                 {
                     case "1":
                         LogIn();
                         break;
-                    case "2"://menuchoice slot available
-
-                        break;
-                    case "3"://menuchoice slot available
-
-                        break;
-                    case "4"://menuchoice slot available
-
-                        break;
-                    case "5"://Exit program
+                    case "2"://Exit program
                         Environment.Exit(0);
                         break;
                     default:
@@ -42,29 +33,49 @@ namespace KiwiBankomaten
                 Console.Clear();// clearing console, 
             } while (true);
         }
-        public static void LogIn()
+        public static int LogIn()
         {
+            int userKey = 0;
+            bool loggedIn = false;
+            
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
-            string userName = (Console.ReadLine());
+            string userName = Console.ReadLine();
             foreach (KeyValuePair<int, User> item in DataBase.UserDict)
             {
                 if (userName == item.Value.UserName)
                 {
-                    int userKey = item.Key;
-                    CheckPassWord(userKey);
+                    userKey = item.Key;
+                    
+                    if (loggedIn = CheckPassWord(userKey))
+                    {
+                        return userKey;
+                    }
                 }
             }
+            return 0;
         }
-        public static void CheckPassWord(int userKey)
+        public static bool CheckPassWord(int userKey)
         {
             Console.WriteLine("Enter your password");
             string userPassWord = (Console.ReadLine());
 
             if (userPassWord == DataBase.UserDict[userKey].Password)
             {
-                Console.WriteLine("congratz petter was right");
+                Console.WriteLine("Sucessfully logged in");
+                return true;
             }
+            else
+            {
+                Console.WriteLine("Wrong password");
+                return false;
+            }
+        }
+
+        public static void LogOut() 
+        {
+            LogIn(); //Tänker att om man kör Logoutmetoden så ska man komma tillbaka till loginskärmen
+
         }
     }
 }
