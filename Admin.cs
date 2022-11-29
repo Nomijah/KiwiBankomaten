@@ -65,7 +65,7 @@ namespace KiwiBankomaten
                 }
             } while (error == true);
         }
-        public static void AdminMenu()
+        public static void AdminMenu(int tries)
         {
             bool loggedIn = true;
             while (loggedIn == true)
@@ -86,7 +86,7 @@ namespace KiwiBankomaten
                         break;
                 }
             }
-            Program.LogOut();
+            Program.LogOut(tries);
         }
     }
 }

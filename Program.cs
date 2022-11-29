@@ -8,9 +8,10 @@ namespace KiwiBankomaten
     {
         static void Main(string[] args)
         {
-            RunProgram();
+            int tries = 0;
+            RunProgram(tries);
         }
-        public static void RunProgram()
+        public static void RunProgram(int tries)
         {
             bool loggedIn;
             int userKey = 0;
@@ -23,7 +24,7 @@ namespace KiwiBankomaten
                 switch (choice)
                 {
                     case "1":
-                        userKey = LogIn(out loggedIn);
+                        userKey = LogIn(out loggedIn, tries);
                         break;
                     case "2"://Exit program
                         Environment.Exit(0);
@@ -37,37 +38,46 @@ namespace KiwiBankomaten
             } while (loggedIn != true);
             if (DataBase.UserDict[userKey].IsAdmin == true)
             {
-                Admin.AdminMenu();
+                Admin.AdminMenu(tries);
             }
             else
             {
-                CustomerMenu(userKey);
+                CustomerMenu(userKey, tries);
             }
         }
-        public static int LogIn(out bool loggedIn)
+        public static int LogIn(out bool loggedIn, int tries)
         {
             int userKey = 0;
             loggedIn = false;
-            Console.WriteLine("Welcome to KiwiBank");
-            Console.WriteLine("Please enter your account name:");
-            string userName = Console.ReadLine();
-
-            foreach (KeyValuePair<int, User> item in DataBase.UserDict)
+            do
             {
-                if (userName == item.Value.UserName)
+                Console.WriteLine("Welcome to KiwiBank");
+                Console.WriteLine("Please enter your account name:");
+                string userName = Console.ReadLine();
+                foreach (KeyValuePair<int, User> item in DataBase.UserDict)
                 {
-                    userKey = item.Key;
-
-                    loggedIn = CheckPassWord(userKey);
-
-                    if (loggedIn)
+                    if (userName == item.Value.UserName)
                     {
-                        Console.WriteLine("Successfully logged in");
-                        Console.WriteLine($"Welcome {userName}");
-                        return userKey; //Returns userKey so we know which user is logged in
+                        userKey = item.Key;
+
+                        loggedIn = CheckPassWord(userKey);
+
+                        if (loggedIn)
+                        {
+                            Console.WriteLine("Successfully logged in");
+                            Console.WriteLine($"Welcome {userName}");
+                            return userKey; //Returns userKey so we know which user is logged in
+                        }
                     }
                 }
-            }
+                tries++;
+                if (tries == 3)
+                {
+                    Console.WriteLine("You´ve failed loggin in 3 times. Closing program...");
+                    Thread.Sleep(3000);
+                    Environment.Exit(0);
+                }
+            } while (true);
             return 0;
         }
         public static bool CheckPassWord(int userKey)
@@ -87,12 +97,12 @@ namespace KiwiBankomaten
             }
         }
 
-        public static void LogOut()
+        public static void LogOut(int tries)
         {
-            RunProgram();
+            RunProgram(tries);
         }
 
-        public static void CustomerMenu(int userKey)
+        public static void CustomerMenu(int userKey, int tries)
         {
             do   //looping menu  
             {
@@ -100,7 +110,7 @@ namespace KiwiBankomaten
                 Console.WriteLine("-1) Overview accounts and balances\n-2) Transfer money personal accounts" +
                     "\n-3) Create new account \n-4) Kiwibank internal Transfer money \n-5) Logout");
                 string choice = Console.ReadLine();
-                
+
                 switch (choice)
                 {
                     case "1":
@@ -116,7 +126,7 @@ namespace KiwiBankomaten
 
                         break;
                     case "5":
-                        LogOut();
+                        LogOut(tries);
 
                         break;
 
