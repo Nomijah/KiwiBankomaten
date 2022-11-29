@@ -37,12 +37,16 @@ namespace KiwiBankomaten
             do
             {
                 error = false;
+                Console.Clear();
                 Console.WriteLine("Vilken sorts användare vill du skapa?\n-1 Customer\n-2 Admin");
                 string userType = Console.ReadLine();
+                Console.Clear();
                 Console.WriteLine("Vilket användarnamn ska den nya användaren ha?");
                 string userName = Console.ReadLine();
+                Console.Clear();
                 Console.WriteLine("Vilket lösenord ska den nya användaren ha?");
                 string passWord = Console.ReadLine();
+                Console.Clear();
 
                 switch (userType)
                 {
@@ -63,7 +67,8 @@ namespace KiwiBankomaten
         }
         public static void AdminMenu()
         {
-            while (true)
+            bool loggedIn = true;
+            while (loggedIn == true)
             {
                 Console.WriteLine("Funktioner för admins:\n-1 Skapa ny användare\n-2 Uppdatera växlingskurs\n-3 Logga ut");
                 switch (Console.ReadLine())
@@ -73,13 +78,15 @@ namespace KiwiBankomaten
                         break;
                     case "2": //UpdateExchangeRate();
                         break;
-                    case "3": Program.RunProgram();
+                    case "3": loggedIn = false;
+                        Console.Clear();
                         break;
                     default:
                         Console.WriteLine("Fel input, skriv in ett korrekt värde");
                         break;
                 }
             }
+            Program.LogOut();
         }
     }
 }

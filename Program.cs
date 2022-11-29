@@ -12,15 +12,18 @@ namespace KiwiBankomaten
         }
         public static void RunProgram()
         {
+            bool loggedIn;
+            int userKey = 0;
             do   //looping menu  
             {
+                loggedIn = false;
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
                 Console.WriteLine("-1) Login\n-2) Exit");
                 string choice = Console.ReadLine();
                 switch (choice)
                 {
                     case "1":
-                        LogIn();
+                        userKey = LogIn(out loggedIn);
                         break;
                     case "2"://Exit program
                         Environment.Exit(0);
@@ -31,12 +34,20 @@ namespace KiwiBankomaten
                 }
                 Thread.Sleep(2000);//leaves eventual message readable for 2 sec
                 Console.Clear();// clearing console, 
-            } while (true);
+            } while (loggedIn != true);
+            if (DataBase.UserDict[userKey].IsAdmin == true)
+            {
+                Admin.AdminMenu();
+            }
+            else
+            {
+                //Customer Menu here
+            }
         }
-        public static int LogIn()
+        public static int LogIn(out bool loggedIn)
         {
             int userKey = 0;
-            bool loggedIn = false;
+            loggedIn = false;
             
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
@@ -49,6 +60,7 @@ namespace KiwiBankomaten
                     
                     if (loggedIn = CheckPassWord(userKey))
                     {
+                        loggedIn = true;
                         return userKey;
                     }
                 }
@@ -74,8 +86,7 @@ namespace KiwiBankomaten
 
         public static void LogOut() 
         {
-            LogIn(); //Tänker att om man kör Logoutmetoden så ska man komma tillbaka till loginskärmen
-
+            RunProgram(); //Tänker att om man kör Logoutmetoden så ska man komma tillbaka till loginskärmen
         }
     }
 }
