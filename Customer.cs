@@ -86,6 +86,8 @@ namespace KiwiBankomaten
             if (BankAccounts[transferFromWhichAccount].Amount >= amountMoney)
             {
                 TransferFromAccToAcc(transferFromWhichAccount, transferToWhichAccount, amountMoney);
+                Console.WriteLine("The Transfer was a success");
+                AccountOverview();
             }
             else
             {
