@@ -10,8 +10,8 @@ namespace KiwiBankomaten
         public static Dictionary<int, User> UserDict = 
             new Dictionary<int, User>()
         {
-                {1, new Customer(1, "Anas", "Core3.1") },
-                {2, new Customer(2, "Tobias", "Qlok") },
+                {1, new Admin(1, "Tobias", "NotionLover65") },
+                {2, new Customer(2, "Anas", "Core3.1") },
                 {3, new Customer(3, "Reidar", "Password123") },
                 {4, new Customer(4, "Michael", "abc") },
                 {5, new Customer(5, "Andre", "123") },

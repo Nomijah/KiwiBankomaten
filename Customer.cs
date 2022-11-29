@@ -9,19 +9,20 @@ namespace KiwiBankomaten
     {
         private List<BankAccount> BankAccounts;
 
-        // Used for creating test users
+        // Used for creating test customers
         public Customer(int id, string username, string password)
         {
             Id = id;
             UserName = username;
             Password = password;
+            IsAdmin = false;
             BankAccounts = new List<BankAccount>()
             {
                 new BankAccount("Lönekonto", "SEK", 1m)
             };
         }
 
-        // Use this when creating users in program
+        // Use this when creating customers in program
         public Customer(string username, string password)
         {
             if (DataBase.UserDict == null)
@@ -35,6 +36,7 @@ namespace KiwiBankomaten
             }
             UserName = username;
             Password = password;
+            IsAdmin = false;
             BankAccounts = new List<BankAccount>()
             {
                 new BankAccount("Lönekonto", "SEK", 1m)
