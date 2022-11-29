@@ -60,5 +60,10 @@ namespace KiwiBankomaten
         {
 
         }
+
+        public virtual void InternalMoneyTransfer()
+        {
+
+        }
     }
 }

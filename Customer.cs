@@ -57,5 +57,11 @@ namespace KiwiBankomaten
                     $"{account.Value.Amount} {account.Value.Currency}");
             }
         }
+
+        public void InternalMoneyTransfer()
+        {
+            
+
+        }
     }
 }
