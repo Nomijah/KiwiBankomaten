@@ -53,7 +53,6 @@ namespace KiwiBankomaten
         }
         public void TransferBetweenCustomerAccounts()
         {
-            bool transferReady;
             decimal amountMoney;
             int transferFromWhichAccount;
             int transferToWhichAccount;
@@ -70,16 +69,8 @@ namespace KiwiBankomaten
             Console.WriteLine("From which account do you want to transfer money to?: ");
             Program.IsValueNumber(out transferToWhichAccount, 1, BankAccounts.Count);
 
-            transferReady = TransferFromCheck(transferFromWhichAccount, amountMoney); 
+            TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney); 
 
-            if (transferReady) 
-            {
-                TransferFromAccToAcc(transferFromWhichAccount, transferToWhichAccount, amountMoney);
-            }
-            else
-            {
-                Console.WriteLine("Not enough money in Account( {0} );\tMoney in Account( {0} ) - {1}", BankAccounts[transferFromWhichAccount].AccountName, BankAccounts[transferFromWhichAccount].Amount);
-            }
         }
         public void AccountOverview()
         {
@@ -90,12 +81,16 @@ namespace KiwiBankomaten
                 index++;
             }
         }
-        public bool TransferFromCheck(int transferFromWhichAccount, decimal amountMoney)
+        public void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
         {
             if (BankAccounts[transferFromWhichAccount].Amount >= amountMoney)
             {
-                return true;
-            } return false;
+                TransferFromAccToAcc(transferFromWhichAccount, transferToWhichAccount, amountMoney);
+            }
+            else
+            {
+                Console.WriteLine("Not enough money in Account( {0} );\tMoney in Account( {0} ) - {1}", BankAccounts[transferFromWhichAccount].AccountName, BankAccounts[transferFromWhichAccount].Amount);
+            }
         }
         public void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
         {
