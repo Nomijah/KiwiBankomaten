@@ -33,7 +33,7 @@ namespace KiwiBankomaten
                 Console.Clear();// clearing console, 
             } while (true);
         }
-        public static void LogIn()
+        public static int LogIn()
         {
             int userKey = 0;
             bool loggedIn = false;
@@ -41,6 +41,7 @@ namespace KiwiBankomaten
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
             string userName = Console.ReadLine();
+
             foreach (KeyValuePair<int, User> item in DataBase.UserDict)
             {
                 if (userName == item.Value.UserName)
@@ -49,7 +50,8 @@ namespace KiwiBankomaten
                     
                     if (loggedIn = CheckPassWord(userKey))
                     {
-                        return userKey;
+                        Console.WriteLine("Successfully logged in");
+                        return userKey; //Returns userKey so we know which user is logged in
                     }
                 }
             }
@@ -62,7 +64,7 @@ namespace KiwiBankomaten
 
             if (userPassWord == DataBase.UserDict[userKey].Password)
             {
-                Console.WriteLine("Sucessfully logged in");
+                Console.WriteLine("Password is correct");
                 return true;
             }
             else
