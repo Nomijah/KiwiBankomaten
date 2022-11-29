@@ -210,7 +210,7 @@ namespace KiwiBankomaten
             Console.WriteLine("From which account do you want to transfer money to?: ");
             Program.IsValueNumber(out transferToWhichAccount, 1, BankAccounts.Count);
 
-            TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney); 
+            TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney);
 
         }
         private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
@@ -232,6 +232,51 @@ namespace KiwiBankomaten
             BankAccounts[transferToWhichAccount].Amount += amountMoney;
 
 
+        }
+        public void InternalMoneyTransfer()
+        {
+            decimal amountMoney;
+            int transferFromWhichAccount;
+
+            Console.Clear();
+            AccountOverview();
+
+            Console.WriteLine("How much money do you want to transfer?: ");
+            while (!decimal.TryParse(Console.ReadLine(), out amountMoney)) //How much money is being transferred
+            {
+                Console.WriteLine("Please input a Number:");
+            }
+
+            Console.WriteLine("From which account do you want to transfer money from?: ");
+            while (!int.TryParse(Console.ReadLine(), out transferFromWhichAccount)) //How much money is being transferred
+            {
+                Console.WriteLine("Please input a Number: ");
+            }
+
+            
+
+            
+
+            foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
+            {
+                if (account.Value.AccountNumber == 40448653)
+                {
+                    Console.WriteLine("Hittade konto nummer 40448653");
+                    Console.ReadLine();
+                }
+
+                
+            }
+
+            //BankAccounts[transferFromWhichAccount].Amount -= amountMoney;
+
+            //int hej = 40448653;
+
+            //foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
+            //{
+            //    Console.WriteLine($"{account.Value.AccountNumber} {account.Value.AccountName}: " +
+            //        $"{account.Value.Amount} {account.Value.Currency}");
+            //}
         }
     }
 }
