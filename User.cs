@@ -55,9 +55,10 @@ namespace KiwiBankomaten
             {
                 _isAdmin = value;
             }
+            
+        public virtual void ViewAccounts()
+        {
+
         }
     }
-
-
-
 }

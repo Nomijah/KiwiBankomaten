@@ -7,7 +7,7 @@ namespace KiwiBankomaten
 {
     internal class Customer : User
     {
-        private List<BankAccount> BankAccounts;
+        private Dictionary<int, BankAccount> BankAccounts;
 
         // Used for creating test customers
         public Customer(int id, string username, string password)
@@ -16,9 +16,14 @@ namespace KiwiBankomaten
             UserName = username;
             Password = password;
             IsAdmin = false;
-            BankAccounts = new List<BankAccount>()
+
+            // Bankaccounts for testing, same for each user
+            BankAccounts = new Dictionary<int, BankAccount>()
             {
-                new BankAccount("Lönekonto", "SEK", 1m)
+                { 1, new BankAccount("Lönekonto", 25347.34m, "SEK", 0m) },
+                { 2, new BankAccount("Sparkonto", 324000m, "SEK", 2.5m) },
+                { 3, new BankAccount("Utlandskonto", 74654.36m, "EUR", 1.3m) },
+                { 4, new BankAccount("Företagskonto", 624.86m, "USD", 0m) }
             };
         }
 
@@ -37,10 +42,20 @@ namespace KiwiBankomaten
             UserName = username;
             Password = password;
             IsAdmin = false;
-            BankAccounts = new List<BankAccount>()
+            
+            BankAccounts = new Dictionary<int, BankAccount>()
             {
-                new BankAccount("Lönekonto", "SEK", 1m)
+                { 1, new BankAccount("Lönekonto", "SEK", 1m) }
             };
+        }
+
+        public override void ViewAccounts()
+        {
+            foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
+            {
+                Console.WriteLine($"{account.Key}. {account.Value.AccountName}: " +
+                    $"{account.Value.Amount} {account.Value.Currency}");
+            }
         }
     }
 }
