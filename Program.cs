@@ -106,7 +106,7 @@ namespace KiwiBankomaten
                 switch (choice)
                 {
                     case "1":
-                        obj.ViewAccounts();
+                        obj.AccountOverview();
                         break;
                     case "2":
                         obj.TransferBetweenCustomerAccounts();
@@ -126,7 +126,6 @@ namespace KiwiBankomaten
                         Console.WriteLine("Wrong input, enter available choice only!");
                         break;
                 }
-                Thread.Sleep(2000);//leaves eventual message readable for 2 sec
                 PressEnterToContinue();
                 Console.Clear();// clearing console, 
             } while (true);

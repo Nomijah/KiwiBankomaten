@@ -59,6 +59,15 @@ namespace KiwiBankomaten
                     $"{account.Value.Amount} {account.Value.Currency}");
             }
         }
+        public void AccountOverview()
+        {
+            int index = 1;
+            foreach (var item in BankAccounts.Values)
+            {
+                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} -\tKontoSaldo : {item.Amount} {item.Currency}");
+                index++;
+            }
+        }
         public void TransferBetweenCustomerAccounts()
         {
             decimal amountMoney;
@@ -66,7 +75,7 @@ namespace KiwiBankomaten
             int transferToWhichAccount;
 
             Console.Clear();
-            ViewAccounts();
+            AccountOverview();
 
             Console.WriteLine("How much money do you want to transfer?: ");
             Program.IsValueNumber(out amountMoney);
@@ -86,7 +95,7 @@ namespace KiwiBankomaten
             {
                 TransferFromAccToAcc(transferFromWhichAccount, transferToWhichAccount, amountMoney);
                 Console.WriteLine("The Transfer was a success");
-                ViewAccounts();
+                AccountOverview();
             }
             else
             {
