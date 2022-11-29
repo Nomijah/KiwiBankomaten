@@ -58,9 +58,13 @@ namespace KiwiBankomaten
             }
         }
 
-        public void InternalMoneyTransfer()
+        public override void InternalMoneyTransfer()
         {
-            
+            foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
+            {
+                Console.WriteLine($"{account.Value.AccountNumber} {account.Value.AccountName}: " +
+                    $"{account.Value.Amount} {account.Value.Currency}");
+            }
 
         }
     }
