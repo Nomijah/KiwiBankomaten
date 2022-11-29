@@ -37,7 +37,7 @@ namespace KiwiBankomaten
         {
             int userKey = 0;
             bool loggedIn = false;
-            
+
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
             string userName = Console.ReadLine();
@@ -47,11 +47,15 @@ namespace KiwiBankomaten
                 if (userName == item.Value.UserName)
                 {
                     userKey = item.Key;
-                    
-                    if (loggedIn = CheckPassWord(userKey))
+
+                    loggedIn = CheckPassWord(userKey);
+
+
+                    if (loggedIn)
                     {
                         Console.WriteLine("Successfully logged in");
-                        return userKey; //Returns userKey so we know which user is logged in
+                        Console.WriteLine($"Welcome {userName}");
+                        CustomerMenu(userKey); //Returns userKey so we know which user is logged in
                     }
                 }
             }
@@ -74,9 +78,47 @@ namespace KiwiBankomaten
             }
         }
 
-        public static void LogOut() 
+        public static void LogOut()
         {
-            LogIn(); //Tänker att om man kör Logoutmetoden så ska man komma tillbaka till loginskärmen
+            RunProgram();
+        }
+
+        public static void CustomerMenu(int userKey)
+        {
+
+            do   //looping menu  
+            {
+                Console.WriteLine("Enter a number as input to navigate in the menu:");
+                Console.WriteLine("-1) Overview accounts and balances\n-2) Transfer money personal accounts" +
+                    "\n-3) Create new account \n-4) Kiwibank internal Transfer money \n-5) Logout");
+                string choice = Console.ReadLine();
+                switch (choice)
+                {
+                    case "1":
+
+                        break;
+                    case "2":
+
+                        break;
+                    case "3":
+
+                        break;
+                    case "4":
+
+                        break;
+                    case "5":
+                        LogOut();
+
+                        break;
+
+                    default:
+                        Console.WriteLine("Wrong input, enter available choice only!");
+                        break;
+                }
+                Thread.Sleep(2000);//leaves eventual message readable for 2 sec
+                Console.Clear();// clearing console, 
+            } while (true);
+
 
         }
     }
