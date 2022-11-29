@@ -128,5 +128,19 @@ namespace KiwiBankomaten
                 Console.Clear();// clearing console, 
             } while (true);
         }
+        public static void IsValueNumber(out decimal amountMoney)
+        {
+            while (!decimal.TryParse(Console.ReadLine(), out amountMoney)) //How much money is being transferred
+            {
+                Console.WriteLine("Please input a Number: ");
+            }
+        }
+        public static void IsValueNumber(out int amountMoney, int minValue, int maxValue)
+        {
+            while (!int.TryParse(Console.ReadLine(), out amountMoney) && amountMoney >= minValue && amountMoney <= maxValue) //How much money is being transferred
+            {
+                Console.WriteLine("Please input a Number between {0} and {1} : ", minValue, maxValue);
+            }
+        }
     }
 }
