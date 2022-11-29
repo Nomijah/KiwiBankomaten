@@ -180,6 +180,16 @@ namespace KiwiBankomaten
                 Console.Clear();
             }
             return DataBase.BankAccountTypes[userChoice - 1].Item2;
+
+        public void AccountOverview()
+        {
+            int index = 1;
+            foreach (var item in BankAccounts.Values)
+            {
+                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {item.Amount} {item.Currency}");
+                index++;
+            }
+
         }
         public void TransferBetweenCustomerAccounts()
         {
@@ -202,16 +212,7 @@ namespace KiwiBankomaten
             TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney); 
 
         }
-        public void AccountOverview()
-        {
-            int index = 1;
-            foreach (var item in BankAccounts.Values)
-            {
-                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} -\tKontoSaldo : {item.Amount} {item.Currency}");
-                index++;
-            }
-        }
-        public void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
+        private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
         {
             if (BankAccounts[transferFromWhichAccount].Amount >= amountMoney)
             {
@@ -224,7 +225,7 @@ namespace KiwiBankomaten
                 Console.WriteLine("Not enough money in Account( {0} );\tMoney in Account( {0} ) - {1}", BankAccounts[transferFromWhichAccount].AccountName, BankAccounts[transferFromWhichAccount].Amount);
             }
         }
-        public void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
+        private void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
         {
             BankAccounts[transferFromWhichAccount].Amount -= amountMoney;
             BankAccounts[transferToWhichAccount].Amount += amountMoney;
