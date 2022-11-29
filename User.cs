@@ -44,6 +44,10 @@ namespace KiwiBankomaten
                 this._id = value;
             }
         }
+        public virtual void ViewAccounts()
+        {
+
+        }
     }
 
 
