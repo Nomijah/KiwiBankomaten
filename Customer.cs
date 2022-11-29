@@ -7,7 +7,7 @@ namespace KiwiBankomaten
 {
     internal class Customer : User
     {
-        private List<BankAccount> BankAccounts;
+        private Dictionary<int, BankAccount> BankAccounts;
 
         // Used for creating test users
         public Customer(int id, string username, string password)
@@ -15,9 +15,9 @@ namespace KiwiBankomaten
             Id = id;
             UserName = username;
             Password = password;
-            BankAccounts = new List<BankAccount>()
+            BankAccounts = new Dictionary<int, BankAccount>()
             {
-                new BankAccount("Lönekonto", "SEK", 1m)
+                { 1, new BankAccount("Lönekonto", "SEK", 1m) }
             };
         }
 
@@ -35,10 +35,19 @@ namespace KiwiBankomaten
             }
             UserName = username;
             Password = password;
-            BankAccounts = new List<BankAccount>()
+            BankAccounts = new Dictionary<int, BankAccount>()
             {
-                new BankAccount("Lönekonto", "SEK", 1m)
+                { 1, new BankAccount("Lönekonto", "SEK", 1m) }
             };
+        }
+
+        public void ViewAccounts()
+        {
+            foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
+            {
+                Console.WriteLine($"{account.Key}. {account.Value.AccountName}: " +
+                    $"{account.Value.Amount} {account.Value.Currency}");
+            }
         }
     }
 }
