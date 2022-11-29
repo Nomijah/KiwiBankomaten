@@ -8,7 +8,6 @@ namespace KiwiBankomaten
     {
         static void Main(string[] args)
         {
-            DataBase.UserDict[2].ViewAccounts();
             RunProgram();
         }
         public static void RunProgram()
