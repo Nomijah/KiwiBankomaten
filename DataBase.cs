@@ -21,7 +21,7 @@ namespace KiwiBankomaten
         // Dictionary with currencies and exchange rates
         public static Dictionary<string, decimal> ExchangeRates =
             new Dictionary<string, decimal>()
-            {
+        {
                 {"SEK", 1m },
                 {"USD", 10.42m },
                 {"EUR", 10.85m },
@@ -32,5 +32,31 @@ namespace KiwiBankomaten
                 {"AUD", 6.98m },
                 {"CNY", 1.45m }
             };
+        public static void PrintCurrencies()
+        {
+            foreach (string currency in DataBase.ExchangeRates.Keys)
+            {
+                Console.WriteLine($"{currency}");
+            }
+        }
+
+        // Dictionary with account types and interest
+        public static List<Tuple<string, decimal>> BankAccountTypes =
+            new List<Tuple<string, decimal>> 
+            {
+                Tuple.Create("Lönekonto", 0m),
+                Tuple.Create("Korttidssparkonto", 1.2m ),
+                Tuple.Create("Långtidssparkonto", 1.7m ),
+                Tuple.Create("Barnsparkonto", 2.3m)
+            };
+
+        public static void PrintAccountTypes()
+        {
+            for (int i = 1; i <= BankAccountTypes.Count; i++)
+            {
+                Console.WriteLine($"{i}. {BankAccountTypes[i - 1].Item1}, " +
+                    $"ränta: {BankAccountTypes[i-1].Item2}");
+            }
+        }
     }
 }
