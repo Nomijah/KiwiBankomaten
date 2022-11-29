@@ -9,12 +9,14 @@ namespace KiwiBankomaten
     {
         private Dictionary<int, BankAccount> BankAccounts;
 
-        // Used for creating test users
+        // Used for creating test customers
         public Customer(int id, string username, string password)
         {
             Id = id;
             UserName = username;
             Password = password;
+            IsAdmin = false;
+
             // Bankaccounts for testing, same for each user
             BankAccounts = new Dictionary<int, BankAccount>()
             {
@@ -25,7 +27,7 @@ namespace KiwiBankomaten
             };
         }
 
-        // Use this when creating users in program
+        // Use this when creating customers in program
         public Customer(string username, string password)
         {
             if (DataBase.UserDict == null)
@@ -39,6 +41,8 @@ namespace KiwiBankomaten
             }
             UserName = username;
             Password = password;
+            IsAdmin = false;
+            
             BankAccounts = new Dictionary<int, BankAccount>()
             {
                 { 1, new BankAccount("Lönekonto", "SEK", 1m) }

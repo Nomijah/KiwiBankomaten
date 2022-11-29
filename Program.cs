@@ -12,15 +12,18 @@ namespace KiwiBankomaten
         }
         public static void RunProgram()
         {
+            bool loggedIn;
+            int userKey = 0;
             do   //looping menu  
             {
+                loggedIn = false;
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
                 Console.WriteLine("-1) Login\n-2) Exit");
                 string choice = Console.ReadLine();
                 switch (choice)
                 {
                     case "1":
-                        LogIn();
+                        userKey = LogIn(out loggedIn);
                         break;
                     case "2"://Exit program
                         Environment.Exit(0);
@@ -31,13 +34,20 @@ namespace KiwiBankomaten
                 }
                 Thread.Sleep(2000);//leaves eventual message readable for 2 sec
                 Console.Clear();// clearing console, 
-            } while (true);
+            } while (loggedIn != true);
+            if (DataBase.UserDict[userKey].IsAdmin == true)
+            {
+                Admin.AdminMenu();
+            }
+            else
+            {
+                //Customer Menu here
+            }
         }
-        public static int LogIn()
+        public static int LogIn(out bool loggedIn)
         {
             int userKey = 0;
-            bool loggedIn = false;
-
+            loggedIn = false;
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
             string userName = Console.ReadLine();
@@ -49,7 +59,6 @@ namespace KiwiBankomaten
                     userKey = item.Key;
 
                     loggedIn = CheckPassWord(userKey);
-
 
                     if (loggedIn)
                     {
@@ -85,7 +94,6 @@ namespace KiwiBankomaten
 
         public static void CustomerMenu(int userKey)
         {
-
             do   //looping menu  
             {
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
@@ -119,8 +127,6 @@ namespace KiwiBankomaten
                 Thread.Sleep(2000);//leaves eventual message readable for 2 sec
                 Console.Clear();// clearing console, 
             } while (true);
-
-
         }
     }
 }
