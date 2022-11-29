@@ -53,7 +53,7 @@ namespace KiwiBankomaten
         {
             foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
             {
-                Console.WriteLine($"{account.Key}. {account.Value.AccountName}: " +
+                Console.WriteLine($"{account.Value.AccountNumber} {account.Value.AccountName}: " +
                     $"{account.Value.Amount} {account.Value.Currency}");
             }
         }
