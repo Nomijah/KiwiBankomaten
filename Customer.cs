@@ -81,10 +81,10 @@ namespace KiwiBankomaten
             Program.IsValueNumber(out amountMoney);
 
             Console.WriteLine("From which account do you want to transfer money from?: ");
-            Program.IsValueNumber(out transferFromWhichAccount, 1, BankAccounts.Count);
+            transferFromWhichAccount = Program.IsValueNumber(1, BankAccounts.Count);
 
             Console.WriteLine("From which account do you want to transfer money to?: ");
-            Program.IsValueNumber(out transferToWhichAccount, 1, BankAccounts.Count);
+            transferToWhichAccount = Program.IsValueNumber(1, BankAccounts.Count);
 
             TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney); 
 

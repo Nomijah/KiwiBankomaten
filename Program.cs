@@ -137,12 +137,43 @@ namespace KiwiBankomaten
                 Console.WriteLine("Please input a Number: ");
             }
         }
-        public static void IsValueNumber(out int amountMoney, int minValue, int maxValue)
+        //public static void IsValueNumber(out int amountMoney, int minValue, int maxValue)
+        //{
+        //    bool isValueCorrect = false;
+        //    do
+        //    {
+        //        if (!int.TryParse(Console.ReadLine(), out amountMoney))
+        //        {
+        //            if (amountMoney >= minValue && amountMoney <= maxValue)
+        //            {
+        //                Console.WriteLine("Please input a Number between {0} and {1} : ", minValue, maxValue);
+        //                isValueCorrect = false;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            isValueCorrect = true;
+        //        }
+        //    } while (!isValueCorrect);
+        //}
+        public static int IsValueNumber(int minValue, int maxValue)
         {
-            while (!int.TryParse(Console.ReadLine(), out amountMoney) && amountMoney >= minValue && amountMoney <= maxValue) //How much money is being transferred
+            do
             {
-                Console.WriteLine("Please input a Number between {0} and {1} : ", minValue, maxValue);
-            }
+                int transferFromOrToWhichAccount;
+                while (!int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount)) //How much money is being transferred
+                {
+                Console.WriteLine("Please input a Number: ");
+                }
+                if (minValue <= transferFromOrToWhichAccount && maxValue >= transferFromOrToWhichAccount)
+                {
+                    return transferFromOrToWhichAccount;
+                }
+                else
+                {
+                    Console.WriteLine("Please input a Number between {0} and {1} : ", minValue, maxValue);
+                }
+            } while (true);
         }
         public static void PressEnterToContinue()
         {
