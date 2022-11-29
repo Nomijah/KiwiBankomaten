@@ -41,7 +41,7 @@ namespace KiwiBankomaten
             }
             else
             {
-                //Customer Menu here
+                CustomerMenu(userKey);
             }
         }
         public static int LogIn(out bool loggedIn)
@@ -64,7 +64,7 @@ namespace KiwiBankomaten
                     {
                         Console.WriteLine("Successfully logged in");
                         Console.WriteLine($"Welcome {userName}");
-                        CustomerMenu(userKey); //Returns userKey so we know which user is logged in
+                        return userKey; //Returns userKey so we know which user is logged in
                     }
                 }
             }
