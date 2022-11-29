@@ -66,7 +66,7 @@ namespace KiwiBankomaten
             int transferToWhichAccount;
 
             Console.Clear();
-            AccountOverview();
+            ViewAccounts();
 
             Console.WriteLine("How much money do you want to transfer?: ");
             Program.IsValueNumber(out amountMoney);
@@ -80,29 +80,20 @@ namespace KiwiBankomaten
             TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney); 
 
         }
-        public void AccountOverview()
-        {
-            int index = 1;
-            foreach (var item in BankAccounts.Values)
-            {
-                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} -\tKontoSaldo : {item.Amount} {item.Currency}");
-                index++;
-            }
-        }
-        public void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
+        private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
         {
             if (BankAccounts[transferFromWhichAccount].Amount >= amountMoney)
             {
                 TransferFromAccToAcc(transferFromWhichAccount, transferToWhichAccount, amountMoney);
                 Console.WriteLine("The Transfer was a success");
-                AccountOverview();
+                ViewAccounts();
             }
             else
             {
                 Console.WriteLine("Not enough money in Account( {0} );\tMoney in Account( {0} ) - {1}", BankAccounts[transferFromWhichAccount].AccountName, BankAccounts[transferFromWhichAccount].Amount);
             }
         }
-        public void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
+        private void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
         {
             BankAccounts[transferFromWhichAccount].Amount -= amountMoney;
             BankAccounts[transferToWhichAccount].Amount += amountMoney;

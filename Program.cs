@@ -96,6 +96,8 @@ namespace KiwiBankomaten
         {
             do   //looping menu  
             {
+                Customer obj = (Customer)DataBase.UserDict[userKey];
+
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
                 Console.WriteLine("-1) Overview accounts and balances\n-2) Transfer money personal accounts" +
                     "\n-3) Create new account \n-4) Kiwibank internal Transfer money \n-5) Logout");
@@ -104,10 +106,10 @@ namespace KiwiBankomaten
                 switch (choice)
                 {
                     case "1":
-
+                        obj.ViewAccounts();
                         break;
                     case "2":
-
+                        obj.TransferBetweenCustomerAccounts();
                         break;
                     case "3":
 
@@ -125,6 +127,7 @@ namespace KiwiBankomaten
                         break;
                 }
                 Thread.Sleep(2000);//leaves eventual message readable for 2 sec
+                PressEnterToContinue();
                 Console.Clear();// clearing console, 
             } while (true);
         }
@@ -140,6 +143,15 @@ namespace KiwiBankomaten
             while (!int.TryParse(Console.ReadLine(), out amountMoney) && amountMoney >= minValue && amountMoney <= maxValue) //How much money is being transferred
             {
                 Console.WriteLine("Please input a Number between {0} and {1} : ", minValue, maxValue);
+            }
+        }
+        public static void PressEnterToContinue()
+        {
+            Console.WriteLine("Klicka enter för att komma till huvudmenyn");
+            ConsoleKey enterPressed = Console.ReadKey(true).Key;
+            while (!Console.KeyAvailable && enterPressed != ConsoleKey.Enter)
+            {
+                enterPressed = Console.ReadKey(true).Key;
             }
         }
     }
