@@ -96,6 +96,8 @@ namespace KiwiBankomaten
         {
             do   //looping menu  
             {
+                Customer obj = (Customer)DataBase.UserDict[userKey];
+
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
                 Console.WriteLine("-1) Overview accounts and balances\n-2) Transfer money personal accounts" +
                     "\n-3) Create new account \n-4) Kiwibank internal Transfer money \n-5) Logout");
@@ -104,10 +106,10 @@ namespace KiwiBankomaten
                 switch (choice)
                 {
                     case "1":
-
+                        obj.AccountOverview();
                         break;
                     case "2":
-
+                        obj.TransferBetweenCustomerAccounts();
                         break;
                     case "3":
 
@@ -124,7 +126,7 @@ namespace KiwiBankomaten
                         Console.WriteLine("Wrong input, enter available choice only!");
                         break;
                 }
-                Thread.Sleep(2000);//leaves eventual message readable for 2 sec
+                PressEnterToContinue();
                 Console.Clear();// clearing console, 
             } while (true);
         }
@@ -135,11 +137,27 @@ namespace KiwiBankomaten
                 Console.WriteLine("Please input a Number: ");
             }
         }
-        public static void IsValueNumber(out int amountMoney, int minValue, int maxValue)
+        public static void IsValueNumber(out int transferFromOrToWhichAccount, int minValue, int maxValue)
         {
-            while (!int.TryParse(Console.ReadLine(), out amountMoney) && amountMoney >= minValue && amountMoney <= maxValue) //How much money is being transferred
+            do
             {
-                Console.WriteLine("Please input a Number between {0} and {1} : ", minValue, maxValue);
+                while (!int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount)) //How much money is being transferred
+                {
+                Console.WriteLine("Please input a Number: ");
+                }
+                if (minValue >= transferFromOrToWhichAccount || maxValue <= transferFromOrToWhichAccount)
+                {
+                    Console.WriteLine("Please input a Number between {0} and {1} : ", minValue, maxValue);
+                }
+            } while (true);
+        }
+        public static void PressEnterToContinue()
+        {
+            Console.WriteLine("Klicka enter för att komma till huvudmenyn");
+            ConsoleKey enterPressed = Console.ReadKey(true).Key;
+            while (!Console.KeyAvailable && enterPressed != ConsoleKey.Enter)
+            {
+                enterPressed = Console.ReadKey(true).Key;
             }
         }
     }
