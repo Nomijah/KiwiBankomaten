@@ -163,7 +163,7 @@ namespace KiwiBankomaten
                         obj.OpenAccount();
                         break;
                     case "4":
-
+                        obj.InternalMoneyTransfer();
                         break;
                     case "5":
                         LogOut();
