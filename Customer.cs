@@ -210,7 +210,14 @@ namespace KiwiBankomaten
             Console.WriteLine("From which account do you want to transfer money to?: ");
             Program.IsValueNumber(out transferToWhichAccount, 1, BankAccounts.Count);
 
-            TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney); 
+            if (InternalCurrencyCheck(transferToWhichAccount, transferFromWhichAccount))
+            {
+                TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney);
+            }
+            else
+            {
+                TransferConvertedCurrency(transferToWhichAccount, transferFromWhichAccount, amountMoney);
+            }
 
         }
         private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
@@ -232,6 +239,46 @@ namespace KiwiBankomaten
             BankAccounts[transferToWhichAccount].Amount += amountMoney;
 
 
+        }
+
+        // Method to check if two internal accounts use the same currency
+        private bool InternalCurrencyCheck(int toAccountNum, int fromAccountNum)
+        {
+            if (BankAccounts[toAccountNum].Currency ==
+                BankAccounts[fromAccountNum].Currency)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        // Method for transferring money with currency exchange
+        public void TransferConvertedCurrency(int toAccountNum,
+            int fromAccountNum, decimal amountMoney)
+        {
+            decimal toRate = 1;
+            decimal fromRate = 1;
+            // Check which currency the accounts are in
+            foreach (KeyValuePair<string, decimal> item in DataBase.ExchangeRates)
+            {
+                // When match is found, save conversion rate
+                if (item.Key == BankAccounts[toAccountNum].Currency)
+                {
+                    toRate = item.Value;
+                }
+                if (item.Key == BankAccounts[fromAccountNum].Currency)
+                {
+                    fromRate = item.Value;
+                }
+            }
+
+            // Withdraw from the source account
+            BankAccounts[fromAccountNum].Amount -= amountMoney;
+            // Add converted value to target account
+            BankAccounts[toAccountNum].Amount += (amountMoney / toRate) * fromRate;
         }
     }
 }
