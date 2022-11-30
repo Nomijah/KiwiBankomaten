@@ -136,7 +136,7 @@ namespace KiwiBankomaten
             // amountMoney == The money that is to be transfered and recieved // isValueNumberCheck == If the user input is correct
             do
             {
-                if (decimal.TryParse(Console.ReadLine(), out amountMoney) && amountMoney > 0) // Gets user input => Checks if its a decimal => Checks if its larger than 0
+                if (decimal.TryParse(Console.ReadLine(), out amountMoney) && amountMoney > 0) // Gets user input => Checks if it's a decimal => Checks if it's larger than 0
                 {
                     isValueNumberCheck = false; // If amountMoney is a valid input
                 }
@@ -158,7 +158,7 @@ namespace KiwiBankomaten
             // transferFromOrToWhichAccount == The account from which the money will be removed or added // minValue == The key for the Account at the top of the dictionary // maxValue == The key for the Account at the bottom of the dictionary // isValueNumberCheck == If the user input is correct
             do
             {
-                if (int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount) && minValue <= transferFromOrToWhichAccount && maxValue >= transferFromOrToWhichAccount) // Gets user input => Checks if its a decimal => Checks if it's in the set range
+                if (int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount) && minValue <= transferFromOrToWhichAccount && maxValue >= transferFromOrToWhichAccount) // Gets user input => Checks if it's a decimal => Checks if it's in the set range
                 {
                     isValueNumberCheck = false; // If transferFromOrToWhichAccount is a valid input
                 }
