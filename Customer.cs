@@ -70,7 +70,7 @@ namespace KiwiBankomaten
             BankAccounts.Add(index, new BankAccount(accountName, currency, interest));
             InsertMoneyIntoNewAccount(interest, accountName);
         }
-        public void InsertMoneyIntoNewAccount(decimal interest, string accountName)
+        public void InsertMoneyIntoNewAccount(decimal interest)
         {
             bool noError;
             decimal insertAmount;
@@ -96,7 +96,7 @@ namespace KiwiBankomaten
             {
                 noError = true;
                 Console.WriteLine("Skriv in mängden pengar du vill sätta in");
-                if (decimal.TryParse(Console.ReadLine(), out insertAmount))
+                if (decimal.TryParse(Console.ReadLine(), out insertAmount) && insertAmount >= 0)
                 {
                     BankAccounts[BankAccounts.Keys.Max()].Amount += insertAmount;
                 }
