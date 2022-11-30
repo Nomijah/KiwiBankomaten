@@ -111,17 +111,17 @@ namespace KiwiBankomaten
         {
             decimal interestAmount = insertAmount * interest / 100;
             Console.WriteLine("Såhär mycket ränta kommer du tjäna med den angivna summan: ");
-            Console.WriteLine("1 år : " + Math.Round(interestAmount,2));
+            Console.WriteLine("1 år : " + Math.Round(interestAmount, 2));
             for (int i = 0; i < 4; i++)
             {
                 interestAmount += (insertAmount + interestAmount) * interest / 100;
             }
-            Console.WriteLine("5 år : " + Math.Round(interestAmount,2));
+            Console.WriteLine("5 år : " + Math.Round(interestAmount, 2));
             for (int i = 0; i < 5; i++)
             {
                 interestAmount += (insertAmount + interestAmount) * interest / 100;
             }
-            Console.WriteLine("10 år : " + Math.Round(interestAmount,2));
+            Console.WriteLine("10 år : " + Math.Round(interestAmount, 2));
         }
         private static string ChooseCurrency()
         {
@@ -238,12 +238,20 @@ namespace KiwiBankomaten
         public void AccountOverview()
         {
             // Shows the Customer their Accounts ranking from top to bottom
-            int index = 1;
-            foreach (var item in BankAccounts.Values) // Loops through all the Customers Accounts
-            {              
-                // Displays to the Customer their Account
-                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {Math.Round(item.Amount,2)} {item.Currency}");
-                index++;
+            //foreach (var item in BankAccounts.Values) // Loops through all the Customers Accounts
+            //{
+            //    // Displays to the Customer their Account
+            //    Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {Math.Round(item.Amount, 2)} {item.Currency}");
+            //    index++;
+            //}
+            {
+                foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
+                {
+                    Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
+                        $"{account.Value.AccountName}: {Math.Round(account.Value.Amount,2)} " +
+                        $"{account.Value.Currency}");
+                }
+
             }
 
         }
@@ -252,7 +260,7 @@ namespace KiwiBankomaten
             // Arguments :
             // fromWhichAccount == Contains the key for the account which value was transfered from 
             // toWhichAccount == Contains the key for the account which value was transfered to
-            
+
             // Shows the Customer the Accounts that was involved in the transaction
             Console.WriteLine("Money was sent from: ");
             Console.WriteLine($"KontoNamn : {BankAccounts[fromWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[fromWhichAccount].Amount, 2)} {BankAccounts[fromWhichAccount].Currency}");
@@ -290,15 +298,15 @@ namespace KiwiBankomaten
             }
 
         }
-        private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney) 
+        private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
         {
             // Arguments :
             // transferFromWhichAccount == Contains which Account to transfer from 
             // transferToWhichAccount == Contains which Account to transfer to 
             // amountMoney = Contains the quantity that is to be transfered
-            
+
             // Checks if transferFromWhichAccount has enough funds to go through with the transfer and then transfers the money if it's possible
-            
+
             if (BankAccounts[transferFromWhichAccount].Amount >= amountMoney) // Checks if transferFromWhichAccount has enough funds for the transfer
             {
                 TransferFromAccToAcc(transferFromWhichAccount, transferToWhichAccount, amountMoney); // Goes through with the transfer
@@ -310,15 +318,15 @@ namespace KiwiBankomaten
                 Console.WriteLine("Not enough money in Account( {0} );\tMoney in Account( {0} ) - {1}", BankAccounts[transferFromWhichAccount].AccountName, BankAccounts[transferFromWhichAccount].Amount); //Tells the user they dont have enough funds in transferFromWhichAccount 
             }
         }
-        private void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney) 
+        private void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
         {
             // Arguments : 
             // transferFromWhichAccount == Contains which Account to transfer from 
             // transferToWhichAccount == Contains which Account to transfer to 
             // amountMoney = Contains the quantity that is to be transfered
-            
+
             // Transfers the funds between the Accounts
-            
+
             BankAccounts[transferFromWhichAccount].Amount -= amountMoney; // Removes the funds
             BankAccounts[transferToWhichAccount].Amount += amountMoney; // Adds the funds
 
@@ -420,24 +428,17 @@ namespace KiwiBankomaten
         public bool TransferToOtherUser(int accountNum, decimal transferAmount)
         {
             // Check every user in database
-            foreach (User user in DataBase.UserDict.Values)
+            foreach (Customer customer in DataBase.CustomerDict.Values)
             {
-                // Do not check for accounts if Admin
-                if (!user.IsAdmin)
+                // Check each account for match
+                foreach (BankAccount acc in customer.BankAccounts.Values)
                 {
-                    // Cast user to customer
-                    Customer temp = (Customer)user;
-
-                    // Check each account for match
-                    foreach (BankAccount acc in temp.BankAccounts.Values)
+                    // If account is found, add transferAmount to the account and return true
+                    if (acc.AccountNumber == accountNum)
                     {
-                        // If account is found, add transferAmount to the account and return true
-                        if (acc.AccountNumber == accountNum)
-                        {
-                            acc.Amount = acc.Amount + transferAmount;
+                        acc.Amount = acc.Amount + transferAmount;
 
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
