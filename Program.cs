@@ -130,47 +130,26 @@ namespace KiwiBankomaten
                 Console.Clear();// clearing console, 
             } while (true);
         }
-        public static void IsValueNumberCheck(out decimal amountMoney, bool isValueNumberCheck)
+        public static void IsValueNumber(out decimal amountMoney)
         {
-            do
+            while (!decimal.TryParse(Console.ReadLine(), out amountMoney)) //How much money is being transferred
             {
-                if (decimal.TryParse(Console.ReadLine(), out amountMoney) && amountMoney > 0)
-                {
-                    isValueNumberCheck = false;
-                }
-                else if (amountMoney < 0)
-                {
-                    Console.WriteLine("Input has to be positive and cannot be 0. Please Try Again!");
-                    isValueNumberCheck = true;
-                }
-                else
-                {
-                    Console.WriteLine("Please input a Number!");
-                    isValueNumberCheck = true;
-                }
-
-            } while (isValueNumberCheck);
+                Console.WriteLine("Please input a Number: ");
+            }
         }
-        public static void IsValueNumberCheck(out int transferFromOrToWhichAccount, int minValue, int maxValue, bool isValueNumberCheck)
+        public static void IsValueNumber(out int transferFromOrToWhichAccount, int minValue, int maxValue)
         {
             do
             {
-                if (int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount) && minValue <= transferFromOrToWhichAccount && maxValue >= transferFromOrToWhichAccount)
+                while (!int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount)) //How much money is being transferred
                 {
-                    isValueNumberCheck = false;
+                Console.WriteLine("Please input a Number: ");
                 }
-                else if (minValue > transferFromOrToWhichAccount || maxValue < transferFromOrToWhichAccount)
+                if (minValue >= transferFromOrToWhichAccount || maxValue <= transferFromOrToWhichAccount)
                 {
-                    Console.WriteLine("Please input a Number between {0} and {1}!", minValue, maxValue);
-                    isValueNumberCheck = true;
+                    Console.WriteLine("Please input a Number between {0} and {1} : ", minValue, maxValue);
                 }
-                else
-                {
-                    Console.WriteLine("Please input a Number!");
-                    isValueNumberCheck = true;
-                }
-
-            } while (isValueNumberCheck);
+            } while (true);
         }
         public static void PressEnterToContinue()
         {

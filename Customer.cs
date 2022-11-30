@@ -197,19 +197,18 @@ namespace KiwiBankomaten
             decimal amountMoney;
             int transferFromWhichAccount;
             int transferToWhichAccount;
-            bool isNumber = false;
 
             Console.Clear();
             AccountOverview();
 
             Console.WriteLine("How much money do you want to transfer?: ");
-            Program.IsValueNumberCheck(out amountMoney, isNumber);
+            Program.IsValueNumber(out amountMoney);
 
             Console.WriteLine("From which account do you want to transfer money from?: ");
-            Program.IsValueNumberCheck(out transferFromWhichAccount, 1, BankAccounts.Count, isNumber);
+            Program.IsValueNumber(out transferFromWhichAccount, 1, BankAccounts.Count);
 
             Console.WriteLine("From which account do you want to transfer money to?: ");
-            Program.IsValueNumberCheck(out transferToWhichAccount, 1, BankAccounts.Count, isNumber);
+            Program.IsValueNumber(out transferToWhichAccount, 1, BankAccounts.Count);
 
             TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney); 
 
