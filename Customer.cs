@@ -17,7 +17,6 @@ namespace KiwiBankomaten
             Id = id;
             UserName = username;
             Password = password;
-            IsAdmin = false;
 
             // Bankaccounts for testing, same for each user
             BankAccounts = new Dictionary<int, BankAccount>()
@@ -32,13 +31,13 @@ namespace KiwiBankomaten
         // Use this when creating customers in program
         public Customer(string username, string password)
         {
-            if (DataBase.UserDict == null)
+            if (DataBase.CustomerDict == null)
             {
                 Id = 1;
             }
             else
             {
-                int newId = DataBase.UserDict.Last().Key + 1;
+                int newId = DataBase.CustomerDict.Last().Key + 1;
                 Id = newId;
             }
             UserName = username;
