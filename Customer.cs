@@ -17,7 +17,6 @@ namespace KiwiBankomaten
             Id = id;
             UserName = username;
             Password = password;
-            IsAdmin = false;
 
             // Bankaccounts for testing, same for each user
             BankAccounts = new Dictionary<int, BankAccount>()
@@ -32,13 +31,13 @@ namespace KiwiBankomaten
         // Use this when creating customers in program
         public Customer(string username, string password)
         {
-            if (DataBase.UserDict == null)
+            if (DataBase.CustomerDict == null)
             {
                 Id = 1;
             }
             else
             {
-                int newId = DataBase.UserDict.Last().Key + 1;
+                int newId = DataBase.CustomerDict.Last().Key + 1;
                 Id = newId;
             }
             UserName = username;
@@ -68,8 +67,62 @@ namespace KiwiBankomaten
             // gets the highest key present and adds one to get new key
             int index = BankAccounts.Keys.Max() + 1;
             BankAccounts.Add(index, new BankAccount(accountName, currency, interest));
+            InsertMoneyIntoNewAccount(interest);
         }
-
+        public void InsertMoneyIntoNewAccount(decimal interest)
+        {
+            bool noError;
+            decimal insertAmount;
+            Console.Clear();
+            Console.WriteLine($"Vill du sätta in {BankAccounts[BankAccounts.Keys.Max()].Currency} i ditt nya konto? J/N");
+            string answer;
+            do
+            {
+                answer = Console.ReadLine().ToUpper();
+                switch (answer)
+                {
+                    case "J":
+                        break;
+                    case "N":
+                        return;
+                    default:
+                        Console.WriteLine("Felaktig inmatning, välj [J] " +
+                            "för ja eller N för nej.");
+                        break;
+                }
+            } while (answer != "J" && answer != "N");
+            do
+            {
+                noError = true;
+                Console.WriteLine("Skriv in mängden pengar du vill sätta in");
+                if (decimal.TryParse(Console.ReadLine(), out insertAmount) && insertAmount >= 0)
+                {
+                    BankAccounts[BankAccounts.Keys.Max()].Amount += insertAmount;
+                }
+                else
+                {
+                    Console.WriteLine("Det där är inte ett giltigt värde");
+                    noError = false;
+                }
+            } while (noError == false);
+            ViewInterestSavingsOfNewAccount(interest, insertAmount);
+        }
+        public void ViewInterestSavingsOfNewAccount(decimal interest, decimal insertAmount)
+        {
+            decimal interestAmount = insertAmount * interest / 100;
+            Console.WriteLine("Såhär mycket ränta kommer du tjäna med den angivna summan: ");
+            Console.WriteLine("1 år : " + Math.Round(interestAmount,2));
+            for (int i = 0; i < 4; i++)
+            {
+                interestAmount += (insertAmount + interestAmount) * interest / 100;
+            }
+            Console.WriteLine("5 år : " + Math.Round(interestAmount,2));
+            for (int i = 0; i < 5; i++)
+            {
+                interestAmount += (insertAmount + interestAmount) * interest / 100;
+            }
+            Console.WriteLine("10 år : " + Math.Round(interestAmount,2));
+        }
         private static string ChooseCurrency()
         {
             Console.Clear();
@@ -151,9 +204,9 @@ namespace KiwiBankomaten
                         do
                         {
                             Console.WriteLine($"Du har valt " +
-                                $"{DataBase.BankAccountTypes[userChoice].Item1}. " +
+                                $"{DataBase.BankAccountTypes[userChoice - 1].Item1}. " +
                                 $"med ränta " +
-                                $"{DataBase.BankAccountTypes[userChoice].Item2}%." +
+                                $"{DataBase.BankAccountTypes[userChoice - 1].Item2}%." +
                                 $" Vill du godkänna detta? [J/N]");
                             answer = Console.ReadLine().ToUpper();
                             switch (answer)
@@ -184,54 +237,132 @@ namespace KiwiBankomaten
 
         public void AccountOverview()
         {
+            // Shows the Customer their Accounts ranking from top to bottom
             int index = 1;
-            foreach (var item in BankAccounts.Values)
-            {
-                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {item.Amount} {item.Currency}");
+            foreach (var item in BankAccounts.Values) // Loops through all the Customers Accounts
+            {              
+                // Displays to the Customer their Account
+                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {Math.Round(item.Amount,2)} {item.Currency}");
                 index++;
             }
 
+        }
+        public void AccountOverview(int fromWhichAccount, int toWhichAccount)
+        {
+            // Arguments :
+            // fromWhichAccount == Contains the key for the account which value was transfered from 
+            // toWhichAccount == Contains the key for the account which value was transfered to
+            
+            // Shows the Customer the Accounts that was involved in the transaction
+            Console.WriteLine("Money was sent from: ");
+            Console.WriteLine($"KontoNamn : {BankAccounts[fromWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[fromWhichAccount].Amount, 2)} {BankAccounts[fromWhichAccount].Currency}");
+            Console.WriteLine("Money was sent to: ");
+            Console.WriteLine($"KontoNamn : {BankAccounts[toWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[toWhichAccount].Amount, 2)} {BankAccounts[toWhichAccount].Currency}");
         }
         public void TransferBetweenCustomerAccounts()
         {
             decimal amountMoney;
             int transferFromWhichAccount;
             int transferToWhichAccount;
+            bool isNumber = false;
 
             Console.Clear();
-            AccountOverview();
+            Console.WriteLine("Enter a number as input to navigate in the menu:");
+            AccountOverview(); // Shows the Customer their Accounts and the balances in said Accounts
 
             Console.WriteLine("How much money do you want to transfer?: ");
-            Program.IsValueNumber(out amountMoney);
+            Program.IsValueNumberCheck(out amountMoney, isNumber); // Gets User input and Checks if it's Valid
 
             Console.WriteLine("From which account do you want to transfer money from?: ");
-            Program.IsValueNumber(out transferFromWhichAccount, 1, BankAccounts.Count);
+            Program.IsValueNumberCheck(out transferFromWhichAccount, 1, BankAccounts.Count, isNumber); // Gets User input and Checks if it's Valid
 
             Console.WriteLine("From which account do you want to transfer money to?: ");
-            Program.IsValueNumber(out transferToWhichAccount, 1, BankAccounts.Count);
+            Program.IsValueNumberCheck(out transferToWhichAccount, 1, BankAccounts.Count, isNumber); // Gets User input and Checks if it's Valid
 
-            TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney);
-
-        }
-        private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
-        {
-            if (BankAccounts[transferFromWhichAccount].Amount >= amountMoney)
+            if (InternalCurrencyCheck(transferToWhichAccount, transferFromWhichAccount))
             {
-                TransferFromAccToAcc(transferFromWhichAccount, transferToWhichAccount, amountMoney);
-                Console.WriteLine("The Transfer was a success");
-                AccountOverview();
+                // Checks if the giving account has enough funds to go through with the transfer and transfers the money if it's possible 
+                TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney);
             }
             else
             {
-                Console.WriteLine("Not enough money in Account( {0} );\tMoney in Account( {0} ) - {1}", BankAccounts[transferFromWhichAccount].AccountName, BankAccounts[transferFromWhichAccount].Amount);
+                TransferConvertedCurrency(transferToWhichAccount, transferFromWhichAccount, amountMoney);
+            }
+
+        }
+        private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney) 
+        {
+            // Arguments :
+            // transferFromWhichAccount == Contains which Account to transfer from 
+            // transferToWhichAccount == Contains which Account to transfer to 
+            // amountMoney = Contains the quantity that is to be transfered
+            
+            // Checks if transferFromWhichAccount has enough funds to go through with the transfer and then transfers the money if it's possible
+            
+            if (BankAccounts[transferFromWhichAccount].Amount >= amountMoney) // Checks if transferFromWhichAccount has enough funds for the transfer
+            {
+                TransferFromAccToAcc(transferFromWhichAccount, transferToWhichAccount, amountMoney); // Goes through with the transfer
+                Console.WriteLine("The Transfer was a success");
+                AccountOverview(transferFromWhichAccount, transferToWhichAccount); // Shows the Customer their updated Accounts
+            }
+            else // If the customer doesn't have enough money
+            {
+                Console.WriteLine("Not enough money in Account( {0} );\tMoney in Account( {0} ) - {1}", BankAccounts[transferFromWhichAccount].AccountName, BankAccounts[transferFromWhichAccount].Amount); //Tells the user they dont have enough funds in transferFromWhichAccount 
             }
         }
-        private void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
+        private void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney) 
         {
-            BankAccounts[transferFromWhichAccount].Amount -= amountMoney;
-            BankAccounts[transferToWhichAccount].Amount += amountMoney;
+            // Arguments : 
+            // transferFromWhichAccount == Contains which Account to transfer from 
+            // transferToWhichAccount == Contains which Account to transfer to 
+            // amountMoney = Contains the quantity that is to be transfered
+            
+            // Transfers the funds between the Accounts
+            
+            BankAccounts[transferFromWhichAccount].Amount -= amountMoney; // Removes the funds
+            BankAccounts[transferToWhichAccount].Amount += amountMoney; // Adds the funds
 
 
+        }
+
+        // Method to check if two internal accounts use the same currency
+        private bool InternalCurrencyCheck(int toAccountNum, int fromAccountNum)
+        {
+            if (BankAccounts[toAccountNum].Currency ==
+                BankAccounts[fromAccountNum].Currency)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        // Method for transferring money with currency exchange
+        public void TransferConvertedCurrency(int toAccountNum,
+            int fromAccountNum, decimal amountMoney)
+        {
+            decimal toRate = 1;
+            decimal fromRate = 1;
+            // Check which currency the accounts are in
+            foreach (KeyValuePair<string, decimal> item in DataBase.ExchangeRates)
+            {
+                // When match is found, save conversion rate
+                if (item.Key == BankAccounts[toAccountNum].Currency)
+                {
+                    toRate = item.Value;
+                }
+                if (item.Key == BankAccounts[fromAccountNum].Currency)
+                {
+                    fromRate = item.Value;
+                }
+            }
+
+            // Withdraw from the source account
+            BankAccounts[fromAccountNum].Amount -= amountMoney;
+            // Add converted value to target account
+            BankAccounts[toAccountNum].Amount += (amountMoney / toRate) * fromRate;
         }
         public void InternalMoneyTransfer()
         {

@@ -13,18 +13,17 @@ namespace KiwiBankomaten
             Id = id;
             UserName = username;
             Password = password;
-            IsAdmin = true;
         }
         // Use this when creating admins in program
         public Admin(string username, string password)
         {
-            if (DataBase.UserDict == null)
+            if (DataBase.AdminList == null)
             {
                 Id = 1;
             }
             else
             {
-                int newId = DataBase.UserDict.Last().Key + 1;
+                int newId = DataBase.AdminList.Count;
                 Id = newId;
             }
             UserName = username;
@@ -51,12 +50,12 @@ namespace KiwiBankomaten
                 switch (userType)
                 {
                     case "1":
-                        DataBase.UserDict.Add(DataBase.UserDict.Last().Key + 1, new Customer(userName, passWord));
-                        Console.WriteLine($"Customer {userName} har skapats med nyckeln {DataBase.UserDict.Last().Key}");
+                        DataBase.CustomerDict.Add(DataBase.CustomerDict.Last().Key + 1, new Customer(userName, passWord));
+                        Console.WriteLine($"Customer {userName} har skapats med nyckeln {DataBase.CustomerDict.Last().Key}");
                         break;
                     case "2":
-                        DataBase.UserDict.Add(DataBase.UserDict.Last().Key + 1, new Admin(userName, passWord));
-                        Console.WriteLine($"Admin {userName} har skapats med nyckeln {DataBase.UserDict.Last().Key}");
+                        DataBase.AdminList.Add(new Admin(userName, passWord));
+                        Console.WriteLine($"Admin {userName} har skapats.");
                         break;
                     default:
                         Console.WriteLine("Fel input, skriv in ett korrekt värde");
