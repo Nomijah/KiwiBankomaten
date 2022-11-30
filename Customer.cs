@@ -106,9 +106,9 @@ namespace KiwiBankomaten
                     noError = false;
                 }
             } while (noError == false);
-            ViewInterestOfNewAccount(interest, insertAmount);
+            ViewInterestSavingsOfNewAccount(interest, insertAmount);
         }
-        public void ViewInterestOfNewAccount(decimal interest, decimal insertAmount)
+        public void ViewInterestSavingsOfNewAccount(decimal interest, decimal insertAmount)
         {
             decimal interestAmount = insertAmount * interest / 100;
             Console.WriteLine("Mängden du kommer tjäna på ränta i ditt nya konto : ");
