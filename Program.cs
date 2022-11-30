@@ -112,7 +112,7 @@ namespace KiwiBankomaten
                         obj.TransferBetweenCustomerAccounts();
                         break;
                     case "3":
-
+                        obj.OpenAccount();
                         break;
                     case "4":
 

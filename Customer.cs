@@ -68,8 +68,64 @@ namespace KiwiBankomaten
             // gets the highest key present and adds one to get new key
             int index = BankAccounts.Keys.Max() + 1;
             BankAccounts.Add(index, new BankAccount(accountName, currency, interest));
+            InsertMoneyIntoNewAccount(interest, accountName);
         }
-
+        public void InsertMoneyIntoNewAccount(decimal interest, string accountName)
+        {
+            bool noError;
+            decimal insertAmount;
+            Console.Clear();
+            Console.WriteLine($"Vill du sätta in {BankAccounts[BankAccounts.Keys.Max()].Currency} i ditt nya konto? J/N");
+            string answer;
+            do
+            {
+                answer = Console.ReadLine().ToUpper();
+                switch (answer)
+                {
+                    case "J":
+                        break;
+                    case "N":
+                        return;
+                    default:
+                        Console.WriteLine("Felaktig inmatning, välj [J] " +
+                            "för ja eller N för nej.");
+                        break;
+                }
+            } while (answer != "J" && answer != "N");
+            do
+            {
+                noError = true;
+                Console.WriteLine("Skriv in mängden pengar du vill sätta in");
+                if (decimal.TryParse(Console.ReadLine(), out insertAmount))
+                {
+                    BankAccounts[BankAccounts.Keys.Max()].Amount += insertAmount;
+                }
+                else
+                {
+                    Console.WriteLine("Det där är inte ett giltigt värde");
+                    noError = false;
+                }
+            } while (noError == false);
+            ViewInterestOfNewAccount(interest, insertAmount);
+        }
+        public void ViewInterestOfNewAccount(decimal interest, decimal insertAmount)
+        {
+            decimal interestAmount = insertAmount * interest / 100;
+            Console.WriteLine("Mängden du kommer tjäna på ränta i ditt nya konto : ");
+            Console.WriteLine("1 år : " + interestAmount);
+            for (int i = 0; i < 5; i++)
+            {
+                insertAmount += interestAmount;
+                interestAmount = insertAmount * interest / 100;
+            }
+            Console.WriteLine("5 år : " + interestAmount);
+            for (int i = 0; i < 5; i++)
+            {
+                insertAmount += interestAmount;
+                interestAmount = insertAmount * interest / 100;
+            }
+            Console.WriteLine("10 år : " + interestAmount);
+        }
         private static string ChooseCurrency()
         {
             Console.Clear();
@@ -151,9 +207,9 @@ namespace KiwiBankomaten
                         do
                         {
                             Console.WriteLine($"Du har valt " +
-                                $"{DataBase.BankAccountTypes[userChoice].Item1}. " +
+                                $"{DataBase.BankAccountTypes[userChoice - 1].Item1}. " +
                                 $"med ränta " +
-                                $"{DataBase.BankAccountTypes[userChoice].Item2}%." +
+                                $"{DataBase.BankAccountTypes[userChoice - 1].Item2}%." +
                                 $" Vill du godkänna detta? [J/N]");
                             answer = Console.ReadLine().ToUpper();
                             switch (answer)
