@@ -131,9 +131,14 @@ namespace KiwiBankomaten
             } while (true);
         }
        
-        public static void IsValueNumberCheck(out decimal amountMoney, bool isValueNumberCheck) // Checks whether or not "decimal amountMoney" is valid input
+        public static void IsValueNumberCheck(out decimal amountMoney, bool isValueNumberCheck) 
         {
-            // amountMoney == The money that is to be transfered and recieved // isValueNumberCheck == If the user input is correct
+            // Arguments :
+            // amountMoney == The money that is to be transfered and recieved 
+            // isValueNumberCheck == If the user input is correct
+            
+            // Checks whether or not "decimal amountMoney" is valid input
+            
             do
             {
                 if (decimal.TryParse(Console.ReadLine(), out amountMoney) && amountMoney > 0) // Gets user input => Checks if it's a decimal => Checks if it's larger than 0
@@ -153,9 +158,15 @@ namespace KiwiBankomaten
 
             } while (isValueNumberCheck);
         }
-        public static void IsValueNumberCheck(out int transferFromOrToWhichAccount, int minValue, int maxValue, bool isValueNumberCheck) // Checks whether or not "int transferFromOrToWhichAccount" is valid input
+        public static void IsValueNumberCheck(out int transferFromOrToWhichAccount, int minValue, int maxValue, bool isValueNumberCheck) 
         {
-            // transferFromOrToWhichAccount == The account from which the money will be removed or added // minValue == The key for the Account at the top of the dictionary // maxValue == The key for the Account at the bottom of the dictionary // isValueNumberCheck == If the user input is correct
+            // Arguments :
+            // transferFromOrToWhichAccount == The account from which the money will be removed or added 
+            // minValue == The key for the Account at the top of the dictionary 
+            // maxValue == The key for the Account at the bottom of the dictionary // isValueNumberCheck == If the user input is correct
+
+            // Checks whether or not "int transferFromOrToWhichAccount" is valid input
+            
             do
             {
                 if (int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount) && minValue <= transferFromOrToWhichAccount && maxValue >= transferFromOrToWhichAccount) // Gets user input => Checks if it's a decimal => Checks if it's in the set range
@@ -175,8 +186,10 @@ namespace KiwiBankomaten
 
             } while (isValueNumberCheck); // Loops if input is invalid
         }
-        public static void PressEnterToContinue() // Stops the program until the user presses "Enter"
+        public static void PressEnterToContinue() 
         {
+            // Stops the program until the user presses "Enter"
+            
             Console.WriteLine("Klicka enter för att komma till huvudmenyn");
             ConsoleKey enterPressed = Console.ReadKey(true).Key; // Gets the input from the user
             while (!Console.KeyAvailable && enterPressed != ConsoleKey.Enter) // Loops if the user Presses any button other than "Enter"
