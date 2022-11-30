@@ -186,8 +186,9 @@ namespace KiwiBankomaten
         {
             int index = 1;
             foreach (var item in BankAccounts.Values) // Loops through all the Customers Accounts
-            {
-                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {item.Amount} {item.Currency}"); // Displays to the Customer their Accounts
+            {              
+                // Displays to the Customer their Account
+                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {Math.Round(item.Amount,2)} {item.Currency}");
                 index++;
             }
 
@@ -212,7 +213,15 @@ namespace KiwiBankomaten
             Console.WriteLine("From which account do you want to transfer money to?: ");
             Program.IsValueNumberCheck(out transferToWhichAccount, 1, BankAccounts.Count, isNumber); // Gets User input and Checks if it's Valid
 
-            TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney); // Checks if the giving account has enough funds to go through with the transfer and transfers the money if it's possible 
+            if (InternalCurrencyCheck(transferToWhichAccount, transferFromWhichAccount))
+            {
+                // Checks if the giving account has enough funds to go through with the transfer and transfers the money if it's possible 
+                TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney);
+            }
+            else
+            {
+                TransferConvertedCurrency(transferToWhichAccount, transferFromWhichAccount, amountMoney);
+            }
 
         }
         private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney) // Checks if transferFromWhichAccount has enough funds to go through with the transfer and then transfers the money if it's possible
@@ -236,6 +245,46 @@ namespace KiwiBankomaten
             BankAccounts[transferToWhichAccount].Amount += amountMoney; // Adds the funds
 
 
+        }
+
+        // Method to check if two internal accounts use the same currency
+        private bool InternalCurrencyCheck(int toAccountNum, int fromAccountNum)
+        {
+            if (BankAccounts[toAccountNum].Currency ==
+                BankAccounts[fromAccountNum].Currency)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        // Method for transferring money with currency exchange
+        public void TransferConvertedCurrency(int toAccountNum,
+            int fromAccountNum, decimal amountMoney)
+        {
+            decimal toRate = 1;
+            decimal fromRate = 1;
+            // Check which currency the accounts are in
+            foreach (KeyValuePair<string, decimal> item in DataBase.ExchangeRates)
+            {
+                // When match is found, save conversion rate
+                if (item.Key == BankAccounts[toAccountNum].Currency)
+                {
+                    toRate = item.Value;
+                }
+                if (item.Key == BankAccounts[fromAccountNum].Currency)
+                {
+                    fromRate = item.Value;
+                }
+            }
+
+            // Withdraw from the source account
+            BankAccounts[fromAccountNum].Amount -= amountMoney;
+            // Add converted value to target account
+            BankAccounts[toAccountNum].Amount += (amountMoney / toRate) * fromRate;
         }
     }
 }

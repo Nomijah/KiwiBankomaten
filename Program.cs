@@ -102,7 +102,7 @@ namespace KiwiBankomaten
                 Console.WriteLine("-1) Overview accounts and balances\n-2) Transfer money personal accounts" +
                     "\n-3) Create new account \n-4) Kiwibank internal Transfer money \n-5) Logout");
                 string choice = Console.ReadLine();
-                
+
                 switch (choice)
                 {
                     case "1":
