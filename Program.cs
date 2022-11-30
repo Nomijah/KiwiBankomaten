@@ -14,35 +14,39 @@ namespace KiwiBankomaten
         {
             bool loggedIn;
             int userKey = 0;
+            int adminKey = -1;
             do   //looping menu  
             {
                 loggedIn = false;
-                Console.WriteLine("Enter a number as input to navigate in the menu:");
-                Console.WriteLine("-1) Login\n-2) Exit");
+                Console.WriteLine("Välj ett av alternativen nedan:");
+                Console.WriteLine("-1) Logga in\n-2) Stäng av");
                 string choice = Console.ReadLine();
                 switch (choice)
                 {
                     case "1":
                         userKey = LogIn(out loggedIn);
+                        if (loggedIn)
+                        {
+                            CustomerMenu(userKey);
+                        }
                         break;
                     case "2"://Exit program
                         Environment.Exit(0);
                         break;
+                    case "admin": // Hidden admin login
+                        adminKey = AdminLogIn(out loggedIn);
+                        if (loggedIn)
+                        {
+                            Admin.AdminMenu(); 
+                        }
+                        break;
                     default:
-                        Console.WriteLine("Wrong input, enter available choice only!");
+                        Console.WriteLine("Felaktigt val, försök igen.");
                         break;
                 }
                 Thread.Sleep(2000);//leaves eventual message readable for 2 sec
                 Console.Clear();// clearing console, 
             } while (loggedIn != true);
-            if (DataBase.UserDict[userKey].IsAdmin == true)
-            {
-                Admin.AdminMenu();
-            }
-            else
-            {
-                CustomerMenu(userKey);
-            }
         }
         public static int LogIn(out bool loggedIn)
         {
@@ -52,7 +56,7 @@ namespace KiwiBankomaten
             Console.WriteLine("Please enter your account name:");
             string userName = Console.ReadLine();
 
-            foreach (KeyValuePair<int, User> item in DataBase.UserDict)
+            foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
             {
                 if (userName == item.Value.UserName)
                 {
@@ -70,12 +74,56 @@ namespace KiwiBankomaten
             }
             return 0;
         }
+
+        public static int AdminLogIn(out bool loggedIn)
+        {
+            int adminKey = 0;
+            loggedIn = false;
+            Console.WriteLine("Welcome to KiwiBank");
+            Console.WriteLine("Please enter your account name:");
+            string userName = Console.ReadLine();
+
+            foreach (Admin item in DataBase.AdminList)
+            {
+                if (userName == item.UserName)
+                {
+                    adminKey = DataBase.AdminList.FindIndex(item => userName == item.UserName);
+
+                    loggedIn = AdminCheckPassWord(adminKey);
+
+                    if (loggedIn)
+                    {
+                        Console.WriteLine("Successfully logged in");
+                        Console.WriteLine($"Welcome {userName}");
+                        return adminKey; //Returns adminKey so we know which admin is logged in
+                    }
+                }
+            }
+            return 0;
+        }
         public static bool CheckPassWord(int userKey)
         {
             Console.WriteLine("Enter your password");
             string userPassWord = (Console.ReadLine());
 
-            if (userPassWord == DataBase.UserDict[userKey].Password)
+            if (userPassWord == DataBase.CustomerDict[userKey].Password)
+            {
+                Console.WriteLine("Password is correct");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Wrong password");
+                return false;
+            }
+        }
+        
+        public static bool AdminCheckPassWord(int adminKey)
+        {
+            Console.WriteLine("Enter your password");
+            string userPassWord = (Console.ReadLine());
+            
+            if (userPassWord == DataBase.AdminList[adminKey].Password)
             {
                 Console.WriteLine("Password is correct");
                 return true;
@@ -96,7 +144,7 @@ namespace KiwiBankomaten
         {
             do   //looping menu  
             {
-                Customer obj = (Customer)DataBase.UserDict[userKey];
+                Customer obj = DataBase.CustomerDict[userKey];
 
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
                 Console.WriteLine("-1) Overview accounts and balances\n-2) Transfer money personal accounts" +
