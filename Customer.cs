@@ -110,20 +110,18 @@ namespace KiwiBankomaten
         public void ViewInterestSavingsOfNewAccount(decimal interest, decimal insertAmount)
         {
             decimal interestAmount = insertAmount * interest / 100;
-            Console.WriteLine("Mängden du kommer tjäna på ränta i ditt nya konto : ");
-            Console.WriteLine("1 år : " + interestAmount);
+            Console.WriteLine("Såhär mycket ränta kommer du tjäna med den angivna summan: ");
+            Console.WriteLine("1 år : " + Math.Round(interestAmount,2));
+            for (int i = 0; i < 4; i++)
+            {
+                interestAmount += (insertAmount + interestAmount) * interest / 100;
+            }
+            Console.WriteLine("5 år : " + Math.Round(interestAmount,2));
             for (int i = 0; i < 5; i++)
             {
-                insertAmount += interestAmount;
-                interestAmount = insertAmount * interest / 100;
+                interestAmount += (insertAmount + interestAmount) * interest / 100;
             }
-            Console.WriteLine("5 år : " + interestAmount);
-            for (int i = 0; i < 5; i++)
-            {
-                insertAmount += interestAmount;
-                interestAmount = insertAmount * interest / 100;
-            }
-            Console.WriteLine("10 år : " + interestAmount);
+            Console.WriteLine("10 år : " + Math.Round(interestAmount,2));
         }
         private static string ChooseCurrency()
         {
