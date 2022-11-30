@@ -237,46 +237,81 @@ namespace KiwiBankomaten
         {
             decimal amountMoney;
             int transferFromWhichAccount;
+            int transferToWhichAccount;
 
             Console.Clear();
             AccountOverview();
 
-            Console.WriteLine("How much money do you want to transfer?: ");
+            Console.WriteLine("Hur mycket pengar vill du föra över?");
             while (!decimal.TryParse(Console.ReadLine(), out amountMoney)) //How much money is being transferred
             {
-                Console.WriteLine("Please input a Number:");
+                Console.WriteLine("Skriv endast siffror");
             }
 
-            Console.WriteLine("From which account do you want to transfer money from?: ");
+            if (amountMoney < 0) //If user enters a negative amount
+            {
+                Console.WriteLine("Du kan inte föra över en negativ summa");
+                return;
+            }
+
+            Console.WriteLine("Från vilket konto vill du föra ifrån?");
             while (!int.TryParse(Console.ReadLine(), out transferFromWhichAccount)) //How much money is being transferred
             {
-                Console.WriteLine("Please input a Number: ");
+                Console.WriteLine("Skriv endast siffror");
             }
 
-            
-
-            
-
-            foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
+            Console.WriteLine("Skriv det 8-siffriga kontonummer du vill föra över pengar till:");
+            while (!int.TryParse(Console.ReadLine(), out transferToWhichAccount)) //How much money is being transferred
             {
-                if (account.Value.AccountNumber == 40448653)
-                {
-                    Console.WriteLine("Hittade konto nummer 40448653");
-                    Console.ReadLine();
-                }
-
-                
+                Console.WriteLine("Skriv endast siffror");
             }
 
-            //BankAccounts[transferFromWhichAccount].Amount -= amountMoney;
+            //If chosen amount to transfer is smaller than accountbalance on chosen account
+            if (BankAccounts[transferFromWhichAccount].Amount >= amountMoney)
+            {
+                //If the TransferToOtherUser is true, do the transfer from personal account
+                if (TransferToOtherUser(transferToWhichAccount, amountMoney))
+                {
+                    //Subtract the amount from the users account
+                    BankAccounts[transferFromWhichAccount].Amount -= amountMoney;
 
-            //int hej = 40448653;
+                    Console.WriteLine($"The amount: {amountMoney} was successfully moved to account: {transferToWhichAccount}");
+                }
+            }
+            //If the chosen amount to transfer exceeds the balance on chosen account
+            else
+            {
+                Console.WriteLine($"Det finns ej tillräckligt med pengar på ditt {BankAccounts[transferFromWhichAccount].AccountName}. Max antal du kan föra över är: {BankAccounts[transferFromWhichAccount].Amount}");
+            }
 
-            //foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
-            //{
-            //    Console.WriteLine($"{account.Value.AccountNumber} {account.Value.AccountName}: " +
-            //        $"{account.Value.Amount} {account.Value.Currency}");
-            //}
+        }
+
+        public bool TransferToOtherUser(int accountNum, decimal transferAmount)
+        {
+            // Check every user in database
+            foreach (User user in DataBase.UserDict.Values)
+            {
+                // Do not check for accounts if Admin
+                if (!user.IsAdmin)
+                {
+                    // Cast user to customer
+                    Customer temp = (Customer)user;
+
+                    // Check each account for match
+                    foreach (BankAccount acc in temp.BankAccounts.Values)
+                    {
+                        // If account is found, add transferAmount to the account and return true
+                        if (acc.AccountNumber == accountNum)
+                        {
+                            acc.Amount = acc.Amount + transferAmount;
+
+                            return true;
+                        }
+                    }
+                }
+            }
+            //If account is not found, returns false
+            return false;
         }
     }
 }

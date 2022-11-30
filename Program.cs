@@ -8,8 +8,6 @@ namespace KiwiBankomaten
     {
         static void Main(string[] args)
         {
-            Customer obj = (Customer)DataBase.UserDict[2];
-            obj.InternalMoneyTransfer();
             RunProgram();
         }
         public static void RunProgram()
