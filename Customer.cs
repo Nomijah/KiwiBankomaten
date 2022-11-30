@@ -187,7 +187,7 @@ namespace KiwiBankomaten
             int index = 1;
             foreach (var item in BankAccounts.Values)
             {
-                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {item.Amount} {item.Currency}");
+                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {Math.Round(item.Amount,2)} {item.Currency}");
                 index++;
             }
 
