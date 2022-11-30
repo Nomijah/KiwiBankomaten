@@ -12,12 +12,12 @@ namespace KiwiBankomaten
         private Dictionary<int, BankAccount> BankAccounts;
 
         // Used for creating test customers
-        public Customer(int id, string username, string password)
+        public Customer(int id, string username, string password, bool locked)
         {
             Id = id;
             UserName = username;
             Password = password;
-
+            Locked = locked;
             // Bankaccounts for testing, same for each user
             BankAccounts = new Dictionary<int, BankAccount>()
             {
@@ -43,6 +43,7 @@ namespace KiwiBankomaten
             UserName = username;
             Password = password;
             IsAdmin = false;
+            Locked = false;
 
             BankAccounts = new Dictionary<int, BankAccount>()
             {
@@ -238,20 +239,12 @@ namespace KiwiBankomaten
         public void AccountOverview()
         {
             // Shows the Customer their Accounts ranking from top to bottom
-            //foreach (var item in BankAccounts.Values) // Loops through all the Customers Accounts
-            //{
-            //    // Displays to the Customer their Account
-            //    Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {Math.Round(item.Amount, 2)} {item.Currency}");
-            //    index++;
-            //}
+            int index = 1;
+            foreach (var item in BankAccounts.Values) // Loops through all the Customers Accounts
             {
-                foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
-                {
-                    Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
-                        $"{account.Value.AccountName}: {Math.Round(account.Value.Amount,2)} " +
-                        $"{account.Value.Currency}");
-                }
-
+                // Displays to the Customer their Account
+                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {Math.Round(item.Amount, 2)} {item.Currency}");
+                index++;
             }
 
         }
@@ -428,17 +421,24 @@ namespace KiwiBankomaten
         public bool TransferToOtherUser(int accountNum, decimal transferAmount)
         {
             // Check every user in database
-            foreach (Customer customer in DataBase.CustomerDict.Values)
+            foreach (User user in DataBase.CustomerDict.Values)
             {
-                // Check each account for match
-                foreach (BankAccount acc in customer.BankAccounts.Values)
+                // Do not check for accounts if Admin
+                if (!user.IsAdmin)
                 {
-                    // If account is found, add transferAmount to the account and return true
-                    if (acc.AccountNumber == accountNum)
-                    {
-                        acc.Amount = acc.Amount + transferAmount;
+                    // Cast user to customer
+                    Customer temp = (Customer)user;
 
-                        return true;
+                    // Check each account for match
+                    foreach (BankAccount acc in temp.BankAccounts.Values)
+                    {
+                        // If account is found, add transferAmount to the account and return true
+                        if (acc.AccountNumber == accountNum)
+                        {
+                            acc.Amount = acc.Amount + transferAmount;
+
+                            return true;
+                        }
                     }
                 }
             }

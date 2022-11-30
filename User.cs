@@ -11,11 +11,12 @@ namespace KiwiBankomaten
         private string _password;
         private int _id;
         private bool _isAdmin;
+        private bool _locked;
 
         public string UserName
-        { 
-            get 
-            { 
+        {
+            get
+            {
                 return this._userName;
             }
             set
@@ -54,6 +55,17 @@ namespace KiwiBankomaten
             set
             {
                 _isAdmin = value;
+            }
+        }
+        public bool Locked
+        {
+            get
+            {
+                return this._locked;
+            }
+            set
+            {
+                _locked = value;
             }
         }
         public virtual void ViewAccounts()
