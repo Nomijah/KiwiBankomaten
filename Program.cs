@@ -112,7 +112,7 @@ namespace KiwiBankomaten
                         obj.TransferBetweenCustomerAccounts(); // Transfers a value between two accounts the user possesses
                         break;
                     case "3":
-
+                        obj.OpenAccount();
                         break;
                     case "4":
 
