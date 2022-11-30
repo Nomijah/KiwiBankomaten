@@ -68,7 +68,7 @@ namespace KiwiBankomaten
             // gets the highest key present and adds one to get new key
             int index = BankAccounts.Keys.Max() + 1;
             BankAccounts.Add(index, new BankAccount(accountName, currency, interest));
-            InsertMoneyIntoNewAccount(interest, accountName);
+            InsertMoneyIntoNewAccount(interest);
         }
         public void InsertMoneyIntoNewAccount(decimal interest)
         {
