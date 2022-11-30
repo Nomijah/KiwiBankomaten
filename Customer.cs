@@ -184,6 +184,7 @@ namespace KiwiBankomaten
 
         public void AccountOverview()
         {
+            // Shows the Customer their Accounts ranking from top to bottom
             int index = 1;
             foreach (var item in BankAccounts.Values) // Loops through all the Customers Accounts
             {              
@@ -192,6 +193,18 @@ namespace KiwiBankomaten
                 index++;
             }
 
+        }
+        public void AccountOverview(int fromWhichAccount, int toWhichAccount)
+        {
+            // Arguments :
+            // fromWhichAccount == Contains the key for the account which value was transfered from 
+            // toWhichAccount == Contains the key for the account which value was transfered to
+            
+            // Shows the Customer the Accounts that was involved in the transaction
+            Console.WriteLine("Money was sent from: ");
+            Console.WriteLine($"KontoNamn : {BankAccounts[fromWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[fromWhichAccount].Amount, 2)} {BankAccounts[fromWhichAccount].Currency}");
+            Console.WriteLine("Money was sent to: ");
+            Console.WriteLine($"KontoNamn : {BankAccounts[toWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[toWhichAccount].Amount, 2)} {BankAccounts[toWhichAccount].Currency}");
         }
         public void TransferBetweenCustomerAccounts()
         {
@@ -224,23 +237,35 @@ namespace KiwiBankomaten
             }
 
         }
-        private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney) // Checks if transferFromWhichAccount has enough funds to go through with the transfer and then transfers the money if it's possible
+        private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney) 
         {
-            // transferFromWhichAccount == Contains which Account to transfer from // transferToWhichAccount == Contains which Account to transfer to // amountMoney = Contains the quantity that is to be transfered
+            // Arguments :
+            // transferFromWhichAccount == Contains which Account to transfer from 
+            // transferToWhichAccount == Contains which Account to transfer to 
+            // amountMoney = Contains the quantity that is to be transfered
+            
+            // Checks if transferFromWhichAccount has enough funds to go through with the transfer and then transfers the money if it's possible
+            
             if (BankAccounts[transferFromWhichAccount].Amount >= amountMoney) // Checks if transferFromWhichAccount has enough funds for the transfer
             {
                 TransferFromAccToAcc(transferFromWhichAccount, transferToWhichAccount, amountMoney); // Goes through with the transfer
                 Console.WriteLine("The Transfer was a success");
-                AccountOverview(); // Shows the Customer their updated Accounts
+                AccountOverview(transferFromWhichAccount, transferToWhichAccount); // Shows the Customer their updated Accounts
             }
             else // If the customer doesn't have enough money
             {
                 Console.WriteLine("Not enough money in Account( {0} );\tMoney in Account( {0} ) - {1}", BankAccounts[transferFromWhichAccount].AccountName, BankAccounts[transferFromWhichAccount].Amount); //Tells the user they dont have enough funds in transferFromWhichAccount 
             }
         }
-        private void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney) // Transfers the funds between the Accounts
+        private void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney) 
         {
-            // transferFromWhichAccount == Contains which Account to transfer from // transferToWhichAccount == Contains which Account to transfer to // amountMoney = Contains the quantity that is to be transfered
+            // Arguments : 
+            // transferFromWhichAccount == Contains which Account to transfer from 
+            // transferToWhichAccount == Contains which Account to transfer to 
+            // amountMoney = Contains the quantity that is to be transfered
+            
+            // Transfers the funds between the Accounts
+            
             BankAccounts[transferFromWhichAccount].Amount -= amountMoney; // Removes the funds
             BankAccounts[transferToWhichAccount].Amount += amountMoney; // Adds the funds
 
