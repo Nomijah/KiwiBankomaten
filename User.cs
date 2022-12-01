@@ -68,9 +68,6 @@ namespace KiwiBankomaten
                 _locked = value;
             }
         }
-        public virtual void ViewAccounts()
-        {
 
-        }
     }
 }

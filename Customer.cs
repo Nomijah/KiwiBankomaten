@@ -51,14 +51,6 @@ namespace KiwiBankomaten
             };
         }
 
-        public override void ViewAccounts()
-        {
-            foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
-            {
-                Console.WriteLine($"{account.Value.AccountNumber} {account.Value.AccountName}: " +
-                    $"{account.Value.Amount} {account.Value.Currency}");
-            }
-        }
 
         public void OpenAccount()
         {
