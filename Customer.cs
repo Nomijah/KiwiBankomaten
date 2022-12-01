@@ -357,6 +357,8 @@ namespace KiwiBankomaten
             BankAccounts[fromAccountNum].Amount -= amountMoney;
             // Add converted value to target account
             BankAccounts[toAccountNum].Amount += (amountMoney / toRate) * fromRate;
+            Console.WriteLine("The Transfer was a success");
+            AccountOverview(fromAccountNum, toAccountNum); // Shows the Customer their updated Accounts
         }
         public void InternalMoneyTransfer()
         {
