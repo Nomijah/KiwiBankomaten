@@ -76,7 +76,7 @@ namespace KiwiBankomaten
                     loggedIn = false;//if name is not found, bool is false, and the WriteLine below is shown once after the try
                 }
             }
-            if (loggedIn == false)
+            if (loggedIn == false) // if user is not logged in, values is false and message is shown
             {
                 Console.WriteLine("Ingen användare med det namnet hittades.");
             }
@@ -111,14 +111,14 @@ namespace KiwiBankomaten
         }
         public static bool CheckPassWord(int userKey, int tries)
         {
-            if (tries == 3)
+            if (tries == 3) //Checks to see if user failed login trice
             {
-                DataBase.CustomerDict[userKey].Locked = true;
+                DataBase.CustomerDict[userKey].Locked = true;//locks user if 3 fails occur
             }
-            if (DataBase.CustomerDict[userKey].Locked == true)
+            if (DataBase.CustomerDict[userKey].Locked == true)//checks to see if the user is locked
             {
                 Console.WriteLine("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin ");
-                Thread.Sleep(3000);
+                Thread.Sleep(3000);//is shown message and returns to the menu.
                 RunProgram();
                 return false;
             }
@@ -131,13 +131,12 @@ namespace KiwiBankomaten
             }
             else
             {
-                Console.WriteLine("Wrong password");
+                Console.WriteLine("Wrong password"); //if wrong password is entered 
                 tries++;
-                CheckPassWord(userKey, tries);
+                CheckPassWord(userKey, tries);//"tries"adds with one, and user is returned CheckPassWord again
                 return false;
             }
         }
-
         public static bool AdminCheckPassWord(int adminKey)
         {
             Console.WriteLine("Enter your password");
