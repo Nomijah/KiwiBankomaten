@@ -37,7 +37,7 @@ namespace KiwiBankomaten
                         adminKey = AdminLogIn(out loggedIn);
                         if (loggedIn)
                         {
-                            Admin.AdminMenu(); 
+                            Admin.AdminMenu();
                         }
                         break;
                     default:
@@ -51,18 +51,18 @@ namespace KiwiBankomaten
         public static int LogIn(out bool loggedIn)
         {
             int userKey = 0;
+            int tries = 0;
             loggedIn = false;
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
             string userName = Console.ReadLine();
-
             foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
             {
                 if (userName == item.Value.UserName)
                 {
                     userKey = item.Key;
-
-                    loggedIn = CheckPassWord(userKey);
+                    loggedIn = true;
+                    loggedIn = CheckPassWord(userKey, tries);
 
                     if (loggedIn)
                     {
@@ -71,6 +71,14 @@ namespace KiwiBankomaten
                         return userKey; //Returns userKey so we know which user is logged in
                     }
                 }
+                else
+                {
+                    loggedIn = false;//if name is not found, bool is false, and the WriteLine below is shown once after the try
+                }
+            }
+            if (loggedIn == false)
+            {
+                Console.WriteLine("Ingen användare med det namnet hittades.");
             }
             return 0;
         }
@@ -101,11 +109,21 @@ namespace KiwiBankomaten
             }
             return 0;
         }
-        public static bool CheckPassWord(int userKey)
+        public static bool CheckPassWord(int userKey, int tries)
         {
+            if (tries == 3)
+            {
+                DataBase.CustomerDict[userKey].Locked = true;
+            }
+            if (DataBase.CustomerDict[userKey].Locked == true)
+            {
+                Console.WriteLine("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin ");
+                Thread.Sleep(3000);
+                RunProgram();
+                return false;
+            }
             Console.WriteLine("Enter your password");
             string userPassWord = (Console.ReadLine());
-
             if (userPassWord == DataBase.CustomerDict[userKey].Password)
             {
                 Console.WriteLine("Password is correct");
@@ -114,15 +132,17 @@ namespace KiwiBankomaten
             else
             {
                 Console.WriteLine("Wrong password");
+                tries++;
+                CheckPassWord(userKey, tries);
                 return false;
             }
         }
-        
+
         public static bool AdminCheckPassWord(int adminKey)
         {
             Console.WriteLine("Enter your password");
             string userPassWord = (Console.ReadLine());
-            
+
             if (userPassWord == DataBase.AdminList[adminKey].Password)
             {
                 Console.WriteLine("Password is correct");
@@ -178,15 +198,15 @@ namespace KiwiBankomaten
                 Console.Clear();// clearing console, 
             } while (true);
         }
-       
-        public static void IsValueNumberCheck(out decimal amountMoney, bool isValueNumberCheck) 
+
+        public static void IsValueNumberCheck(out decimal amountMoney, bool isValueNumberCheck)
         {
             // Arguments :
             // amountMoney == The money that is to be transfered and recieved 
             // isValueNumberCheck == If the user input is correct
-            
+
             // Checks whether or not "decimal amountMoney" is valid input
-            
+
             do
             {
                 if (decimal.TryParse(Console.ReadLine(), out amountMoney) && amountMoney > 0) // Gets user input => Checks if it's a decimal => Checks if it's larger than 0
@@ -206,7 +226,7 @@ namespace KiwiBankomaten
 
             } while (isValueNumberCheck);
         }
-        public static void IsValueNumberCheck(out int transferFromOrToWhichAccount, int minValue, int maxValue, bool isValueNumberCheck) 
+        public static void IsValueNumberCheck(out int transferFromOrToWhichAccount, int minValue, int maxValue, bool isValueNumberCheck)
         {
             // Arguments :
             // transferFromOrToWhichAccount == The account from which the money will be removed or added 
@@ -214,7 +234,7 @@ namespace KiwiBankomaten
             // maxValue == The key for the Account at the bottom of the dictionary // isValueNumberCheck == If the user input is correct
 
             // Checks whether or not "int transferFromOrToWhichAccount" is valid input
-            
+
             do
             {
                 if (int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount) && minValue <= transferFromOrToWhichAccount && maxValue >= transferFromOrToWhichAccount) // Gets user input => Checks if it's a decimal => Checks if it's in the set range
@@ -234,10 +254,10 @@ namespace KiwiBankomaten
 
             } while (isValueNumberCheck); // Loops if input is invalid
         }
-        public static void PressEnterToContinue() 
+        public static void PressEnterToContinue()
         {
             // Stops the program until the user presses "Enter"
-            
+
             Console.WriteLine("Klicka enter för att komma till huvudmenyn");
             ConsoleKey enterPressed = Console.ReadKey(true).Key; // Gets the input from the user
             while (!Console.KeyAvailable && enterPressed != ConsoleKey.Enter) // Loops if the user Presses any button other than "Enter"

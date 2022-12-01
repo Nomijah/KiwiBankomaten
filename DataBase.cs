@@ -7,15 +7,15 @@ namespace KiwiBankomaten
     class DataBase
     {
         // Dictionary for saving users. With 6 test users created
-        public static Dictionary<int, Customer> CustomerDict = 
+        public static Dictionary<int, Customer> CustomerDict =
             new Dictionary<int, Customer>()
         {
-                {1, new Customer(1, "Tobias", "NotionLover65") },
-                {2, new Customer(2, "Anas", "Core3.1") },
-                {3, new Customer(3, "Reidar", "Password123") },
-                {4, new Customer(4, "Michael", "abc") },
-                {5, new Customer(5, "Andre", "123") },
-                {6, new Customer(6, "Ludvig", "drowssaP") }
+                {1, new Customer(1, "Tobias", "NotionLover65",false) },
+                {2, new Customer(2, "Anas", "Core3.1",false) },
+                {3, new Customer(3, "Reidar", "Password123",false) },
+                {4, new Customer(4, "Michael", "abc",false) },
+                {5, new Customer(5, "Andre", "123",false) },
+                {6, new Customer(6, "Ludvig", "drowssaP",false) }
         };
 
         // List of Admins
@@ -52,7 +52,7 @@ namespace KiwiBankomaten
 
         // Dictionary with account types and interest
         public static List<Tuple<string, decimal>> BankAccountTypes =
-            new List<Tuple<string, decimal>> 
+            new List<Tuple<string, decimal>>
             {
                 Tuple.Create("Lönekonto", 0m),
                 Tuple.Create("Korttidssparkonto", 1.2m ),
@@ -65,7 +65,7 @@ namespace KiwiBankomaten
             for (int i = 1; i <= BankAccountTypes.Count; i++)
             {
                 Console.WriteLine($"{i}. {BankAccountTypes[i - 1].Item1}, " +
-                    $"ränta: {BankAccountTypes[i-1].Item2}");
+                    $"ränta: {BankAccountTypes[i - 1].Item2}");
             }
         }
     }
