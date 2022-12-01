@@ -236,17 +236,17 @@ namespace KiwiBankomaten
             return DataBase.BankAccountTypes[userChoice - 1].Item2;
         }
 
+        // Prints out users accounts
         public void AccountOverview()
         {
-            // Shows the Customer their Accounts ranking from top to bottom
-            int index = 1;
-            foreach (var item in BankAccounts.Values) // Loops through all the Customers Accounts
             {
-                // Displays to the Customer their Account
-                Console.WriteLine($"-{index}) -\tKontoNamn : {item.AccountName} - KontoSaldo : {Math.Round(item.Amount, 2)} {item.Currency}");
-                index++;
+                foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
+                {
+                    Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
+                        $"{account.Value.AccountName}: {Math.Round(account.Value.Amount,2)} " +
+                        $"{account.Value.Currency}");
+                }
             }
-
         }
         public void AccountOverview(int fromWhichAccount, int toWhichAccount)
         {
