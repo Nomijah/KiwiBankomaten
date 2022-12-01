@@ -240,6 +240,7 @@ namespace KiwiBankomaten
         public void AccountOverview()
         {
             {
+                // Print out each account with key, number, name, value and currency
                 foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
                 {
                     Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
@@ -421,24 +422,17 @@ namespace KiwiBankomaten
         public bool TransferToOtherUser(int accountNum, decimal transferAmount)
         {
             // Check every user in database
-            foreach (User user in DataBase.CustomerDict.Values)
+            foreach (Customer customer in DataBase.CustomerDict.Values)
             {
-                // Do not check for accounts if Admin
-                if (!user.IsAdmin)
+                // Check each account for match
+                foreach (BankAccount acc in customer.BankAccounts.Values)
                 {
-                    // Cast user to customer
-                    Customer temp = (Customer)user;
-
-                    // Check each account for match
-                    foreach (BankAccount acc in temp.BankAccounts.Values)
+                    // If account is found, add transferAmount to the account and return true
+                    if (acc.AccountNumber == accountNum)
                     {
-                        // If account is found, add transferAmount to the account and return true
-                        if (acc.AccountNumber == accountNum)
-                        {
-                            acc.Amount = acc.Amount + transferAmount;
+                        acc.Amount = acc.Amount + transferAmount;
 
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
