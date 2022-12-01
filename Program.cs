@@ -61,7 +61,6 @@ namespace KiwiBankomaten
                 if (userName == item.Value.UserName)
                 {
                     userKey = item.Key;
-                    loggedIn = true;
                     loggedIn = CheckPassWord(userKey, tries);
 
                     if (loggedIn)

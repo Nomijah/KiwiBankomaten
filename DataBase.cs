@@ -42,6 +42,8 @@ namespace KiwiBankomaten
                 {"AUD", 6.98m },
                 {"CNY", 1.45m }
             };
+
+        // Prints out currrency list with current exchange rates
         public static void PrintCurrencies()
         {
             foreach (string currency in DataBase.ExchangeRates.Keys)
@@ -60,6 +62,7 @@ namespace KiwiBankomaten
                 Tuple.Create("Barnsparkonto", 2.3m)
             };
 
+        // Prints out account types with interest values
         public static void PrintAccountTypes()
         {
             for (int i = 1; i <= BankAccountTypes.Count; i++)
