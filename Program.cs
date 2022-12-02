@@ -62,7 +62,7 @@ namespace KiwiBankomaten
                 {
                     userKey = item.Key;
                     loggedIn = CheckPassWord(userKey, tries);
-
+                    loggedIn = true; //defines bool since it will change otherwise, dont change!
                     if (loggedIn)
                     {
                         Console.WriteLine("Successfully logged in");
@@ -71,11 +71,11 @@ namespace KiwiBankomaten
                     }
                 }
                 else
-                {
-                    loggedIn = false;//if name is not found, bool is false, and the WriteLine below is shown once after the try
+                {//if name is not found, bool is false, and the WriteLine below is shown once after the try
+                    loggedIn = false;
                 }
             }
-            if (loggedIn == false) // if user is not logged in, values is false and message is shown
+            if (!loggedIn) // if user is not logged in, values is false and message is shown
             {
                 Console.WriteLine("Ingen användare med det namnet hittades.");
             }
