@@ -256,18 +256,13 @@ namespace KiwiBankomaten
                 }
             }
         }
-
-        // Prints out users accounts
+ 
+        // Shows the Customer the Accounts that was involved in the transaction
         public void AccountOverview(int fromWhichAccount, int toWhichAccount)
         {
-            // Arguments :
-            // fromWhichAccount == Contains the key for the account which value was transfered from 
-            // toWhichAccount == Contains the key for the account which value was transfered to
-
-            // Shows the Customer the Accounts that was involved in the transaction
-            Console.WriteLine("Money was sent from: ");
-            Console.WriteLine($"KontoNamn : {BankAccounts[fromWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[fromWhichAccount].Amount, 2)} {BankAccounts[fromWhichAccount].Currency}");
-            Console.WriteLine("Money was sent to: ");
+            Console.WriteLine("Money was sent from : ");
+            Console.WriteLine($"KontoNamn : {BankAccounts[fromWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[fromWhichAccount].Amount, 2)} {BankAccounts[fromWhichAccount].Currency}\n");
+            Console.WriteLine("Money was sent to : ");
             Console.WriteLine($"KontoNamn : {BankAccounts[toWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[toWhichAccount].Amount, 2)} {BankAccounts[toWhichAccount].Currency}");
         }
 
@@ -287,6 +282,7 @@ namespace KiwiBankomaten
 
             bool correctAmount = false;
             do
+
             {
                 Console.WriteLine("Hur mycket pengar vill du föra över?");
                 Program.IsValueNumberCheck(out amountMoney);
