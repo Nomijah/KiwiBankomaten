@@ -189,15 +189,15 @@ namespace KiwiBankomaten
             }
             return currency;
         }
-        
+
         // Method for adding money into newly created account.
-        public void InsertMoneyIntoNewAccount(decimal interest) 
+        public void InsertMoneyIntoNewAccount(decimal interest)
         {
             // Used to ensure money amount is valid, has to be a positive number.
             bool noError;
 
             // Amount of money to be inserted into new account.
-            decimal insertAmount; 
+            decimal insertAmount;
 
             Console.WriteLine($"Vill du sätta in {BankAccounts[BankAccounts.Keys.Max()].Currency} i ditt nya konto? J/N");
             string answer;
@@ -224,7 +224,7 @@ namespace KiwiBankomaten
                 noError = true;
                 Console.WriteLine("Skriv in mängden pengar du vill sätta in");
                 // Checks if amount to be inserted is a number and checks if it is a positive number.
-                if (decimal.TryParse(Console.ReadLine(), out insertAmount) && insertAmount >= 0) 
+                if (decimal.TryParse(Console.ReadLine(), out insertAmount) && insertAmount >= 0)
                 {
                     // Adds money into newly created account.
                     BankAccounts[BankAccounts.Keys.Max()].Amount += insertAmount;
@@ -239,19 +239,19 @@ namespace KiwiBankomaten
         }
         // Method for printing the amount of money the account's interest will earn them over different amounts of time
         // with the money they've just inserted.
-        public void ViewInterestSavingsOfNewAccount(decimal interest, decimal insertAmount) 
+        public void ViewInterestSavingsOfNewAccount(decimal interest, decimal insertAmount)
         {
             decimal interestAmount = insertAmount * interest / 100;
             Console.WriteLine("Såhär mycket ränta kommer du tjäna med den angivna summan: ");
             Console.WriteLine("1 år : " + Math.Round(interestAmount, 2));
             // Calculates amount of money account will earn in interest in 5 years.
-            for (int i = 0; i < 4; i++) 
+            for (int i = 0; i < 4; i++)
             {
                 interestAmount += (insertAmount + interestAmount) * interest / 100;
             }
             Console.WriteLine("5 år : " + Math.Round(interestAmount, 2));
             // Calculates amount of money account will earn in interest in 10 years.
-            for (int i = 0; i < 5; i++) 
+            for (int i = 0; i < 5; i++)
             {
                 interestAmount += (insertAmount + interestAmount) * interest / 100;
             }
@@ -261,18 +261,18 @@ namespace KiwiBankomaten
         // Prints out users accounts.
         public void AccountOverview()
         {
-        
+
             // Print out each account with key, number, name, value and currency
             foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
             {
-                    Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
-                        $"{account.Value.AccountName}: {AmountDecimal(account.Value.Amount)} " +
-                        $"{account.Value.Currency}");
-                }
+                Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
+                    $"{account.Value.AccountName}: {AmountDecimal(account.Value.Amount)} " +
+                    $"{account.Value.Currency}");
             }
-        
         }
- 
+
+
+
         // Shows the Customer the Accounts that was involved in the transaction
         public void AccountOverview(int fromWhichAccount, int toWhichAccount)
         {
@@ -291,7 +291,7 @@ namespace KiwiBankomaten
 
             Console.Clear();
             // Shows the Customer their Accounts and the balances in said Accounts
-            AccountOverview(); 
+            AccountOverview();
 
             Console.WriteLine("Från vilket konto vill du föra över pengarna?");
             Utility.IsValueNumberCheck(out transferFromWhichAccount, BankAccounts.Count);
@@ -314,33 +314,13 @@ namespace KiwiBankomaten
 
             Console.WriteLine("Vilket konto vill du föra över pengarna till?");
             // Gets User input and Checks if it's Valid
-            Utility.IsValueNumberCheck(out transferToWhichAccount, BankAccounts.Count); 
+            Utility.IsValueNumberCheck(out transferToWhichAccount, BankAccounts.Count);
 
             TransferMoney(BankAccounts[transferToWhichAccount].AccountNumber,
                     BankAccounts[transferFromWhichAccount].AccountNumber, amountMoney);
             AccountOverview(transferFromWhichAccount, transferToWhichAccount);
 
         }
-            
-        // Method to check if two internal accounts use the same currency.
-        private bool CurrencyCheck(int toAccountNum, int fromAccountNum)
-        {
-            string toCurrency = "";
-            string fromCurrency = "";
-            foreach (Customer c in DataBase.CustomerDict.Values)
-            {
-                foreach (BankAccount b in c.BankAccounts.Values)
-                {
-                    if (toAccountNum == b.AccountNumber)
-                    {
-                        toCurrency = b.Currency;
-                    }
-                    else if (fromAccountNum == b.AccountNumber)
-                    {
-                        fromCurrency = b.Currency;
-                    }
-                }
-            }
 
         //Method to separete commas in amount
         public string AmountDecimal(decimal valueDec)
@@ -401,10 +381,11 @@ namespace KiwiBankomaten
                         b.Amount -= amountMoney;
                     }
                 }
-            }   
+            }
             Console.WriteLine("Överföringen lyckades.");
             Utility.PressEnterToContinue();
         }
+
         public void InternalMoneyTransfer()
         {
             decimal amountMoney;
@@ -448,8 +429,8 @@ namespace KiwiBankomaten
                 }
             } while (!correctAccountNumber);
 
-                TransferMoney((int)transferToWhichAccount,
-                BankAccounts[transferFromWhichAccount].AccountNumber, amountMoney);
+            TransferMoney((int)transferToWhichAccount,
+            BankAccounts[transferFromWhichAccount].AccountNumber, amountMoney);
 
         }
 
