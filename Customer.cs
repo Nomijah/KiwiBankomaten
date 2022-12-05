@@ -191,7 +191,6 @@ namespace KiwiBankomaten
         {
             bool noError;
             decimal insertAmount;
-            Console.Clear();
             Console.WriteLine($"Vill du sätta in {BankAccounts[BankAccounts.Keys.Max()].Currency} i ditt nya konto? J/N");
             string answer;
             do
@@ -211,6 +210,7 @@ namespace KiwiBankomaten
             } while (answer != "J" && answer != "N");
             do
             {
+                Console.Clear();
                 noError = true;
                 Console.WriteLine("Skriv in mängden pengar du vill sätta in");
                 if (decimal.TryParse(Console.ReadLine(), out insertAmount) && insertAmount >= 0)
