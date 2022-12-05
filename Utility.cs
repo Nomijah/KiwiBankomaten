@@ -10,56 +10,24 @@ namespace KiwiBankomaten
         // Checks whether or not "decimal amountMoney" is valid input
         public static void IsValueNumberCheck(out decimal amountMoney)
         {
-
-            bool isValueNumberCheck = false;
-
-            do
+            // Gets user input => Checks if it's a decimal => Checks if it's larger than 0
+            while (!(decimal.TryParse(Console.ReadLine(), out amountMoney) && amountMoney > 0))
             {
-                // Gets user input => Checks if it's a decimal => Checks if it's larger than 0
-                if (decimal.TryParse(Console.ReadLine(), out amountMoney) && amountMoney > 0)
-                {
-                    isValueNumberCheck = false; // If amountMoney is a valid input
-                }
-                else if (amountMoney < 0) // Checks if amountMoney is larger than 0
-                {
-                    Console.WriteLine("Input has to be positive and cannot be 0. Please Try Again!");
-                    isValueNumberCheck = true; // If amountMoney is lower or equal to 0
-                }
-                else // If the answer is not a number or other invalid input
-                {
-                    Console.WriteLine("Please input a Number!");
-                    isValueNumberCheck = true; // If amountMoney is an invalid input
-                }
-
-            } while (isValueNumberCheck);
+                Console.WriteLine("Please input a positive number that is greater than 0.");
+            }
         }
 
         // Checks whether or not "int transferFromOrToWhichAccount" is valid input
         public static void IsValueNumberCheck(out int transferFromOrToWhichAccount, int maxValue)
         {
-            bool isValueNumberCheck = false;
             int minValue = 1;
-
-            do
+            // Gets user input => Checks if it's an integer => Checks if it's in the set range
+            while (!(int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount) && minValue <= transferFromOrToWhichAccount && maxValue >= transferFromOrToWhichAccount))
             {
-                // Gets user input => Checks if it's a decimal => Checks if it's in the set range
-                if (int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount) && minValue <= transferFromOrToWhichAccount && maxValue >= transferFromOrToWhichAccount)
-                {
-                    isValueNumberCheck = false; // If transferFromOrToWhichAccount is a valid input
-                }
-                else if (minValue > transferFromOrToWhichAccount || maxValue < transferFromOrToWhichAccount) // Checks if transferFromOrToWhichAccount is in the given range 
-                {
-                    Console.WriteLine("Please input a Number between {0} and {1}!", minValue, maxValue);
-                    isValueNumberCheck = true; // If transferFromOrToWhichAccount is an invalid input
-                }
-                else // If the answer is not a number or other invalid input
-                {
-                    Console.WriteLine("Please input a Number!");
-                    isValueNumberCheck = true; // If transferFromOrToWhichAccount is an invalid input
-                }
-
-            } while (isValueNumberCheck); // Loops if input is invalid
+                Console.WriteLine("Please input a Number that is within the specified range. \n[{0} - {1}]", minValue, maxValue);
+            }
         }
+
 
         public static bool CheckPassWord(int userKey, int tries)
         {
