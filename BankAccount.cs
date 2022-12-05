@@ -21,7 +21,7 @@ namespace KiwiBankomaten
         
         private static int AccountNumberCounter = 40448653;
         
-        // For testing, to give value to accounts
+        // For testing, to give value to accounts.
         public BankAccount(string _accountName, decimal _value, string _currency,
             decimal _interest)
         {
@@ -33,7 +33,7 @@ namespace KiwiBankomaten
             AccountNumberCounter++;
         }
 
-        // Use this constructor for users
+        // Use this constructor for users.
         public BankAccount(string _name, string _currency, decimal _interest)
         {
             this._accountName = _name;

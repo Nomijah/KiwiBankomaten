@@ -48,21 +48,28 @@ namespace KiwiBankomaten
                 Console.Clear();// clearing console, 
             } while (loggedIn != true);
         }
+        
+        //Checks if user exist, returns userKey
         public static int LogIn(out bool loggedIn)
         {
-            int userKey = 0;
+            int userKey = 0; 
             int tries = 0;
             loggedIn = false;
+
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
             string userName = Console.ReadLine();
+
+            // loop through customer dictionary to search for userName
             foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
             {
                 if (userName == item.Value.UserName)
                 {
-                    userKey = item.Key;
-                    loggedIn = CheckPassWord(userKey, tries);
+                    userKey = item.Key;// stores userKey
+                    loggedIn = Utility.CheckPassWord(userKey, tries); // calls CheckPassWord function to check password
                     loggedIn = true; //defines bool since it will change otherwise, dont change!
+
+                    // if login is successful
                     if (loggedIn)
                     {
                         Console.WriteLine("Successfully logged in");
@@ -96,7 +103,7 @@ namespace KiwiBankomaten
                 {
                     adminKey = DataBase.AdminList.FindIndex(item => userName == item.UserName);
 
-                    loggedIn = AdminCheckPassWord(adminKey);
+                    loggedIn = Utility.AdminCheckPassWord(adminKey);
 
                     if (loggedIn)
                     {
@@ -108,51 +115,6 @@ namespace KiwiBankomaten
             }
             return 0;
         }
-        public static bool CheckPassWord(int userKey, int tries)
-        {
-            if (tries == 3) //Checks to see if user failed login trice, before requesting Password again
-            {
-                DataBase.CustomerDict[userKey].Locked = true;//locks user if 3 fails occur
-            }
-            //if the user is locked, message is displayed and user is returned to mainmenu
-            if (DataBase.CustomerDict[userKey].Locked == true)
-            {
-                Console.WriteLine("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin ");
-                Thread.Sleep(3000);//is shown message and returns to the menu.
-                RunProgram();
-                return false;
-            }
-            Console.WriteLine("Enter your password");
-            string userPassWord = (Console.ReadLine());
-            if (userPassWord == DataBase.CustomerDict[userKey].Password)
-            {
-                Console.WriteLine("Password is correct");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Wrong password"); //if wrong password is entered 
-                tries++;  //"tries"adds with one, and user is returned CheckPassWord again
-                CheckPassWord(userKey, tries);
-                return false;
-            }
-        }
-        public static bool AdminCheckPassWord(int adminKey)
-        {
-            Console.WriteLine("Enter your password");
-            string userPassWord = (Console.ReadLine());
-
-            if (userPassWord == DataBase.AdminList[adminKey].Password)
-            {
-                Console.WriteLine("Password is correct");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Wrong password");
-                return false;
-            }
-        }
 
         public static void LogOut()
         {
@@ -163,6 +125,7 @@ namespace KiwiBankomaten
         {
             do   //looping menu  
             {
+                //Creates an instance of the loggedIn user in database
                 Customer obj = DataBase.CustomerDict[userKey];
 
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
@@ -179,13 +142,13 @@ namespace KiwiBankomaten
                         obj.TransferBetweenCustomerAccounts(); // Transfers a value between two accounts the user possesses
                         break;
                     case "3":
-                        obj.OpenAccount();
+                        obj.OpenAccount(); //Opens account for the specific user
                         break;
                     case "4":
-                        obj.InternalMoneyTransfer();
+                        obj.InternalMoneyTransfer(); //Transfer money to other user in bank
                         break;
                     case "5":
-                        LogOut();
+                        LogOut(); //Logout
 
                         break;
 
@@ -193,76 +156,11 @@ namespace KiwiBankomaten
                         Console.WriteLine("Wrong input, enter available choice only!");
                         break;
                 }
-                PressEnterToContinue();
+                Utility.PressEnterToContinue();
                 Console.Clear();// clearing console, 
             } while (true);
         }
+            
 
-        public static void IsValueNumberCheck(out decimal amountMoney, bool isValueNumberCheck)
-        {
-            // Arguments :
-            // amountMoney == The money that is to be transfered and recieved 
-            // isValueNumberCheck == If the user input is correct
-
-            // Checks whether or not "decimal amountMoney" is valid input
-
-            do
-            {
-                if (decimal.TryParse(Console.ReadLine(), out amountMoney) && amountMoney > 0) // Gets user input => Checks if it's a decimal => Checks if it's larger than 0
-                {
-                    isValueNumberCheck = false; // If amountMoney is a valid input
-                }
-                else if (amountMoney < 0) // Checks if amountMoney is larger than 0
-                {
-                    Console.WriteLine("Input has to be positive and cannot be 0. Please Try Again!");
-                    isValueNumberCheck = true; // If amountMoney is lower or equal to 0
-                }
-                else // If the answer is not a number or other invalid input
-                {
-                    Console.WriteLine("Please input a Number!");
-                    isValueNumberCheck = true; // If amountMoney is an invalid input
-                }
-
-            } while (isValueNumberCheck);
-        }
-        public static void IsValueNumberCheck(out int transferFromOrToWhichAccount, int minValue, int maxValue, bool isValueNumberCheck)
-        {
-            // Arguments :
-            // transferFromOrToWhichAccount == The account from which the money will be removed or added 
-            // minValue == The key for the Account at the top of the dictionary 
-            // maxValue == The key for the Account at the bottom of the dictionary // isValueNumberCheck == If the user input is correct
-
-            // Checks whether or not "int transferFromOrToWhichAccount" is valid input
-
-            do
-            {
-                if (int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount) && minValue <= transferFromOrToWhichAccount && maxValue >= transferFromOrToWhichAccount) // Gets user input => Checks if it's a decimal => Checks if it's in the set range
-                {
-                    isValueNumberCheck = false; // If transferFromOrToWhichAccount is a valid input
-                }
-                else if (minValue > transferFromOrToWhichAccount || maxValue < transferFromOrToWhichAccount) // Checks if transferFromOrToWhichAccount is in the given range 
-                {
-                    Console.WriteLine("Please input a Number between {0} and {1}!", minValue, maxValue);
-                    isValueNumberCheck = true; // If transferFromOrToWhichAccount is an invalid input
-                }
-                else // If the answer is not a number or other invalid input
-                {
-                    Console.WriteLine("Please input a Number!");
-                    isValueNumberCheck = true; // If transferFromOrToWhichAccount is an invalid input
-                }
-
-            } while (isValueNumberCheck); // Loops if input is invalid
-        }
-        public static void PressEnterToContinue()
-        {
-            // Stops the program until the user presses "Enter"
-
-            Console.WriteLine("Klicka enter för att komma till huvudmenyn");
-            ConsoleKey enterPressed = Console.ReadKey(true).Key; // Gets the input from the user
-            while (!Console.KeyAvailable && enterPressed != ConsoleKey.Enter) // Loops if the user Presses any button other than "Enter"
-            {
-                enterPressed = Console.ReadKey(true).Key;
-            }
-        }
     }
 }
