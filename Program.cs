@@ -20,6 +20,7 @@ namespace KiwiBankomaten
             do 
             {
                 loggedIn = false;
+                Console.WriteLine("---------------------------------------------------");
                 Console.WriteLine("Välj ett av alternativen nedan:");
                 Console.WriteLine("-1) Logga in\n-2) Stäng av");
                 string choice = Console.ReadLine();
@@ -61,6 +62,7 @@ namespace KiwiBankomaten
             int tries = 0;
             loggedIn = false;
 
+            Console.WriteLine("---------------------------------------------------");
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
             string userName = Console.ReadLine();
@@ -79,8 +81,8 @@ namespace KiwiBankomaten
                     {
                         // clearing console, 
                         Console.Clear();
-                        Console.WriteLine($"Welcome {userName}");
-                        return; //Returns userKey so we know which user is logged in
+                        
+                        return;
                     }
                 }
                 else
@@ -96,6 +98,7 @@ namespace KiwiBankomaten
         {
             int adminKey = 0;
             loggedIn = false;
+            Console.WriteLine("---------------------------------------------------");
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
             string userName = Console.ReadLine();
@@ -130,23 +133,28 @@ namespace KiwiBankomaten
             // Looping menu  
             do 
             {
-                
-                
                 // Creates an instance of the loggedIn user in database
                 Customer obj = DataBase.CustomerDict[userKey];
+
+                Console.WriteLine("---------------------------------------------------");
+                Console.WriteLine($"Welcome {obj.UserName}");
+                Console.WriteLine("---------------------------------------------------");
 
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
                 Console.WriteLine("-1) Overview accounts and balances\n-2) Transfer money personal accounts" +
                     "\n-3) Create new account \n-4) Kiwibank internal Transfer money \n-5) Logout");
+                
                 string choice = Console.ReadLine();
 
                 switch (choice)
                 {
                     case "1":
+                        Console.WriteLine("---------------------------------------------------");
                         // Overviews the Accounts and their respective balances
-                        obj.AccountOverview(); 
+                        obj.AccountOverview();
                         break;
                     case "2":
+                        Console.WriteLine("---------------------------------------------------");
                         // Transfers a value between two accounts the user possesses
                         obj.TransferBetweenCustomerAccounts(); 
                         break;
@@ -155,6 +163,7 @@ namespace KiwiBankomaten
                         obj.OpenAccount(); 
                         break;
                     case "4":
+                        Console.WriteLine("---------------------------------------------------");
                         // Transfer money to other user in bank
                         obj.InternalMoneyTransfer(); 
                         break;
@@ -168,6 +177,7 @@ namespace KiwiBankomaten
                         Console.WriteLine("Wrong input, enter available choice only!");
                         break;
                 }
+                Console.WriteLine("---------------------------------------------------");
                 Utility.PressEnterToContinue();
 
                 // clearing console, 

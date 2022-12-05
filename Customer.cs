@@ -72,25 +72,31 @@ namespace KiwiBankomaten
         // Lets the customer choose what type of account to open.
         public decimal ChooseAccountType()
         {
-            Console.Clear();
             int userChoice = 0;
             // Loop until user has entered a valid choice
             while (userChoice == 0)
             {
+                Console.Clear();
+                Console.WriteLine("---------------------------------------------------");
                 Console.WriteLine("Vilken typ av konto vill du öppna?");
+                Console.WriteLine("---------------------------------------------------");
                 DataBase.PrintAccountTypes();
-                Console.Write($"Välj [1 - {DataBase.BankAccountTypes.Count}]:");
+                Console.WriteLine("---------------------------------------------------");
+                Console.Write($"Välj [1 - {DataBase.BankAccountTypes.Count}]: ");
                 string userInput = Console.ReadLine();
+                
+
                 try
                 {
                     userChoice = Convert.ToInt32(userInput);
                     if (userChoice < 1 ||
                         userChoice > DataBase.BankAccountTypes.Count)
                     {
+                        Console.WriteLine("---------------------------------------------------");
                         Console.WriteLine("Felaktigt val, numret du angett " +
                             "finns inte i listan.");
                         userChoice = 0;
-                        Thread.Sleep(2000);
+                        Utility.PressEnterToContinue();
                     }
                     else
                     {
@@ -98,6 +104,7 @@ namespace KiwiBankomaten
                         // Check if user is happy with the choice
                         do
                         {
+                            Console.WriteLine("---------------------------------------------------");
                             Console.WriteLine($"Du har valt " +
                                 $"{DataBase.BankAccountTypes[userChoice - 1].Item1}. " +
                                 $"med ränta " +
@@ -122,12 +129,12 @@ namespace KiwiBankomaten
                 }
                 catch
                 {
+                    Console.WriteLine("---------------------------------------------------");
                     Console.WriteLine("Felaktig inmatning, använd endast" +
                         " siffror.");
-                    Thread.Sleep(2000);
+                    Utility.PressEnterToContinue();
                 }
                 Console.Clear();
-                Console.WriteLine("----------------------------------------------------------------------------");
             }
             // returns the interest rate of chosen account type
             return DataBase.BankAccountTypes[userChoice - 1].Item2;
@@ -140,11 +147,15 @@ namespace KiwiBankomaten
             string accountName;
             do
             {
+                Console.WriteLine("---------------------------------------------------");
                 Console.WriteLine("Vilket namn vill du ge ditt konto?");
+                Console.WriteLine("---------------------------------------------------");
+                Console.Write("KontoNamn: ");
                 accountName = Console.ReadLine();
                 string answer;
                 do
                 {
+                    Console.WriteLine("---------------------------------------------------");
                     Console.WriteLine($"Ditt konto får namnet {accountName}. " +
                         $"Vill du godkänna detta? [J/N]");
                     answer = Console.ReadLine().ToUpper();
@@ -156,8 +167,10 @@ namespace KiwiBankomaten
                         case "N":
                             break;
                         default:
+                            Console.WriteLine("---------------------------------------------------");
                             Console.WriteLine("Felaktig inmatning, välj [J] " +
                                 "för ja eller N för nej.");
+                            Utility.PressEnterToContinue();
                             break;
                     }
                     // Loop until valid choice is given
@@ -166,29 +179,29 @@ namespace KiwiBankomaten
             } while (notReady);
                 
             Console.Clear();
-            Console.WriteLine("----------------------------------------------------------------------------");
-
             return accountName;
         }
 
         // Lets the customer choose which currency the account shall be in.
         private string ChooseCurrency()
         {
-            Console.Clear();
-            Console.WriteLine("Vilken valuta vill du använda till ditt konto?" +
-                "\nTillgängliga valutor:");
-
+            Console.WriteLine("---------------------------------------------------");
+            Console.WriteLine("Vilken valuta vill du använda till ditt konto?");
+            Console.WriteLine("---------------------------------------------------");
+            Console.WriteLine("Tillgängliga valutor");
             DataBase.PrintCurrencies();
 
+            Console.WriteLine("---------------------------------------------------");
             Console.Write("Ange valuta: ");
             string currency = Console.ReadLine().ToUpper();
             // Check if user input is correct, if not ask again
             while (!DataBase.ExchangeRates.ContainsKey(currency))
             {
-                Console.Clear();
+                
                 Console.WriteLine("Valutan du angett finns inte i systemet," +
                     "vänligen välj en valuta från listan.");
                 DataBase.PrintCurrencies();
+                Console.WriteLine("---------------------------------------------------");
                 Console.Write("Ange valuta: ");
                 currency = Console.ReadLine().ToUpper();
             }
@@ -271,7 +284,7 @@ namespace KiwiBankomaten
             // Print out each account with key, number, name, value and currency
             foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
             {
-                Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
+                Console.WriteLine($"-{account.Key}). {account.Value.AccountNumber} " +
                     $"{account.Value.AccountName}: {Utility.AmountDecimal(account.Value.Amount)} " +
                     $"{account.Value.Currency}");
             }
