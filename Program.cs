@@ -15,7 +15,9 @@ namespace KiwiBankomaten
             bool loggedIn;
             int userKey = 0;
             int adminKey = -1;
-            do   //looping menu, which will run when the program is started 
+                
+            //looping menu, which will run when the program is started 
+            do 
             {
                 loggedIn = false;
                 Console.WriteLine("Välj ett av alternativen nedan:");
@@ -24,7 +26,7 @@ namespace KiwiBankomaten
                 switch (choice)
                 {
                     case "1":
-                        userKey = LogIn(out loggedIn); //pressing 1 leads to using Login()
+                        LogIn(out loggedIn, out userKey); //pressing 1 leads to using Login()
                         if (loggedIn)
                         {
                             CustomerMenu(userKey);//if login is successful, leads to CustomerMenu() 
@@ -42,6 +44,9 @@ namespace KiwiBankomaten
                         break;
                     default://If neither of these options are used the defaultmsg is displayed
                         Console.WriteLine("Felaktigt val, försök igen.");
+                        Utility.PressEnterToContinue();
+                        Console.Clear();
+                        RunProgram();
                         break;
                 }
                 Thread.Sleep(2000);//leaves eventual message readable for 2 sec
@@ -50,9 +55,9 @@ namespace KiwiBankomaten
         }
         
         //Checks if user exist, returns userKey
-        public static int LogIn(out bool loggedIn)
+        public static void LogIn(out bool loggedIn, out int userKey)
         {
-            int userKey = 0; 
+            userKey = 0; 
             int tries = 0;
             loggedIn = false;
 
@@ -72,9 +77,10 @@ namespace KiwiBankomaten
                     // if login is successful
                     if (loggedIn)
                     {
-                        Console.WriteLine("Successfully logged in");
+                        // clearing console, 
+                        Console.Clear();
                         Console.WriteLine($"Welcome {userName}");
-                        return userKey; //Returns userKey so we know which user is logged in
+                        return; //Returns userKey so we know which user is logged in
                     }
                 }
                 else
@@ -82,11 +88,8 @@ namespace KiwiBankomaten
                     loggedIn = false;
                 }
             }
-            if (!loggedIn) // if user is not logged in, values is false and message is shown
-            {
-                Console.WriteLine("Ingen användare med det namnet hittades.");
-            }
-            return 0;
+            Console.WriteLine("Ingen användare med det namnet hittades.");
+            return;
         }
 
         public static int AdminLogIn(out bool loggedIn)
@@ -118,14 +121,18 @@ namespace KiwiBankomaten
 
         public static void LogOut()
         {
-            RunProgram(); // Makes the program go back to the log in menu
+            // Makes the program go back to the log in menu
+            RunProgram(); 
         }
 
         public static void CustomerMenu(int userKey)
         {
-            do   //looping menu  
+            // Looping menu  
+            do 
             {
-                //Creates an instance of the loggedIn user in database
+                
+                
+                // Creates an instance of the loggedIn user in database
                 Customer obj = DataBase.CustomerDict[userKey];
 
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
@@ -136,19 +143,24 @@ namespace KiwiBankomaten
                 switch (choice)
                 {
                     case "1":
-                        obj.AccountOverview(); // Overviews the Accounts and their respective balances
+                        // Overviews the Accounts and their respective balances
+                        obj.AccountOverview(); 
                         break;
                     case "2":
-                        obj.TransferBetweenCustomerAccounts(); // Transfers a value between two accounts the user possesses
+                        // Transfers a value between two accounts the user possesses
+                        obj.TransferBetweenCustomerAccounts(); 
                         break;
                     case "3":
-                        obj.OpenAccount(); //Opens account for the specific user
+                        // Opens account for the specific user
+                        obj.OpenAccount(); 
                         break;
                     case "4":
-                        obj.InternalMoneyTransfer(); //Transfer money to other user in bank
+                        // Transfer money to other user in bank
+                        obj.InternalMoneyTransfer(); 
                         break;
                     case "5":
-                        LogOut(); //Logout
+                        // Logout
+                        LogOut(); 
 
                         break;
 
@@ -157,7 +169,10 @@ namespace KiwiBankomaten
                         break;
                 }
                 Utility.PressEnterToContinue();
-                Console.Clear();// clearing console, 
+
+                // clearing console, 
+                Console.Clear();
+
             } while (true);
         }
     }

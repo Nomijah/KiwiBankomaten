@@ -70,7 +70,7 @@ namespace KiwiBankomaten
             if (DataBase.CustomerDict[userKey].Locked == true)
             {
                 Console.WriteLine("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin ");
-                Thread.Sleep(3000);//is shown message and returns to the menu.
+                Utility.PressEnterToContinue();
                 Program.RunProgram();
                 return false; //Returns to Login
             }

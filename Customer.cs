@@ -125,6 +125,7 @@ namespace KiwiBankomaten
                     Thread.Sleep(2000);
                 }
                 Console.Clear();
+                Console.WriteLine("----------------------------------------------------------------------------");
             }
             // returns the interest rate of chosen account type
             return DataBase.BankAccountTypes[userChoice - 1].Item2;
@@ -161,13 +162,16 @@ namespace KiwiBankomaten
                 } while (answer != "J" && answer != "N");
                 // Loop until user is happy with the choice
             } while (notReady);
+                
+            Console.Clear();
+            Console.WriteLine("----------------------------------------------------------------------------");
+
             return accountName;
         }
 
         // Lets the customer choose which currency the account shall be in.
         private string ChooseCurrency()
         {
-            Console.Clear();
             Console.WriteLine("Vilken valuta vill du använda till ditt konto?" +
                 "\nTillgängliga valutor:");
 
@@ -259,10 +263,10 @@ namespace KiwiBankomaten
         // Shows the Customer the Accounts that was involved in the transaction
         public void AccountOverview(int fromWhichAccount, int toWhichAccount)
         {
-            Console.WriteLine("Money was sent from : ");
+            Console.WriteLine("\nMoney was sent from : ");
             Console.WriteLine($"KontoNamn : {BankAccounts[fromWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[fromWhichAccount].Amount, 2)} {BankAccounts[fromWhichAccount].Currency}\n");
             Console.WriteLine("Money was sent to : ");
-            Console.WriteLine($"KontoNamn : {BankAccounts[toWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[toWhichAccount].Amount, 2)} {BankAccounts[toWhichAccount].Currency}");
+            Console.WriteLine($"KontoNamn : {BankAccounts[toWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[toWhichAccount].Amount, 2)} {BankAccounts[toWhichAccount].Currency}\n");
         }
 
         //Initalizes the transfer between accounts
@@ -273,17 +277,21 @@ namespace KiwiBankomaten
             int transferToWhichAccount;
 
             Console.Clear();
+            Console.WriteLine("---------------------------------------------------");
             Console.WriteLine("Enter a number as input to navigate in the menu:");
             AccountOverview(); // Shows the Customer their Accounts and the balances in said Accounts
+            Console.WriteLine("---------------------------------------------------");
 
-            Console.WriteLine("From which account do you want to transfer money from?: ");
+            Console.WriteLine("Which account do you want to transfer money from?: ");
             Utility.IsValueNumberCheck(out transferFromWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
 
             Console.WriteLine("How much money do you want to transfer?: ");
             Utility.IsValueNumberCheck(out amountMoney); // Gets User input and Checks if it's Valid
 
-            Console.WriteLine("From which account do you want to transfer money to?: ");
+            Console.WriteLine("Which account do you want to transfer money to?: ");
             Utility.IsValueNumberCheck(out transferToWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
+
+            Console.WriteLine("---------------------------------------------------");
 
             if (CurrencyCheck(transferToWhichAccount, transferFromWhichAccount))
             {
