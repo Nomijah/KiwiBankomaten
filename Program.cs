@@ -211,8 +211,7 @@ namespace KiwiBankomaten
         
         // Checks whether or not "decimal amountMoney" is valid input
         public static void IsValueNumberCheck(out decimal amountMoney)
-        {
-
+        { 
             bool isValueNumberCheck = false;
 
             do
@@ -265,7 +264,6 @@ namespace KiwiBankomaten
         // Stops the program until the user presses "Enter"
         public static void PressEnterToContinue()
         {
-
             Console.WriteLine("Klicka enter för att komma till huvudmenyn");
             ConsoleKey enterPressed = Console.ReadKey(true).Key; // Gets the input from the user
             while (!Console.KeyAvailable && enterPressed != ConsoleKey.Enter) // Loops if the user Presses any button other than "Enter"
