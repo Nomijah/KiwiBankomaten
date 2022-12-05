@@ -245,15 +245,15 @@ namespace KiwiBankomaten
         // Prints out users accounts.
         public void AccountOverview()
         {
+        
+            // Print out each account with key, number, name, value and currency
+            foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
             {
-                // Print out each account with key, number, name, value and currency
-                foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
-                {
-                    Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
-                        $"{account.Value.AccountName}: {Math.Round(account.Value.Amount,2)} " +
-                        $"{account.Value.Currency}");
-                }
+               Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
+                   $"{account.Value.AccountName}: {Math.Round(account.Value.Amount,2)} " +
+                   $"{account.Value.Currency}");
             }
+        
         }
  
         // Shows the Customer the Accounts that was involved in the transaction
