@@ -66,7 +66,7 @@ namespace KiwiBankomaten
                 if (userName == item.Value.UserName)
                 {
                     userKey = item.Key;// stores userKey
-                    loggedIn = CheckPassWord(userKey, tries); // calls CheckPassWord function to check password
+                    loggedIn = Utility.CheckPassWord(userKey, tries); // calls CheckPassWord function to check password
                     loggedIn = true; //defines bool since it will change otherwise, dont change!
 
                     // if login is successful
@@ -103,7 +103,7 @@ namespace KiwiBankomaten
                 {
                     adminKey = DataBase.AdminList.FindIndex(item => userName == item.UserName);
 
-                    loggedIn = AdminCheckPassWord(adminKey);
+                    loggedIn = Utility.AdminCheckPassWord(adminKey);
 
                     if (loggedIn)
                     {
@@ -114,53 +114,6 @@ namespace KiwiBankomaten
                 }
             }
             return 0;
-        }
-        public static bool CheckPassWord(int userKey, int tries)
-        {
-            if (tries == 3) //Checks to see if user failed login trice, before requesting Password again
-            {
-                DataBase.CustomerDict[userKey].Locked = true;//locks user if 3 fails occur
-            }
-            //if the user is locked, message is displayed and user is returned to mainmenu
-            if (DataBase.CustomerDict[userKey].Locked == true)
-            {
-                Console.WriteLine("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin ");
-                Thread.Sleep(3000);//is shown message and returns to the menu.
-                RunProgram();
-                return false; //Returns to Login
-            }
-            Console.WriteLine("Enter your password");
-            string userPassWord = (Console.ReadLine()); // lets user enter password
-
-            //if the user is locked, message is displayed and user is returned to mainmenu
-            if (userPassWord == DataBase.CustomerDict[userKey].Password)
-            {
-                Console.WriteLine("Password is correct");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Wrong password"); //if wrong password is entered 
-                tries++;  //"tries"adds with one, and user is returned CheckPassWord again
-                CheckPassWord(userKey, tries);
-                return false;
-            }
-        }
-        public static bool AdminCheckPassWord(int adminKey)
-        {
-            Console.WriteLine("Enter your password");
-            string userPassWord = (Console.ReadLine());
-
-            if (userPassWord == DataBase.AdminList[adminKey].Password)
-            {
-                Console.WriteLine("Password is correct");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Wrong password");
-                return false;
-            }
         }
 
         public static void LogOut()
@@ -203,11 +156,10 @@ namespace KiwiBankomaten
                         Console.WriteLine("Wrong input, enter available choice only!");
                         break;
                 }
-                PressEnterToContinue();
+                Utility.PressEnterToContinue();
                 Console.Clear();// clearing console, 
             } while (true);
         }
-
         
         // Checks whether or not "decimal amountMoney" is valid input
         public static void IsValueNumberCheck(out decimal amountMoney)
