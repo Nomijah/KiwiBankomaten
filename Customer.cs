@@ -379,6 +379,12 @@ namespace KiwiBankomaten
             Console.Clear();
             AccountOverview();
 
+            Console.WriteLine("Vilket konto vill du föra över pengar ifrån?");
+            while (!int.TryParse(Console.ReadLine(), out transferFromWhichAccount)) //How much money is being transferred
+            {
+                Console.WriteLine("Skriv endast siffror");
+            }
+
             Console.WriteLine("Hur mycket pengar vill du föra över?");
             while (!decimal.TryParse(Console.ReadLine(), out amountMoney)) //How much money is being transferred
             {
@@ -391,13 +397,7 @@ namespace KiwiBankomaten
                 return;
             }
 
-            Console.WriteLine("Från vilket konto vill du föra ifrån?");
-            while (!int.TryParse(Console.ReadLine(), out transferFromWhichAccount)) //How much money is being transferred
-            {
-                Console.WriteLine("Skriv endast siffror");
-            }
-
-            Console.WriteLine("Skriv det 8-siffriga kontonummer du vill föra över pengar till:");
+            Console.WriteLine("Skriv det 8-siffriga kontonummer du vill föra över pengarna till:");
             while (!int.TryParse(Console.ReadLine(), out transferToWhichAccount)) //How much money is being transferred
             {
                 Console.WriteLine("Skriv endast siffror");
@@ -423,24 +423,22 @@ namespace KiwiBankomaten
 
         }
 
-        public bool TransferToOtherUser(int accountNum, decimal transferAmount)
+        public bool CheckIfAccountExists(int accountNum)
         {
-            // Check every user in database
+            // Check every user in database.
             foreach (Customer customer in DataBase.CustomerDict.Values)
             {
-                // Check each account for match
+                // Check users each account for match.
                 foreach (BankAccount acc in customer.BankAccounts.Values)
                 {
-                    // If account is found, add transferAmount to the account and return true
+                    // If account is found, return true.
                     if (acc.AccountNumber == accountNum)
                     {
-                        acc.Amount = acc.Amount + transferAmount;
-
                         return true;
                     }
                 }
             }
-            //If account is not found, returns false
+            //If account is not found, return false.
             return false;
         }
     }
