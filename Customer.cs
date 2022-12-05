@@ -51,7 +51,7 @@ namespace KiwiBankomaten
             };
         }
 
-        // Method for customers to open account
+        // Method for customers to open account.
         public void OpenAccount()
         {
             // Gets the interest rate of chosen account
@@ -67,7 +67,7 @@ namespace KiwiBankomaten
             InsertMoneyIntoNewAccount(interest);
         }
 
-        // Lets the customer choose what type of account to open
+        // Lets the customer choose what type of account to open.
         public decimal ChooseAccountType()
         {
             Console.Clear();
@@ -130,7 +130,7 @@ namespace KiwiBankomaten
             return DataBase.BankAccountTypes[userChoice - 1].Item2;
         }
 
-        // Lets the customer choose a name for the account
+        // Lets the customer choose a name for the account.
         private string ChooseAccountName()
         {
             bool notReady = true;
@@ -164,7 +164,7 @@ namespace KiwiBankomaten
             return accountName;
         }
 
-        // Lets the customer choose which currency the account shall be in
+        // Lets the customer choose which currency the account shall be in.
         private string ChooseCurrency()
         {
             Console.Clear();
@@ -335,7 +335,7 @@ namespace KiwiBankomaten
 
         }
 
-        // Method to check if two internal accounts use the same currency
+        // Method to check if two internal accounts use the same currency.
         private bool CurrencyCheck(int toAccountNum, int fromAccountNum)
         {
             if (BankAccounts[toAccountNum].Currency ==
