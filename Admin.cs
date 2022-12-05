@@ -37,17 +37,22 @@ namespace KiwiBankomaten
             bool error; 
             do
             {
+                string userName = "";
+                string passWord = "";
                 error = false;
                 Console.Clear();
                 Console.WriteLine("Vilken sorts användare vill du skapa?\n-1 Customer\n-2 Admin");
                 string userType = Console.ReadLine();
-                Console.Clear();
-                Console.WriteLine("Vilket användarnamn ska den nya användaren ha?");
-                string userName = Console.ReadLine();
-                Console.Clear();
-                Console.WriteLine("Vilket lösenord ska den nya användaren ha?");
-                string passWord = Console.ReadLine();
-                Console.Clear();
+                if (userType == "1" || userType == "2")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Vilket användarnamn ska den nya användaren ha?");
+                    userName = Console.ReadLine();
+                    Console.Clear();
+                    Console.WriteLine("Vilket lösenord ska den nya användaren ha?");
+                    passWord = Console.ReadLine();
+                    Console.Clear();
+                }
 
                 switch (userType)
                 {
@@ -77,6 +82,7 @@ namespace KiwiBankomaten
             // Loop that runs so long as the admin has not chosen to log out.
             while (loggedIn == true) 
             {
+                Console.Clear();
                 Console.WriteLine("Funktioner för admins:\n-1 Skapa ny användare\n-2 Uppdatera växlingskurs\n-3 Logga ut");
                 switch (Console.ReadLine())
                 {

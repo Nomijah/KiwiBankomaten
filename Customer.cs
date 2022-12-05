@@ -65,6 +65,7 @@ namespace KiwiBankomaten
             int index = BankAccounts.Keys.Max() + 1;
             // Adds the new account to customers account dictionary
             BankAccounts.Add(index, new BankAccount(accountName, currency, interest));
+            // Asks user if they want to put money into new account, if yes money is created in account.
             InsertMoneyIntoNewAccount(interest);
         }
 
@@ -194,9 +195,10 @@ namespace KiwiBankomaten
         {
             // Used to ensure money amount is valid, has to be a positive number.
             bool noError;
+
             // Amount of money to be inserted into new account.
             decimal insertAmount; 
-            Console.Clear();
+
             Console.WriteLine($"Vill du sätta in {BankAccounts[BankAccounts.Keys.Max()].Currency} i ditt nya konto? J/N");
             string answer;
             // Will only proceed if user selects J or N.
@@ -218,6 +220,7 @@ namespace KiwiBankomaten
             // Loop runs until user has chosen a valid amount of money to put into account.
             do
             {
+                Console.Clear();
                 noError = true;
                 Console.WriteLine("Skriv in mängden pengar du vill sätta in");
                 // Checks if amount to be inserted is a number and checks if it is a positive number.
