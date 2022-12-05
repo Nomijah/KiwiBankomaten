@@ -30,9 +30,11 @@ namespace KiwiBankomaten
             Password = password;
             IsAdmin = true;
         }
-        public static void CreateNewUser()
+        // Admin method for creating new users.
+        public static void CreateNewUser() 
         {
-            bool error;
+            // Used in the do-while loop to repeat if any input errors are detected.
+            bool error; 
             do
             {
                 error = false;
@@ -49,14 +51,17 @@ namespace KiwiBankomaten
 
                 switch (userType)
                 {
-                    case "1":
+                    // Adds customer account to CustomerDict with name and password set from user input.
+                    case "1": 
                         DataBase.CustomerDict.Add(DataBase.CustomerDict.Last().Key + 1, new Customer(userName, passWord));
                         Console.WriteLine($"Customer {userName} har skapats med nyckeln {DataBase.CustomerDict.Last().Key}");
                         break;
-                    case "2":
+                    // Adds admin account to AdminList with name and password set from user input.
+                    case "2": 
                         DataBase.AdminList.Add(new Admin(userName, passWord));
                         Console.WriteLine($"Admin {userName} har skapats.");
                         break;
+                    // Loop repeats and switch is run again if none of the correct values are chosen.
                     default:
                         Console.WriteLine("Fel input, skriv in ett korrekt värde");
                         error = true;
@@ -64,10 +69,13 @@ namespace KiwiBankomaten
                 }
             } while (error == true);
         }
-        public static void AdminMenu()
+        // Menu where admin can select different functions.
+        public static void AdminMenu() 
         {
+            // Used to log admin out if set to false.
             bool loggedIn = true;
-            while (loggedIn == true)
+            // Loop that runs so long as the admin has not chosen to log out.
+            while (loggedIn == true) 
             {
                 Console.WriteLine("Funktioner för admins:\n-1 Skapa ny användare\n-2 Uppdatera växlingskurs\n-3 Logga ut");
                 switch (Console.ReadLine())
@@ -77,15 +85,18 @@ namespace KiwiBankomaten
                         break;
                     case "2": //UpdateExchangeRate();
                         break;
+                    // User will be broken out of loop and then logged out if 3 is chosen.
                     case "3": loggedIn = false;
                         Console.Clear();
                         break;
+                    // Loop repeats and switch is run again if none of the correct values are chosen.
                     default:
                         Console.WriteLine("Fel input, skriv in ett korrekt värde");
                         break;
                 }
             }
-            Program.LogOut();
+            // Program.LogOut is called outside the loop and switch because of possible bugs if it were to be called inside it.
+            Program.LogOut(); 
         }
     }
 }

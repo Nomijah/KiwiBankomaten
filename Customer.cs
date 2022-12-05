@@ -172,14 +172,17 @@ namespace KiwiBankomaten
             return currency;
         }
 
-
-        public void InsertMoneyIntoNewAccount(decimal interest)
+        // Method for adding money into newly created account.
+        public void InsertMoneyIntoNewAccount(decimal interest) 
         {
+            // Used to ensure money amount is valid, has to be a positive number.
             bool noError;
-            decimal insertAmount;
+            // Amount of money to be inserted into new account.
+            decimal insertAmount; 
             Console.Clear();
             Console.WriteLine($"Vill du sätta in {BankAccounts[BankAccounts.Keys.Max()].Currency} i ditt nya konto? J/N");
             string answer;
+            // Will only proceed if user selects J or N.
             do
             {
                 answer = Console.ReadLine().ToUpper();
@@ -195,12 +198,15 @@ namespace KiwiBankomaten
                         break;
                 }
             } while (answer != "J" && answer != "N");
+            // Loop runs until user has chosen a valid amount of money to put into account.
             do
             {
                 noError = true;
                 Console.WriteLine("Skriv in mängden pengar du vill sätta in");
-                if (decimal.TryParse(Console.ReadLine(), out insertAmount) && insertAmount >= 0)
+                // Checks if amount to be inserted is a number and checks if it is a positive number.
+                if (decimal.TryParse(Console.ReadLine(), out insertAmount) && insertAmount >= 0) 
                 {
+                    // Adds money into newly created account.
                     BankAccounts[BankAccounts.Keys.Max()].Amount += insertAmount;
                 }
                 else
@@ -211,17 +217,21 @@ namespace KiwiBankomaten
             } while (noError == false);
             ViewInterestSavingsOfNewAccount(interest, insertAmount);
         }
-        public void ViewInterestSavingsOfNewAccount(decimal interest, decimal insertAmount)
+        // Method for printing the amount of money the account's interest will earn them over different amounts of time
+        // with the money they've just inserted.
+        public void ViewInterestSavingsOfNewAccount(decimal interest, decimal insertAmount) 
         {
             decimal interestAmount = insertAmount * interest / 100;
             Console.WriteLine("Såhär mycket ränta kommer du tjäna med den angivna summan: ");
             Console.WriteLine("1 år : " + Math.Round(interestAmount, 2));
-            for (int i = 0; i < 4; i++)
+            // Calculates amount of money account will earn in interest in 5 years.
+            for (int i = 0; i < 4; i++) 
             {
                 interestAmount += (insertAmount + interestAmount) * interest / 100;
             }
             Console.WriteLine("5 år : " + Math.Round(interestAmount, 2));
-            for (int i = 0; i < 5; i++)
+            // Calculates amount of money account will earn in interest in 10 years.
+            for (int i = 0; i < 5; i++) 
             {
                 interestAmount += (insertAmount + interestAmount) * interest / 100;
             }
