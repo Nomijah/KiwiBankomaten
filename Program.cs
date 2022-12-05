@@ -15,7 +15,7 @@ namespace KiwiBankomaten
             bool loggedIn;
             int userKey = 0;
             int adminKey = -1;
-            do   //looping menu  
+            do   //looping menu, which will run when the program is started 
             {
                 loggedIn = false;
                 Console.WriteLine("Välj ett av alternativen nedan:");
@@ -24,23 +24,23 @@ namespace KiwiBankomaten
                 switch (choice)
                 {
                     case "1":
-                        userKey = LogIn(out loggedIn);
+                        userKey = LogIn(out loggedIn); //pressing 1 leads to using Login()
                         if (loggedIn)
                         {
-                            CustomerMenu(userKey);
+                            CustomerMenu(userKey);//if login is successful, leads to CustomerMenu() 
                         }
                         break;
                     case "2"://Exit program
-                        Environment.Exit(0);
+                        Environment.Exit(0);//closes the program 
                         break;
-                    case "admin": // Hidden admin login
+                    case "admin": // Hidden admin login, which leads to AdminLogIn() and AdminMenu()
                         adminKey = AdminLogIn(out loggedIn);
                         if (loggedIn)
                         {
                             Admin.AdminMenu();
                         }
                         break;
-                    default:
+                    default://If neither of these options are used the defaultmsg is displayed
                         Console.WriteLine("Felaktigt val, försök igen.");
                         break;
                 }
@@ -62,7 +62,7 @@ namespace KiwiBankomaten
                 {
                     userKey = item.Key;
                     loggedIn = CheckPassWord(userKey, tries);
-
+                    loggedIn = true; //defines bool since it will change otherwise, dont change!
                     if (loggedIn)
                     {
                         Console.WriteLine("Successfully logged in");
@@ -71,11 +71,11 @@ namespace KiwiBankomaten
                     }
                 }
                 else
-                {
-                    loggedIn = false;//if name is not found, bool is false, and the WriteLine below is shown once after the try
+                {//if name is not found, bool is false, and the WriteLine below is shown once after the try
+                    loggedIn = false;
                 }
             }
-            if (loggedIn == false) // if user is not logged in, values is false and message is shown
+            if (!loggedIn) // if user is not logged in, values is false and message is shown
             {
                 Console.WriteLine("Ingen användare med det namnet hittades.");
             }
@@ -110,11 +110,12 @@ namespace KiwiBankomaten
         }
         public static bool CheckPassWord(int userKey, int tries)
         {
-            if (tries == 3) //Checks to see if user failed login trice
+            if (tries == 3) //Checks to see if user failed login trice, before requesting Password again
             {
                 DataBase.CustomerDict[userKey].Locked = true;//locks user if 3 fails occur
             }
-            if (DataBase.CustomerDict[userKey].Locked == true)//checks to see if the user is locked
+            //if the user is locked, message is displayed and user is returned to mainmenu
+            if (DataBase.CustomerDict[userKey].Locked == true)
             {
                 Console.WriteLine("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin ");
                 Thread.Sleep(3000);//is shown message and returns to the menu.
@@ -131,8 +132,8 @@ namespace KiwiBankomaten
             else
             {
                 Console.WriteLine("Wrong password"); //if wrong password is entered 
-                tries++;
-                CheckPassWord(userKey, tries);//"tries"adds with one, and user is returned CheckPassWord again
+                tries++;  //"tries"adds with one, and user is returned CheckPassWord again
+                CheckPassWord(userKey, tries);
                 return false;
             }
         }

@@ -51,21 +51,28 @@ namespace KiwiBankomaten
             };
         }
 
-        
+        // Method for customers to open account
         public void OpenAccount()
         {
+            // Gets the interest rate of chosen account
             decimal interest = ChooseAccountType();
+            // Gets the chosen name of account
             string accountName = ChooseAccountName();
+            // Gets currency choice from Customer
             string currency = ChooseCurrency();
-            // gets the highest key present and adds one to get new key
+            // Gets the highest key present and adds one to get new key
             int index = BankAccounts.Keys.Max() + 1;
+            // Adds the new account to customers account dictionary
             BankAccounts.Add(index, new BankAccount(accountName, currency, interest));
             InsertMoneyIntoNewAccount(interest);
         }
+
+        // Lets the customer choose what type of account to open
         public decimal ChooseAccountType()
         {
             Console.Clear();
             int userChoice = 0;
+            // Loop until user has entered a valid choice
             while (userChoice == 0)
             {
                 Console.WriteLine("Vilken typ av konto vill du öppna?");
@@ -86,6 +93,7 @@ namespace KiwiBankomaten
                     else
                     {
                         string answer;
+                        // Check if user is happy with the choice
                         do
                         {
                             Console.WriteLine($"Du har valt " +
@@ -106,6 +114,7 @@ namespace KiwiBankomaten
                                         "välj [J] för ja eller [N] för nej.");
                                     break;
                             }
+                            // Repeat loop until valid choice is given
                         } while (answer != "J" && answer != "N");
                     }
                 }
@@ -117,8 +126,11 @@ namespace KiwiBankomaten
                 }
                 Console.Clear();
             }
+            // returns the interest rate of chosen account type
             return DataBase.BankAccountTypes[userChoice - 1].Item2;
         }
+
+        // Lets the customer choose a name for the account
         private string ChooseAccountName()
         {
             bool notReady = true;
@@ -145,10 +157,14 @@ namespace KiwiBankomaten
                                 "för ja eller N för nej.");
                             break;
                     }
+                    // Loop until valid choice is given
                 } while (answer != "J" && answer != "N");
+                // Loop until user is happy with the choice
             } while (notReady);
             return accountName;
         }
+
+        // Lets the customer choose which currency the account shall be in
         private string ChooseCurrency()
         {
             Console.Clear();
@@ -159,7 +175,7 @@ namespace KiwiBankomaten
 
             Console.Write("Ange valuta: ");
             string currency = Console.ReadLine().ToUpper();
-            // Check if user input is correct
+            // Check if user input is correct, if not ask again
             while (!DataBase.ExchangeRates.ContainsKey(currency))
             {
                 Console.Clear();
@@ -273,7 +289,7 @@ namespace KiwiBankomaten
             Console.WriteLine("From which account do you want to transfer money to?: ");
             Program.IsValueNumberCheck(out transferToWhichAccount, 1, BankAccounts.Count, isNumber); // Gets User input and Checks if it's Valid
 
-            if (InternalCurrencyCheck(transferToWhichAccount, transferFromWhichAccount))
+            if (CurrencyCheck(transferToWhichAccount, transferFromWhichAccount))
             {
                 // Checks if the giving account has enough funds to go through with the transfer and transfers the money if it's possible 
                 TransferFromCheck(transferFromWhichAccount, transferToWhichAccount, amountMoney);
@@ -319,8 +335,8 @@ namespace KiwiBankomaten
 
         }
 
-        // Method to check if two internal accounts use the same currency.
-        private bool InternalCurrencyCheck(int toAccountNum, int fromAccountNum)
+        // Method to check if two internal accounts use the same currency
+        private bool CurrencyCheck(int toAccountNum, int fromAccountNum)
         {
             if (BankAccounts[toAccountNum].Currency ==
                 BankAccounts[fromAccountNum].Currency)
