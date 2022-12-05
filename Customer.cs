@@ -51,7 +51,7 @@ namespace KiwiBankomaten
             };
         }
 
-        // Method for customers to open account
+        // Method for customers to open account.
         public void OpenAccount()
         {
             // Gets the interest rate of chosen account
@@ -67,7 +67,7 @@ namespace KiwiBankomaten
             InsertMoneyIntoNewAccount(interest);
         }
 
-        // Lets the customer choose what type of account to open
+        // Lets the customer choose what type of account to open.
         public decimal ChooseAccountType()
         {
             Console.Clear();
@@ -130,7 +130,7 @@ namespace KiwiBankomaten
             return DataBase.BankAccountTypes[userChoice - 1].Item2;
         }
 
-        // Lets the customer choose a name for the account
+        // Lets the customer choose a name for the account.
         private string ChooseAccountName()
         {
             bool notReady = true;
@@ -164,7 +164,7 @@ namespace KiwiBankomaten
             return accountName;
         }
 
-        // Lets the customer choose which currency the account shall be in
+        // Lets the customer choose which currency the account shall be in.
         private string ChooseCurrency()
         {
             Console.Clear();
@@ -255,6 +255,8 @@ namespace KiwiBankomaten
                 }
             }
         }
+
+        // Prints out users accounts
         public void AccountOverview(int fromWhichAccount, int toWhichAccount)
         {
             // Arguments :
@@ -267,6 +269,8 @@ namespace KiwiBankomaten
             Console.WriteLine("Money was sent to: ");
             Console.WriteLine($"KontoNamn : {BankAccounts[toWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[toWhichAccount].Amount, 2)} {BankAccounts[toWhichAccount].Currency}");
         }
+
+        //Initalizes the transfer between accounts
         public void TransferBetweenCustomerAccounts()
         {
             decimal amountMoney;
@@ -297,7 +301,7 @@ namespace KiwiBankomaten
             }
 
         }
-           
+
         // Checks if transferFromWhichAccount has enough funds to go through with the transfer and then transfers the money if it's possible
         private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
         {
@@ -310,25 +314,22 @@ namespace KiwiBankomaten
             }
             else // If the customer doesn't have enough money
             {
-                Console.WriteLine("Not enough money in Account( {0} );\tMoney in Account( {0} ) - {1}", BankAccounts[transferFromWhichAccount].AccountName, BankAccounts[transferFromWhichAccount].Amount); //Tells the user they dont have enough funds in transferFromWhichAccount 
+                //Tells the user they dont have enough funds in transferFromWhichAccount 
+                Console.WriteLine("Not enough money in Account( {0} );\tMoney in Account( {0} ) - {1}", BankAccounts[transferFromWhichAccount].AccountName, BankAccounts[transferFromWhichAccount].Amount); 
             }
+
         }
+            
+        // Transfers the funds between the Accounts
         private void TransferFromAccToAcc(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
         {
-            // Arguments : 
-            // transferFromWhichAccount == Contains which Account to transfer from 
-            // transferToWhichAccount == Contains which Account to transfer to 
-            // amountMoney = Contains the quantity that is to be transfered
-
-            // Transfers the funds between the Accounts
 
             BankAccounts[transferFromWhichAccount].Amount -= amountMoney; // Removes the funds
             BankAccounts[transferToWhichAccount].Amount += amountMoney; // Adds the funds
 
-
         }
 
-        // Method to check if two internal accounts use the same currency
+        // Method to check if two internal accounts use the same currency.
         private bool CurrencyCheck(int toAccountNum, int fromAccountNum)
         {
             if (BankAccounts[toAccountNum].Currency ==
