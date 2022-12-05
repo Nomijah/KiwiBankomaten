@@ -64,6 +64,7 @@ namespace KiwiBankomaten
             int index = BankAccounts.Keys.Max() + 1;
             // Adds the new account to customers account dictionary
             BankAccounts.Add(index, new BankAccount(accountName, currency, interest));
+            // Asks user if they want to put money into new account, if yes money is created in account
             InsertMoneyIntoNewAccount(interest);
         }
 
