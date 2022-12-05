@@ -11,14 +11,14 @@ namespace KiwiBankomaten
     {
         private Dictionary<int, BankAccount> BankAccounts;
 
-        // Used for creating test customers
+        // Used for creating test customers.
         public Customer(int id, string username, string password, bool locked)
         {
             Id = id;
             UserName = username;
             Password = password;
             Locked = locked;
-            // Bankaccounts for testing, same for each user
+            // Bankaccounts for testing, same for each user.
             BankAccounts = new Dictionary<int, BankAccount>()
             {
                 { 1, new BankAccount("Lönekonto", 25347.34m, "SEK", 0m) },
@@ -28,7 +28,7 @@ namespace KiwiBankomaten
             };
         }
 
-        // Use this when creating customers in program
+        // Use this when creating customers in program.
         public Customer(string username, string password)
         {
             if (DataBase.CustomerDict == null)
@@ -228,7 +228,7 @@ namespace KiwiBankomaten
             Console.WriteLine("10 år : " + Math.Round(interestAmount, 2));
         }
 
-        // Prints out users accounts
+        // Prints out users accounts.
         public void AccountOverview()
         {
             {
@@ -319,7 +319,7 @@ namespace KiwiBankomaten
 
         }
 
-        // Method to check if two internal accounts use the same currency
+        // Method to check if two internal accounts use the same currency.
         private bool InternalCurrencyCheck(int toAccountNum, int fromAccountNum)
         {
             if (BankAccounts[toAccountNum].Currency ==
@@ -333,7 +333,7 @@ namespace KiwiBankomaten
             }
         }
 
-        // Method for transferring money with currency exchange
+        // Method for transferring money with currency exchange.
         public void TransferConvertedCurrency(int toAccountNum,
             int fromAccountNum, decimal amountMoney)
         {
