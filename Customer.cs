@@ -330,8 +330,6 @@ namespace KiwiBankomaten
 
         }
 
-        
-
         // Method for transferring money with currency exchange.
         public void TransferMoney(int toAccountNum,
             int fromAccountNum, decimal amountMoney)
