@@ -255,18 +255,13 @@ namespace KiwiBankomaten
                 }
             }
         }
-
-        // Prints out users accounts
+ 
+        // Shows the Customer the Accounts that was involved in the transaction
         public void AccountOverview(int fromWhichAccount, int toWhichAccount)
         {
-            // Arguments :
-            // fromWhichAccount == Contains the key for the account which value was transfered from 
-            // toWhichAccount == Contains the key for the account which value was transfered to
-
-            // Shows the Customer the Accounts that was involved in the transaction
-            Console.WriteLine("Money was sent from: ");
-            Console.WriteLine($"KontoNamn : {BankAccounts[fromWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[fromWhichAccount].Amount, 2)} {BankAccounts[fromWhichAccount].Currency}");
-            Console.WriteLine("Money was sent to: ");
+            Console.WriteLine("Money was sent from : ");
+            Console.WriteLine($"KontoNamn : {BankAccounts[fromWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[fromWhichAccount].Amount, 2)} {BankAccounts[fromWhichAccount].Currency}\n");
+            Console.WriteLine("Money was sent to : ");
             Console.WriteLine($"KontoNamn : {BankAccounts[toWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[toWhichAccount].Amount, 2)} {BankAccounts[toWhichAccount].Currency}");
         }
 
@@ -281,11 +276,14 @@ namespace KiwiBankomaten
             Console.WriteLine("Enter a number as input to navigate in the menu:");
             AccountOverview(); // Shows the Customer their Accounts and the balances in said Accounts
 
+            Console.WriteLine("From which account do you want to transfer money from?: ");
+            Program.IsValueNumberCheck(out transferFromWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
+
             Console.WriteLine("How much money do you want to transfer?: ");
             Utility.IsValueNumberCheck(out amountMoney); // Gets User input and Checks if it's Valid
 
             Console.WriteLine("From which account do you want to transfer money from?: ");
-            Utility.IsValueNumberCheck(out transferFromWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
+            Program.IsValueNumberCheck(out transferFromWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
 
             Console.WriteLine("From which account do you want to transfer money to?: ");
             Utility.IsValueNumberCheck(out transferToWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
