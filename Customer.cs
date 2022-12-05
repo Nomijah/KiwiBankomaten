@@ -236,7 +236,7 @@ namespace KiwiBankomaten
                 foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
                 {
                     Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
-                        $"{account.Value.AccountName}: {Math.Round(account.Value.Amount,2)} " +
+                        $"{account.Value.AccountName}: {AmountDecimal(account.Value.Amount)} " +
                         $"{account.Value.Currency}");
                 }
             }
@@ -317,6 +317,12 @@ namespace KiwiBankomaten
             BankAccounts[transferToWhichAccount].Amount += amountMoney; // Adds the funds
 
 
+        }
+        //Method to separete commas in amount
+        public string AmountDecimal(decimal valueDec)
+        {//the 0 is a placeholder, which shows even if the value is 0 
+            string stringDec = valueDec.ToString("#,##0.00");
+            return stringDec;
         }
 
         // Method to check if two internal accounts use the same currency
