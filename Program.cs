@@ -264,11 +264,38 @@ namespace KiwiBankomaten
         // Stops the program until the user presses "Enter"
         public static void PressEnterToContinue()
         {
-            Console.WriteLine("Klicka enter för att komma till huvudmenyn");
-            ConsoleKey enterPressed = Console.ReadKey(true).Key; // Gets the input from the user
-            while (!Console.KeyAvailable && enterPressed != ConsoleKey.Enter) // Loops if the user Presses any button other than "Enter"
+            Console.WriteLine("Klicka Enter för att fortsätta.");
+            // Gets the input from the user
+            ConsoleKey enterPressed = Console.ReadKey(true).Key; 
+            // Loops if the user Presses any button other than "Enter"
+            while (!Console.KeyAvailable && enterPressed != ConsoleKey.Enter) 
             {
                 enterPressed = Console.ReadKey(true).Key;
+            }
+        }
+
+        // Choose to continue or go back to main menu.
+        public static bool ContinueOrAbort()
+        {
+
+            Console.WriteLine("Klicka Enter för att försöka igen eller Esc för" +
+                " att återgå till huvudmenyn.");
+            // Gets the input from the user
+            ConsoleKey userInput = Console.ReadKey(true).Key;
+            // Loops if the user Presses any button other than "Enter"
+            while (userInput != ConsoleKey.Enter && userInput != ConsoleKey.Escape) 
+            {
+                Console.WriteLine("Felaktig inmatning, välj Enter för att försöka " +
+                    "igen eller Esc för att återgå till huvudmenyn.");
+                userInput = Console.ReadKey(true).Key;
+            }
+            if (userInput == ConsoleKey.Escape)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }
