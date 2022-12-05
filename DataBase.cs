@@ -6,7 +6,7 @@ namespace KiwiBankomaten
 {
     class DataBase
     {
-        // Dictionary for saving users. With 6 test users created
+        // Dictionary for saving users, with 6 test users created.
         public static Dictionary<int, Customer> CustomerDict =
             new Dictionary<int, Customer>()
         {
@@ -18,7 +18,7 @@ namespace KiwiBankomaten
                 {6, new Customer(6, "Ludvig", "drowssaP",false) }
         };
 
-        // List of Admins
+        // List of Admins.
         public static List<Admin> AdminList = new List<Admin>()
         {
             {new Admin("Petter", "Rettep") },
@@ -28,7 +28,7 @@ namespace KiwiBankomaten
             {new Admin("Charlie", "Eilrahc") }
         };
 
-        // Dictionary with currencies and exchange rates
+        // Dictionary with currencies and exchange rates.
         public static Dictionary<string, decimal> ExchangeRates =
             new Dictionary<string, decimal>()
         {
@@ -43,7 +43,7 @@ namespace KiwiBankomaten
                 {"CNY", 1.45m }
             };
 
-        // Prints out currrency list with current exchange rates
+        // Prints out currrency list with current exchange rates.
         public static void PrintCurrencies()
         {
             foreach (string currency in DataBase.ExchangeRates.Keys)
@@ -52,7 +52,7 @@ namespace KiwiBankomaten
             }
         }
 
-        // Dictionary with account types and interest
+        // Dictionary with account types and interest.
         public static List<Tuple<string, decimal>> BankAccountTypes =
             new List<Tuple<string, decimal>>
             {
@@ -62,7 +62,7 @@ namespace KiwiBankomaten
                 Tuple.Create("Barnsparkonto", 2.3m)
             };
 
-        // Prints out account types with interest values
+        // Prints out account types with interest values.
         public static void PrintAccountTypes()
         {
             for (int i = 1; i <= BankAccountTypes.Count; i++)
