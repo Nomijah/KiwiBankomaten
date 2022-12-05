@@ -71,7 +71,7 @@ namespace KiwiBankomaten
             {
                 Console.Clear();
                 Console.WriteLine("Funktioner för admins:\n-1 Skapa ny användare\n-2 Uppdatera växlingskurs" +
-                    "\n-3 Visa alla användare\n-4 Redigera användarkonto\n-5 Logga ut");
+                    "\n-3 Välj en specifik användare\n-4 Redigera ett användarkonto\n-5 Logga ut");
                 switch (Console.ReadLine())
                 {
                     case "1":
@@ -96,6 +96,7 @@ namespace KiwiBankomaten
             }
             Program.LogOut();
         }
+        // Method for printing out all customer accounts with their ID, Username, Password and IsLocked status.
         public static void ViewAllUsers()
         {
             Console.WriteLine("---Alla användarkonton i Kiwibank---");
@@ -105,18 +106,23 @@ namespace KiwiBankomaten
                     $"Lösenord:{customer.Value.Password} - Spärrat:{customer.Value.Locked}");
             }
         }
+        // Method for selecting one specific user account and then giving the admin a choice of what to do
+        // with the account.
         public static void EditUserAccount()
         {
             bool noError;
             do
             {
                 Console.Clear();
+                // Prints all user accounts so admin can see which accounts they can select.
                 ViewAllUsers();
-                Console.WriteLine("Vilken användare vill du redigera? Välj genom att skriva in ID");
+                Console.WriteLine("Vilken användare vill du välja? Välj genom att skriva in ID");
+                // Admin inputs user ID here to select which account they want to edit.
                 noError = Int32.TryParse(Console.ReadLine(), out int userID);
+                // Checks if admin input is a number and if that number exists as a key in the customer dictionary.
                 if (noError && DataBase.CustomerDict.ContainsKey(userID))
                 {
-                    noError = false;
+                    // Chosen customer account is saved for access to non-static methods and easier property access.
                     Customer selectedUser = DataBase.CustomerDict[userID];
                     do
                     {
@@ -128,20 +134,23 @@ namespace KiwiBankomaten
                         string userChoice = Console.ReadLine();
                         switch (userChoice)
                         {
+                            // Prints all user's bank accounts.
                             case "1":
                                 selectedUser.AccountOverview();
                                 Console.ReadKey();
                                 break;
+                            // Lets admin lock or unlock user's account.
                             case "2":
                                 LockOrUnlockAccount(selectedUser);
                                 Console.ReadKey();
                                 break;
+                            // Lets admin change password of user's account.
                             case "3":
                                 ChangeUserPassword(selectedUser);
                                 break;
+                            // Returns admin to the main admin menu.
                             case "4":
-                                noError = true;
-                                break;
+                                return;
                             default: 
                                 Console.WriteLine("Fel input, skriv in ett korrekt värde");
                                 break;
@@ -155,9 +164,11 @@ namespace KiwiBankomaten
                 }
             } while (noError == false);
         }
+        // Method for locking user account if it is not locked, or unlocking user account if it is locked.
         public static void LockOrUnlockAccount(Customer selectedUser)
         {
             string answer;
+            // Checks if user account is locked or not, asks different question depending on status.
             if (selectedUser.Locked)
             {
                 Console.WriteLine("Kontot är spärrat");
@@ -171,6 +182,7 @@ namespace KiwiBankomaten
             do
             {
                 answer = Console.ReadLine().ToUpper();
+                // If admin confirms that they want to lock/unlock user then we do so.
                 switch (answer)
                 {
                     case "J":
@@ -192,10 +204,12 @@ namespace KiwiBankomaten
             } while (answer != "J" && answer != "N");
 
         }
+        // Method for changing user account's password.
         public static void ChangeUserPassword(Customer selectedUser)
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine($"Vill du ändra lösenordet till användaren {selectedUser.Id} - {selectedUser.UserName}? J/N");
                 if (Console.ReadLine().ToUpper() == "J")
                 {
@@ -203,6 +217,7 @@ namespace KiwiBankomaten
                     Console.WriteLine($"Skriv in det nya lösenordet till användaren {selectedUser.UserName}");
                     string newPassWord = Console.ReadLine();
                     Console.WriteLine("Konfirmera användarens lösenord genom att skriva in det igen");
+                    // Makes user input the password again to confirm that it is what they want.
                     if (Console.ReadLine() == newPassWord)
                     {
                         selectedUser.Password = newPassWord;
@@ -210,7 +225,7 @@ namespace KiwiBankomaten
                     }
                     else
                     {
-                        Console.WriteLine("Du skrev inte in rätt lösenord för att konfirmera");
+                        Console.WriteLine("Du konfirmerade inte lösenordet");
                         Console.ReadKey();
                     }
                 }
