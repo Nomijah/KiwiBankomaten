@@ -251,9 +251,10 @@ namespace KiwiBankomaten
 
             } while (isValueNumberCheck); // Loops if input is invalid
         }
+            
+        // Stops the program until the user presses "Enter"
         public static void PressEnterToContinue()
         {
-            // Stops the program until the user presses "Enter"
 
             Console.WriteLine("Klicka enter för att komma till huvudmenyn");
             ConsoleKey enterPressed = Console.ReadKey(true).Key; // Gets the input from the user
