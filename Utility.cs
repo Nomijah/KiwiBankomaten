@@ -77,6 +77,14 @@ namespace KiwiBankomaten
             }
         }
 
+        //Method to separete commas in amount
+        public static string AmountDecimal(decimal valueDec)
+        {
+            //the 0 is a placeholder, which shows even if the value is 0 
+            string stringDec = valueDec.ToString("#,##0.00");
+            return stringDec;
+        }
+
         // Stops the program until the user presses "Enter"
         public static void PressEnterToContinue()
         {

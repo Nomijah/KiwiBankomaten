@@ -242,6 +242,7 @@ namespace KiwiBankomaten
             } while (noError == false);
             ViewInterestSavingsOfNewAccount(interest, insertAmount);
         }
+        
         // Method for printing the amount of money the account's interest will earn them over different amounts of time
         // with the money they've just inserted.
         public void ViewInterestSavingsOfNewAccount(decimal interest, decimal insertAmount)
@@ -271,7 +272,7 @@ namespace KiwiBankomaten
             foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
             {
                 Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
-                    $"{account.Value.AccountName}: {AmountDecimal(account.Value.Amount)} " +
+                    $"{account.Value.AccountName}: {Utility.AmountDecimal(account.Value.Amount)} " +
                     $"{account.Value.Currency}");
             }
         }
@@ -329,13 +330,7 @@ namespace KiwiBankomaten
 
         }
 
-        //Method to separete commas in amount
-        public string AmountDecimal(decimal valueDec)
-        {
-            //the 0 is a placeholder, which shows even if the value is 0 
-            string stringDec = valueDec.ToString("#,##0.00");
-            return stringDec;
-        }
+        
 
         // Method for transferring money with currency exchange.
         public void TransferMoney(int toAccountNum,
