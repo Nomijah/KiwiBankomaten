@@ -187,8 +187,6 @@ namespace KiwiBankomaten
             }
             return currency;
         }
-
-
         public void InsertMoneyIntoNewAccount(decimal interest)
         {
             bool noError;
@@ -274,20 +272,19 @@ namespace KiwiBankomaten
             decimal amountMoney;
             int transferFromWhichAccount;
             int transferToWhichAccount;
-            bool isNumber = false;
 
             Console.Clear();
             Console.WriteLine("Enter a number as input to navigate in the menu:");
             AccountOverview(); // Shows the Customer their Accounts and the balances in said Accounts
 
             Console.WriteLine("How much money do you want to transfer?: ");
-            Program.IsValueNumberCheck(out amountMoney, isNumber); // Gets User input and Checks if it's Valid
+            Program.IsValueNumberCheck(out amountMoney); // Gets User input and Checks if it's Valid
 
             Console.WriteLine("From which account do you want to transfer money from?: ");
-            Program.IsValueNumberCheck(out transferFromWhichAccount, 1, BankAccounts.Count, isNumber); // Gets User input and Checks if it's Valid
+            Program.IsValueNumberCheck(out transferFromWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
 
             Console.WriteLine("From which account do you want to transfer money to?: ");
-            Program.IsValueNumberCheck(out transferToWhichAccount, 1, BankAccounts.Count, isNumber); // Gets User input and Checks if it's Valid
+            Program.IsValueNumberCheck(out transferToWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
 
             if (CurrencyCheck(transferToWhichAccount, transferFromWhichAccount))
             {
@@ -300,14 +297,10 @@ namespace KiwiBankomaten
             }
 
         }
+           
+        // Checks if transferFromWhichAccount has enough funds to go through with the transfer and then transfers the money if it's possible
         private void TransferFromCheck(int transferFromWhichAccount, int transferToWhichAccount, decimal amountMoney)
         {
-            // Arguments :
-            // transferFromWhichAccount == Contains which Account to transfer from 
-            // transferToWhichAccount == Contains which Account to transfer to 
-            // amountMoney = Contains the quantity that is to be transfered
-
-            // Checks if transferFromWhichAccount has enough funds to go through with the transfer and then transfers the money if it's possible
 
             if (BankAccounts[transferFromWhichAccount].Amount >= amountMoney) // Checks if transferFromWhichAccount has enough funds for the transfer
             {
