@@ -277,13 +277,10 @@ namespace KiwiBankomaten
             AccountOverview(); // Shows the Customer their Accounts and the balances in said Accounts
 
             Console.WriteLine("From which account do you want to transfer money from?: ");
-            Program.IsValueNumberCheck(out transferFromWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
+            Utility.IsValueNumberCheck(out transferFromWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
 
             Console.WriteLine("How much money do you want to transfer?: ");
             Utility.IsValueNumberCheck(out amountMoney); // Gets User input and Checks if it's Valid
-
-            Console.WriteLine("From which account do you want to transfer money from?: ");
-            Program.IsValueNumberCheck(out transferFromWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
 
             Console.WriteLine("From which account do you want to transfer money to?: ");
             Utility.IsValueNumberCheck(out transferToWhichAccount, BankAccounts.Count); // Gets User input and Checks if it's Valid
