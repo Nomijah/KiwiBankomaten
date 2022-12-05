@@ -101,7 +101,8 @@ namespace KiwiBankomaten
             Console.WriteLine("---Alla användarkonton i Kiwibank---");
             foreach (KeyValuePair<int, Customer> customer in DataBase.CustomerDict)
             {
-                Console.WriteLine($"ID:{customer.Value.Id} - Användarnamn:{customer.Value.UserName} - Lösenord:{customer.Value.Password} - Spärrat:{customer.Value.Locked}");
+                Console.WriteLine($"ID:{customer.Value.Id} - Användarnamn:{customer.Value.UserName} - " +
+                    $"Lösenord:{customer.Value.Password} - Spärrat:{customer.Value.Locked}");
             }
         }
         public static void EditUserAccount()
@@ -120,10 +121,10 @@ namespace KiwiBankomaten
                     do
                     {
                         Console.Clear();
-                        Console.WriteLine($"Du har valt användaren {selectedUser.Id} - {selectedUser.UserName}" +
-                            $" - Spärrat Konto:{selectedUser.Locked}");
+                        Console.WriteLine($"Du har valt användaren ID:{selectedUser.Id} - Användarnamn:{selectedUser.UserName}" +
+                            $" - Lösenord:{selectedUser.Password} - Spärrad:{selectedUser.Locked}");
                         Console.WriteLine("Vad vill du göra med användaren?\n-1 Visa bankkonton\n-2 Lås/Lås upp" +
-                            "\n-3 Ändra lösenord\n-4 Återvänd till admin menyn");
+                            "\n-3 Ändra lösenord\n-4 Återvänd till adminmenyn");
                         string userChoice = Console.ReadLine();
                         switch (userChoice)
                         {
@@ -140,6 +141,9 @@ namespace KiwiBankomaten
                                 break;
                             case "4":
                                 noError = true;
+                                break;
+                            default: 
+                                Console.WriteLine("Fel input, skriv in ett korrekt värde");
                                 break;
                         }
                     } while (noError == false);
@@ -190,6 +194,28 @@ namespace KiwiBankomaten
         }
         public static void ChangeUserPassword(Customer selectedUser)
         {
+            while (true)
+            {
+                Console.WriteLine($"Vill du ändra lösenordet till användaren {selectedUser.Id} - {selectedUser.UserName}? J/N");
+                if (Console.ReadLine().ToUpper() == "J")
+                {
+                    Console.Clear();
+                    Console.WriteLine($"Skriv in det nya lösenordet till användaren {selectedUser.UserName}");
+                    string newPassWord = Console.ReadLine();
+                    Console.WriteLine("Konfirmera användarens lösenord genom att skriva in det igen");
+                    if (Console.ReadLine() == newPassWord)
+                    {
+                        selectedUser.Password = newPassWord;
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Du skrev inte in rätt lösenord för att konfirmera");
+                        Console.ReadKey();
+                    }
+                }
+                else { return; }
+            }
 
         }
     }
