@@ -69,7 +69,9 @@ namespace KiwiBankomaten
             bool loggedIn = true;
             while (loggedIn == true)
             {
-                Console.WriteLine("Funktioner för admins:\n-1 Skapa ny användare\n-2 Uppdatera växlingskurs\n-3 Logga ut");
+                Console.Clear();
+                Console.WriteLine("Funktioner för admins:\n-1 Skapa ny användare\n-2 Uppdatera växlingskurs" +
+                    "\n-3 Visa alla användare\n-4 Redigera användarkonto\n-5 Logga ut");
                 switch (Console.ReadLine())
                 {
                     case "1":
@@ -77,7 +79,14 @@ namespace KiwiBankomaten
                         break;
                     case "2": //UpdateExchangeRate();
                         break;
-                    case "3": loggedIn = false;
+                    case "3": Console.Clear(); 
+                        ViewAllUsers();
+                        Console.ReadKey();
+                        break;
+                    case "4": Console.Clear();
+                        EditUserAccount();
+                        break;
+                    case "5": loggedIn = false;
                         Console.Clear();
                         break;
                     default:
@@ -86,6 +95,102 @@ namespace KiwiBankomaten
                 }
             }
             Program.LogOut();
+        }
+        public static void ViewAllUsers()
+        {
+            Console.WriteLine("---Alla användarkonton i Kiwibank---");
+            foreach (KeyValuePair<int, Customer> customer in DataBase.CustomerDict)
+            {
+                Console.WriteLine($"ID:{customer.Value.Id} - Användarnamn:{customer.Value.UserName} - Lösenord:{customer.Value.Password} - Spärrat:{customer.Value.Locked}");
+            }
+        }
+        public static void EditUserAccount()
+        {
+            bool noError;
+            do
+            {
+                Console.Clear();
+                ViewAllUsers();
+                Console.WriteLine("Vilken användare vill du redigera? Välj genom att skriva in ID");
+                noError = Int32.TryParse(Console.ReadLine(), out int userID);
+                if (noError && DataBase.CustomerDict.ContainsKey(userID))
+                {
+                    noError = false;
+                    Customer selectedUser = DataBase.CustomerDict[userID];
+                    do
+                    {
+                        Console.Clear();
+                        Console.WriteLine($"Du har valt användaren {selectedUser.Id} - {selectedUser.UserName}" +
+                            $" - Spärrat Konto:{selectedUser.Locked}");
+                        Console.WriteLine("Vad vill du göra med användaren?\n-1 Visa bankkonton\n-2 Lås/Lås upp" +
+                            "\n-3 Ändra lösenord\n-4 Återvänd till admin menyn");
+                        string userChoice = Console.ReadLine();
+                        switch (userChoice)
+                        {
+                            case "1":
+                                selectedUser.AccountOverview();
+                                Console.ReadKey();
+                                break;
+                            case "2":
+                                LockOrUnlockAccount(selectedUser);
+                                Console.ReadKey();
+                                break;
+                            case "3":
+                                ChangeUserPassword(selectedUser);
+                                break;
+                            case "4":
+                                noError = true;
+                                break;
+                        }
+                    } while (noError == false);
+                }
+                else
+                {
+                    Console.WriteLine("Ogiltig användare vald, skriv in ett giltigt ID");
+                    noError = false;
+                }
+            } while (noError == false);
+        }
+        public static void LockOrUnlockAccount(Customer selectedUser)
+        {
+            string answer;
+            if (selectedUser.Locked)
+            {
+                Console.WriteLine("Kontot är spärrat");
+                Console.WriteLine("Vill du avspärra kontot? J/N");
+            }
+            else
+            {
+                Console.WriteLine("Kontot är inte spärrat");
+                Console.WriteLine("Vill du spärra kontot? J/N");
+            }
+            do
+            {
+                answer = Console.ReadLine().ToUpper();
+                switch (answer)
+                {
+                    case "J":
+                        if (selectedUser.Locked)
+                        {
+                            selectedUser.Locked = false;
+                        }
+                        else
+                        {
+                            selectedUser.Locked = true;
+                        }
+                        break;
+                    case "N":
+                        break;
+                    default:
+                        Console.WriteLine("Fel input, välj antingen J/N");
+                        break;
+                }
+            } while (answer != "J" && answer != "N");
+
+        }
+        public static void ChangeUserPassword(Customer selectedUser)
+        {
+
         }
     }
 }
