@@ -48,21 +48,28 @@ namespace KiwiBankomaten
                 Console.Clear();// clearing console, 
             } while (loggedIn != true);
         }
+        
+        //Checks if user exist, returns userKey
         public static int LogIn(out bool loggedIn)
         {
-            int userKey = 0;
+            int userKey = 0; 
             int tries = 0;
             loggedIn = false;
+
             Console.WriteLine("Welcome to KiwiBank");
             Console.WriteLine("Please enter your account name:");
             string userName = Console.ReadLine();
+
+            // loop through customer dictionary to search for userName
             foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
             {
                 if (userName == item.Value.UserName)
                 {
-                    userKey = item.Key;
-                    loggedIn = CheckPassWord(userKey, tries);
+                    userKey = item.Key;// stores userKey
+                    loggedIn = CheckPassWord(userKey, tries); // calls CheckPassWord function to check password
                     loggedIn = true; //defines bool since it will change otherwise, dont change!
+
+                    // if login is successful
                     if (loggedIn)
                     {
                         Console.WriteLine("Successfully logged in");
@@ -120,10 +127,12 @@ namespace KiwiBankomaten
                 Console.WriteLine("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin ");
                 Thread.Sleep(3000);//is shown message and returns to the menu.
                 RunProgram();
-                return false;
+                return false; //Returns to Login
             }
             Console.WriteLine("Enter your password");
-            string userPassWord = (Console.ReadLine());
+            string userPassWord = (Console.ReadLine()); // lets user enter password
+
+            //if the user is locked, message is displayed and user is returned to mainmenu
             if (userPassWord == DataBase.CustomerDict[userKey].Password)
             {
                 Console.WriteLine("Password is correct");
@@ -163,6 +172,7 @@ namespace KiwiBankomaten
         {
             do   //looping menu  
             {
+                //Creates an instance of the loggedIn user in database
                 Customer obj = DataBase.CustomerDict[userKey];
 
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
@@ -179,13 +189,13 @@ namespace KiwiBankomaten
                         obj.TransferBetweenCustomerAccounts(); // Transfers a value between two accounts the user possesses
                         break;
                     case "3":
-                        obj.OpenAccount();
+                        obj.OpenAccount(); //Opens account for the specific user
                         break;
                     case "4":
-                        obj.InternalMoneyTransfer();
+                        obj.InternalMoneyTransfer(); //Transfer money to other user in bank
                         break;
                     case "5":
-                        LogOut();
+                        LogOut(); //Logout
 
                         break;
 
