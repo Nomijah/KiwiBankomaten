@@ -172,7 +172,6 @@ namespace KiwiBankomaten
                         Console.WriteLine($"Växlingskursen för {currency} har ändrats till {newValue}");
                         Utility.PressEnterToContinue();
                     }
-                    
                 }
                 else
                 {
