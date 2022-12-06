@@ -598,16 +598,13 @@ namespace KiwiBankomaten
                 }
             }
 
-            decimal loanSum = 0;
             // Subtracts current loans as the values in LoanAccounts is negative
             foreach (LoanAccount item in LoanAccounts.Values)
             {
                 sum += item.Amount/5;
-                loanSum += item.Amount;
             }
 
-            return (sum * 5) + loanSum;
-
+            return sum * 5;
         }
         // Converts foreign currency to SEK
         public decimal ConvertToSek(BankAccount userAccount)
