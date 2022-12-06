@@ -13,8 +13,8 @@ namespace KiwiBankomaten
         private decimal _interest;
         private List<string> _log;
         
-        public int AccountNumber { get => _accountNumber; }
-        public string AccountName {get => _accountName;}
+        public int AccountNumber { get => _accountNumber; set => _accountNumber = value; }
+        public string AccountName { get => _accountName; set => _accountName = value; }
         public decimal Amount { get => _amount; set => _amount = value; }
         public string Currency { get => _currency; set => _currency = value; }
         public decimal Interest { get => _interest; set => _interest = value; }
@@ -44,7 +44,10 @@ namespace KiwiBankomaten
             AccountNumberCounter++;
         }
 
-     
+        public BankAccount()
+        {
+
+        }
 
 
     }
