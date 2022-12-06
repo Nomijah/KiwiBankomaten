@@ -126,6 +126,7 @@ namespace KiwiBankomaten
                 decimal newValue;
                 // Used as key to get currency from database.
                 string currency;
+                // Loops until admin answers whether they want to update a value or not.
                 do
                 {
                     Console.Clear();
@@ -135,6 +136,7 @@ namespace KiwiBankomaten
                 } while (answer != "J" && answer != "N");
                 if (answer == "J")
                 {
+                    // If admin does want to update a value, loops until they input a valid currency.
                     do
                     {
                         Console.Clear();
@@ -147,8 +149,7 @@ namespace KiwiBankomaten
                             Utility.PressEnterToContinue();
                         }
                     } while (!DataBase.ExchangeRates.ContainsKey(currency));
-
-                    // Loops until admin inputs a valid positive number.
+                    // Loops until admin inputs a valid positive number´as the new exchange rate.
                     do
                     {
                         Console.Clear();
@@ -161,12 +162,14 @@ namespace KiwiBankomaten
                             Utility.PressEnterToContinue();
                         }
                     } while (noError == false || newValue < 0);
+                    // Loops until admin confirms whether or not they want to apply the changes to the exchange rate.
                     do
                     {
                         Console.Clear();
                         Console.WriteLine($"Växlingskursen för {currency} kommer ändras till {newValue}. godkänner du detta? J/N");
                         answer = Console.ReadLine().ToUpper();
                     } while (answer != "J" && answer != "N");
+                    // If admin answers yes, exchange rate is updated.
                     if (answer == "J")
                     {
                         DataBase.ExchangeRates[currency] = newValue;
