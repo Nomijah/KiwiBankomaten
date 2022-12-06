@@ -30,33 +30,43 @@ namespace KiwiBankomaten
             Password = password;
             IsAdmin = true;
         }
-        public static void CreateNewUser()
+        // Admin method for creating new users.
+        public static void CreateNewUser() 
         {
-            bool error;
+            // Used in the do-while loop to repeat if any input errors are detected.
+            bool error; 
             do
             {
+                string userName = "";
+                string passWord = "";
                 error = false;
                 Console.Clear();
                 Console.WriteLine("Vilken sorts användare vill du skapa?\n-1 Customer\n-2 Admin");
                 string userType = Console.ReadLine();
-                Console.Clear();
-                Console.WriteLine("Vilket användarnamn ska den nya användaren ha?");
-                string userName = Console.ReadLine();
-                Console.Clear();
-                Console.WriteLine("Vilket lösenord ska den nya användaren ha?");
-                string passWord = Console.ReadLine();
-                Console.Clear();
+                if (userType == "1" || userType == "2")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Vilket användarnamn ska den nya användaren ha?");
+                    userName = Console.ReadLine();
+                    Console.Clear();
+                    Console.WriteLine("Vilket lösenord ska den nya användaren ha?");
+                    passWord = Console.ReadLine();
+                    Console.Clear();
+                }
 
                 switch (userType)
                 {
-                    case "1":
+                    // Adds customer account to CustomerDict with name and password set from user input.
+                    case "1": 
                         DataBase.CustomerDict.Add(DataBase.CustomerDict.Last().Key + 1, new Customer(userName, passWord));
                         Console.WriteLine($"Customer {userName} har skapats med nyckeln {DataBase.CustomerDict.Last().Key}");
                         break;
-                    case "2":
+                    // Adds admin account to AdminList with name and password set from user input.
+                    case "2": 
                         DataBase.AdminList.Add(new Admin(userName, passWord));
                         Console.WriteLine($"Admin {userName} har skapats.");
                         break;
+                    // Loop repeats and switch is run again if none of the correct values are chosen.
                     default:
                         Console.WriteLine("Fel input, skriv in ett korrekt värde");
                         error = true;
@@ -64,10 +74,13 @@ namespace KiwiBankomaten
                 }
             } while (error == true);
         }
-        public static void AdminMenu()
+        // Menu where admin can select different functions.
+        public static void AdminMenu() 
         {
+            // Used to log admin out if set to false.
             bool loggedIn = true;
-            while (loggedIn == true)
+            // Loop that runs so long as the admin has not chosen to log out.
+            while (loggedIn == true) 
             {
                 Console.Clear();
                 Console.WriteLine("Funktioner för admins:\n-1 Skapa ny användare\n-2 Uppdatera växlingskurs" +
@@ -77,7 +90,8 @@ namespace KiwiBankomaten
                     case "1":
                         CreateNewUser();
                         break;
-                    case "2": //UpdateExchangeRate();
+                    // Shows list of exchange rates with their values and asks if admin wants to change them.
+                    case "2": UpdateExchangeRate();
                         break;
                     case "3": Console.Clear(); 
                         ViewAllUsers();
@@ -89,12 +103,93 @@ namespace KiwiBankomaten
                     case "5": loggedIn = false;
                         Console.Clear();
                         break;
+                    // Loop repeats and switch is run again if none of the correct values are chosen.
                     default:
                         Console.WriteLine("Fel input, skriv in ett korrekt värde");
                         break;
                 }
             }
-            Program.LogOut();
+            // Program.LogOut is called outside the loop and switch because of possible bugs if it were to be called inside it.
+            Program.LogOut(); 
+        }
+        // Method for printing out all currencies and their exchange rates.
+        public static void ListExchangeRates()
+        {
+            foreach (KeyValuePair<string, decimal> exchangeRates in DataBase.ExchangeRates)
+            {
+                Console.WriteLine($"{exchangeRates.Key} {exchangeRates.Value}");
+            }
+        }
+        // Method for updating a currency's exchange rate.
+        public static void UpdateExchangeRate()
+        {
+            while (true)
+            {
+                // Is used to ensure the new value of the exchange rate is valid.
+                bool noError;
+                // Is used to make sure user answers with J/N when confirming options.
+                string answer;
+                // The new value of the exchange rate.
+                decimal newValue;
+                // Used as key to get currency from database.
+                string currency;
+                // Loops until admin answers whether they want to update a value or not.
+                do
+                {
+                    Console.Clear();
+                    ListExchangeRates();
+                    Console.WriteLine("Vill du ändra växlingskursen på någon valuta? J/N");
+                    answer = Console.ReadLine().ToUpper();
+                } while (answer != "J" && answer != "N");
+                if (answer == "J")
+                {
+                    // If admin does want to update a value, loops until they input a valid currency.
+                    do
+                    {
+                        Console.Clear();
+                        ListExchangeRates();
+                        Console.WriteLine("Var vänlig skriv in den valuta du vill ändra. SEK, USD, EUR, etc ");
+                        currency = Console.ReadLine().ToUpper();
+                        if (!DataBase.ExchangeRates.ContainsKey(currency))
+                        {
+                            Console.WriteLine("Ogiltigt värde, skriv in en valuta");
+                            Utility.PressEnterToContinue();
+                        }
+                    } while (!DataBase.ExchangeRates.ContainsKey(currency));
+                    // Loops until admin inputs a valid positive number´as the new exchange rate.
+                    do
+                    {
+                        Console.Clear();
+                        Console.WriteLine($"Växlingskursen för {currency} - {DataBase.ExchangeRates[currency]}");
+                        Console.WriteLine("Var vänlig skriv in den nya växlingskursen för valutan");
+                        noError = Decimal.TryParse(Console.ReadLine(), out newValue);
+                        if (noError == false || newValue < 0)
+                        {
+                            Console.WriteLine("Ogiltigt värde, mata in en positiv siffra");
+                            Utility.PressEnterToContinue();
+                        }
+                    } while (noError == false || newValue < 0);
+                    // Loops until admin confirms whether or not they want to apply the changes to the exchange rate.
+                    do
+                    {
+                        Console.Clear();
+                        Console.WriteLine($"Växlingskursen för {currency} kommer ändras till {newValue}. godkänner du detta? J/N");
+                        answer = Console.ReadLine().ToUpper();
+                    } while (answer != "J" && answer != "N");
+                    // If admin answers yes, exchange rate is updated.
+                    if (answer == "J")
+                    {
+                        DataBase.ExchangeRates[currency] = newValue;
+                        Console.WriteLine($"Växlingskursen för {currency} har ändrats till {newValue}");
+                        Utility.PressEnterToContinue();
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            }
+
         }
         // Method for printing out all customer accounts with their ID, Username, Password and IsLocked status.
         public static void ViewAllUsers()
