@@ -163,6 +163,7 @@ namespace KiwiBankomaten
                     } while (noError == false || newValue < 0);
                     do
                     {
+                        Console.Clear();
                         Console.WriteLine($"Växlingskursen för {currency} kommer ändras till {newValue}. godkänner du detta? J/N");
                         answer = Console.ReadLine().ToUpper();
                     } while (answer != "J" && answer != "N");
