@@ -9,19 +9,7 @@ namespace KiwiBankomaten
     {
         public static bool CheckPassWord(int userKey, int tries)
         {
-            if (tries == 3) //Checks to see if user failed login trice, before requesting Password again
-            {
-                DataBase.CustomerDict[userKey].Locked = true;//locks user if 3 fails occur
-            }
-            //if the user is locked, message is displayed and user is returned to mainmenu
-            if (DataBase.CustomerDict[userKey].Locked == true)
-            {
-                UserInterface.DisplayMessage("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin");
-                PressEnterToContinue();
-                Console.Clear();
-                Program.RunProgram();
-                return false; //Returns to Login
-            }
+            CheckPassWordLimit(userKey, tries);
             
             string userPassWord = UserInterface.PromptForString("Enter your password"); // lets user enter password
 
@@ -38,6 +26,23 @@ namespace KiwiBankomaten
                 CheckPassWord(userKey, tries);
                 return false;
             }
+        }
+
+        public static bool CheckPassWordLimit(int userKey, int tries)
+        {
+            //if the user is locked, message is displayed and user is returned to mainmenu
+            if (tries == 3 || DataBase.CustomerDict[userKey].Locked == true)
+            {
+                DataBase.CustomerDict[userKey].Locked = true;//locks user if 3 fails occur
+
+                UserInterface.DisplayMessage("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin");
+                
+                PressEnterToContinue();
+
+                Program.RunProgram();
+            }
+            return true;
+
         }
         public static bool AdminCheckPassWord(int adminKey)
         {
