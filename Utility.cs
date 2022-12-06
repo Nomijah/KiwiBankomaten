@@ -7,112 +7,80 @@ namespace KiwiBankomaten
 {
     internal class Utility
     {
-        // Checks whether or not "decimal amountMoney" is valid input
-        public static void IsValueNumberCheck(out decimal amountMoney)
+        public static bool CheckPassWord(int userKey)
         {
+            //if the user is locked, message is displayed and user is returned to mainmenu
 
-            bool isValueNumberCheck = false;
-
-            do
+            for (int i = 0; i <= 3; i++)
             {
-                // Gets user input => Checks if it's a decimal => Checks if it's larger than 0
-                if (decimal.TryParse(Console.ReadLine(), out amountMoney) && amountMoney > 0)
-                {
-                    isValueNumberCheck = false; // If amountMoney is a valid input
-                }
-                else if (amountMoney < 0) // Checks if amountMoney is larger than 0
-                {
-                    Console.WriteLine("Input has to be positive and cannot be 0. Please Try Again!");
-                    isValueNumberCheck = true; // If amountMoney is lower or equal to 0
-                }
-                else // If the answer is not a number or other invalid input
-                {
-                    Console.WriteLine("Please input a Number!");
-                    isValueNumberCheck = true; // If amountMoney is an invalid input
-                }
+                CheckPassWordLimit(userKey, i);    
 
-            } while (isValueNumberCheck);
+                if (UserInterface.PromptForString("Enter your password") == DataBase.CustomerDict[userKey].Password)
+                {
+                    Console.WriteLine("Password is correct");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Wrong password"); //if wrong password is entered
+                    PressEnterToContinue();
+                    RemoveLines(5);
+                } 
+            }
+            return false;
         }
 
-        // Checks whether or not "int transferFromOrToWhichAccount" is valid input
-        public static void IsValueNumberCheck(out int transferFromOrToWhichAccount, int maxValue)
+        public static bool CheckAdminPassWord(int adminKey)
         {
-            bool isValueNumberCheck = false;
-            int minValue = 1;
+            //if the user is locked, message is displayed and user is returned to mainmenu
 
-            do
+            for (int i = 0; i < 3; i++)
             {
-                // Gets user input => Checks if it's a decimal => Checks if it's in the set range
-                if (int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount) && minValue <= transferFromOrToWhichAccount && maxValue >= transferFromOrToWhichAccount)
+                if (UserInterface.PromptForString("Enter your password") == DataBase.AdminList[adminKey].Password)
                 {
-                    isValueNumberCheck = false; // If transferFromOrToWhichAccount is a valid input
+                    Console.WriteLine("Password is correct");
+                    return true;
                 }
-                else if (minValue > transferFromOrToWhichAccount || maxValue < transferFromOrToWhichAccount) // Checks if transferFromOrToWhichAccount is in the given range 
+                else
                 {
-                    Console.WriteLine("Please input a Number between {0} and {1}!", minValue, maxValue);
-                    isValueNumberCheck = true; // If transferFromOrToWhichAccount is an invalid input
-                }
-                else // If the answer is not a number or other invalid input
-                {
-                    Console.WriteLine("Please input a Number!");
-                    isValueNumberCheck = true; // If transferFromOrToWhichAccount is an invalid input
-                }
-
-            } while (isValueNumberCheck); // Loops if input is invalid
+                    Console.WriteLine("Wrong password"); //if wrong password is entered
+                    PressEnterToContinue();
+                    RemoveLines(5);
+                } 
+            }
+            UserInterface.DisplayMessage("Du har inte lyckats logga in på 3 försök... fan va du suger på detta...");
+            PressEnterToContinue();
+            Program.RunProgram();
+            return false;
         }
 
-        public static bool CheckPassWord(int userKey, int tries)
+        public static void CheckPassWordLimit(int userKey, int tries)
         {
-            if (tries == 3) //Checks to see if user failed login trice, before requesting Password again
+            //if the user is locked, message is displayed and user is returned to mainmenu
+            if (tries == 3 || DataBase.CustomerDict[userKey].Locked == true)
             {
                 DataBase.CustomerDict[userKey].Locked = true;//locks user if 3 fails occur
-            }
-            //if the user is locked, message is displayed and user is returned to mainmenu
-            if (DataBase.CustomerDict[userKey].Locked == true)
-            {
-                Console.WriteLine("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin ");
-                Thread.Sleep(3000);//is shown message and returns to the menu.
-                Program.RunProgram();
-                return false; //Returns to Login
-            }
-            Console.WriteLine("Enter your password");
-            string userPassWord = (Console.ReadLine()); // lets user enter password
 
-            //if the user is locked, message is displayed and user is returned to mainmenu
-            if (userPassWord == DataBase.CustomerDict[userKey].Password)
-            {
-                Console.WriteLine("Password is correct");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Wrong password"); //if wrong password is entered 
-                tries++;  //"tries"adds with one, and user is returned CheckPassWord again
-                CheckPassWord(userKey, tries);
-                return false;
+                UserInterface.DisplayMessage("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin");
+                
+                PressEnterToContinue();
+
+                Program.RunProgram();
             }
         }
-        public static bool AdminCheckPassWord(int adminKey)
-        {
-            Console.WriteLine("Enter your password");
-            string userPassWord = (Console.ReadLine());
 
-            if (userPassWord == DataBase.AdminList[adminKey].Password)
-            {
-                Console.WriteLine("Password is correct");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Wrong password");
-                return false;
-            }
+        //Method to separete commas in amount
+        public static string AmountDecimal(decimal valueDec)
+        {
+            //the 0 is a placeholder, which shows even if the value is 0 
+            string stringDec = valueDec.ToString("#,##0.00");
+            return stringDec;
         }
 
         // Stops the program until the user presses "Enter"
         public static void PressEnterToContinue()
         {
-            Console.WriteLine("Klicka Enter för att fortsätta.");
+            UserInterface.DisplayMessage("Klicka Enter för att fortsätta.");
             // Gets the input from the user
             ConsoleKey enterPressed = Console.ReadKey(true).Key;
             // Loops if the user Presses any button other than "Enter"
@@ -126,7 +94,7 @@ namespace KiwiBankomaten
         public static bool ContinueOrAbort()
         {
 
-            Console.WriteLine("Klicka Enter för att försöka igen eller Esc för" +
+            UserInterface.DisplayMessage("Klicka Enter för att försöka igen eller Esc för" +
                 " att återgå till huvudmenyn.");
             // Gets the input from the user
             ConsoleKey userInput = Console.ReadKey(true).Key;
@@ -145,6 +113,38 @@ namespace KiwiBankomaten
             {
                 return true;
             }
+        }
+
+        public static bool YesOrNo(string input, string accountName)
+        {
+            UserInterface.DisplayMessage($"Ditt konto får {input} {accountName}\n" +
+                $"Vill du godkänna detta? [J/N]");
+            switch (UserInterface.PromptForString().ToUpper())
+            {
+                case "J":
+                    return false;
+                case "N":
+                    RemoveLines(7);
+                    return true;
+                default:
+                    UserInterface.DisplayMessage("Felaktig inmatning\nVälj [J] " +
+                        "för ja eller N för nej.");
+                    PressEnterToContinue();
+                    RemoveLines(10);
+                    YesOrNo(input, accountName);
+                    break;
+            }
+            return false;
+        }
+
+        public static void RemoveLines(int lines)
+        {
+            for (int i = 0; i < lines; i++)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                Console.Write(new string(' ', Console.BufferWidth));
+            }
+            Console.SetCursorPosition(0, Console.CursorTop);
         }
     }
 }

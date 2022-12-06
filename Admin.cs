@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace KiwiBankomaten
@@ -37,45 +38,52 @@ namespace KiwiBankomaten
             bool error; 
             do
             {
+                string userType;
                 string userName = "";
                 string passWord = "";
                 error = false;
                 Console.Clear();
-                Console.WriteLine("Vilken sorts användare vill du skapa?\n-1 Customer\n-2 Admin");
-                string userType = Console.ReadLine();
-                if (userType == "1" || userType == "2")
+
+                UserInterface.DisplayMessage("Vilken sorts användare vill du skapa?");
+                UserInterface.DisplayMenu(new string[] {"Customer", "Admin"});
+
+                while (UserInterface.PromptForString(out userType) != "1" && userType != "2")
                 {
-                    Console.Clear();
-                    Console.WriteLine("Vilket användarnamn ska den nya användaren ha?");
-                    userName = Console.ReadLine();
-                    Console.Clear();
-                    Console.WriteLine("Vilket lösenord ska den nya användaren ha?");
-                    passWord = Console.ReadLine();
-                    Console.Clear();
+                    UserInterface.DisplayMessage("Fel input, skriv in ett korrekt värde");
+                    Utility.PressEnterToContinue();
                 }
+
+                Console.Clear();
+                UserInterface.DisplayMessage("Vilket användarnamn ska den nya användaren ha?");
+                userName = UserInterface.PromptForString();
+
+                Console.Clear();
+                UserInterface.DisplayMessage("Vilket lösenord ska den nya användaren ha?");
+                passWord = UserInterface.PromptForString();
+
+                Console.Clear();
 
                 switch (userType)
                 {
                     // Adds customer account to CustomerDict with name and password set from user input.
                     case "1": 
                         DataBase.CustomerDict.Add(DataBase.CustomerDict.Last().Key + 1, new Customer(userName, passWord));
-                        Console.WriteLine($"Customer {userName} har skapats med nyckeln {DataBase.CustomerDict.Last().Key}");
+                        UserInterface.DisplayMessage($"Customer {userName} har skapats med nyckeln {DataBase.CustomerDict.Last().Key}");
                         break;
                     // Adds admin account to AdminList with name and password set from user input.
                     case "2": 
                         DataBase.AdminList.Add(new Admin(userName, passWord));
-                        Console.WriteLine($"Admin {userName} har skapats.");
+                        UserInterface.DisplayMessage($"Admin {userName} har skapats.");
                         break;
                     // Loop repeats and switch is run again if none of the correct values are chosen.
                     default:
-                        Console.WriteLine("Fel input, skriv in ett korrekt värde");
                         error = true;
                         break;
                 }
             } while (error == true);
         }
         // Menu where admin can select different functions.
-        public static void AdminMenu() 
+        public static void AdminMenu(int adminKey) 
         {
             // Used to log admin out if set to false.
             bool loggedIn = true;
@@ -83,9 +91,10 @@ namespace KiwiBankomaten
             while (loggedIn == true) 
             {
                 Console.Clear();
-                Console.WriteLine("Funktioner för admins:\n-1 Skapa ny användare\n-2 Uppdatera växlingskurs" +
-                    "\n-3 Visa alla användare\n-4 Redigera ett användarkonto\n-5 Logga ut");
-                switch (Console.ReadLine())
+                UserInterface.DisplayAdminMessageLoggedIn(adminKey);
+                UserInterface.DisplayMenu(new string[] { "Skapa ny användare", "Uppdatera växlingskurs","Visa alla användare", 
+                    "Redigera ett användarkonto", "Logga ut" });
+                switch (UserInterface.PromptForString())
                 {
                     case "1":
                         CreateNewUser();
@@ -106,6 +115,8 @@ namespace KiwiBankomaten
                     // Loop repeats and switch is run again if none of the correct values are chosen.
                     default:
                         Console.WriteLine("Fel input, skriv in ett korrekt värde");
+                        Utility.PressEnterToContinue();
+                        Utility.RemoveLines(5);
                         break;
                 }
             }
