@@ -130,7 +130,7 @@ namespace KiwiBankomaten
 
                 Console.WriteLine("Enter a number as input to navigate in the menu:");
                 Console.WriteLine("-1) Overview accounts and balances\n-2) Transfer money personal accounts" +
-                    "\n-3) Create new account \n-4) Kiwibank internal Transfer money \n-5) Logout");
+                    "\n-3) Create new account \n-4) Kiwibank internal Transfer money \n-5) Låna pengar\n-6) Logga ut");
                 string choice = Console.ReadLine();
 
                 switch (choice)
@@ -148,6 +148,9 @@ namespace KiwiBankomaten
                         obj.InternalMoneyTransfer(); //Transfer money to other user in bank
                         break;
                     case "5":
+                        obj.LoanMoney();
+                        break;
+                    case "6":
                         LogOut(); //Logout
 
                         break;
