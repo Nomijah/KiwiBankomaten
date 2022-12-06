@@ -200,9 +200,9 @@ namespace KiwiBankomaten
             } while (noError == false);
             ViewInterestSavingsOfNewAccount(interest, insertAmount);
         }
-        
-        // Method for printing the amount of money the account's interest will earn them over different amounts of time
-        // with the money they've just inserted.
+
+        // Method for printing the amount of money the account's interest will earn
+        // them over different amounts of time with the money they've just inserted.
         public void ViewInterestSavingsOfNewAccount(decimal interest, decimal insertAmount)
         {
             decimal interestAmount = insertAmount * interest / 100;
@@ -224,23 +224,30 @@ namespace KiwiBankomaten
 
         }
 
-        // Prints out users accounts.
-        public void AccountOverview()
+        // Prints out users bank accounts.
+        public void BankAccountOverview()
         {
             Console.WriteLine("---------------------------------------------------");
             // Print out each account with key, number, name, value and currency
+            Console.WriteLine("Bankkonton:");
             foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
             {
                 Console.WriteLine($"-{account.Key}). {account.Value.AccountNumber} " +
                     $"{account.Value.AccountName}: {Utility.AmountDecimal(account.Value.Amount)} " +
                     $"{account.Value.Currency}");
             }
+        }
 
+        // Prints out users loan accounts.
+        public void LoanAccountOverview()
+        {
+            Console.WriteLine("---------------------------------------------------");
             // Print out each loan account with key, number, value and currency
+            Console.WriteLine("Lånekonton:");
             foreach (KeyValuePair<int, LoanAccount> account in LoanAccounts)
             {
-                Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
-                    $"{account.Value.AccountName}: {AmountDecimal(account.Value.Amount)} " +
+                Console.WriteLine($"-{account.Key}). {account.Value.AccountNumber} " +
+                    $"{account.Value.AccountName}: {Utility.AmountDecimal(account.Value.Amount)} " +
                     $"{account.Value.Currency}");
             }
         }
@@ -329,7 +336,7 @@ namespace KiwiBankomaten
                 UserInterface.DisplayMessage($"From: {transferFrom} " +
                     $"Amount: {Utility.AmountDecimal(amountMoney)} To: {transferTo}");
             }
-            AccountOverview(); // Shows the Customer their Accounts and the balances in said Accounts
+            BankAccountOverview(); // Shows the Customer their Accounts and the balances in said Accounts
 
             Console.WriteLine("---------------------------------------------------");
         }
@@ -398,7 +405,7 @@ namespace KiwiBankomaten
             decimal transferToWhichAccount;
 
             Console.Clear();
-            AccountOverview();
+            BankAccountOverview();
 
             Console.WriteLine("Från vilket konto vill du föra över pengarna?");
             transferFromWhichAccount = UserInterface.IsValueNumberCheck(BankAccounts.Count);
@@ -480,13 +487,13 @@ namespace KiwiBankomaten
             Tuple<string, decimal> accountType = ChooseLoanAccountType();
 
             Console.WriteLine("Hur mycket pengar vill du låna?");
-            Console.WriteLine($"Du kan max låna {AmountDecimal(CheckLoanLimit())} kronor.");
-            Utility.IsValueNumberCheck(out decimal amountMoney);
+            Console.WriteLine($"Du kan max låna {Utility.AmountDecimal(CheckLoanLimit())} kronor.");
+            decimal amountMoney = UserInterface.IsValueNumberCheck();
             while (amountMoney > CheckLoanLimit())
             {
-                Console.WriteLine($"Du kan inte låna mer än {AmountDecimal(CheckLoanLimit())} kronor.\n" +
+                Console.WriteLine($"Du kan inte låna mer än {Utility.AmountDecimal(CheckLoanLimit())} kronor.\n" +
                     $"Hur mycket vill du låna?");
-                Utility.IsValueNumberCheck(out amountMoney);
+                amountMoney = UserInterface.IsValueNumberCheck();
             }
 
             // Gets the highest key present and adds one to get new key
