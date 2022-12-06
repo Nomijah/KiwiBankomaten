@@ -3,6 +3,51 @@ using System;
 
 public class UserInterface
 {
+    // Display Logo
+    public static void DisplayLogo()
+    {
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write("$$\\   $$\\$$\\             $$\\      ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("_____");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write("       $$$$$$$\\                   $$\\       \r\n" +
+                      "$$ | $$  \\__|            \\__|    ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("/     \\*");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write("     $$  __$$\\                  $$ |      \r\n" +
+                      "$$ |$$  /$$\\$$\\  $$\\  $$\\$$\\    ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("/  ._.  \\**");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write("   $$ |  $$ |$$$$$$\\ $$$$$$$\\ $$ |  $$\\\r\n" +
+                      "$$$$$  / $$ $$ | $$ | $$ $$ |  ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("|  ./ \\.  |**");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write("  $$$$$$$\\ |\\____$$\\$$  __$$\\$$ | $$  |\r\n" +
+                      "$$  $$<  $$ $$ | $$ | $$ $$ |  ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("|  .\\_/.  |**");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write("  $$  __$$\\ $$$$$$$ $$ |  $$ $$$$$$  /\r\n" +
+                      "$$ |\\$$\\ $$ $$ | $$ | $$ $$ |   ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("\\  ‘ ‘  /***");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write("  $$ |  $$ $$  __$$ $$ |  $$ $$  _$$<  \r\n" +
+                      "$$ | \\$$\\$$ \\$$$$$\\$$$$  $$ |    ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("\\_____/***");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write("   $$$$$$$  \\$$$$$$$ $$ |  $$ $$ | \\$$\\\r\n" +
+                      "\\__|  \\__\\__|\\_____\\____/\\__|      ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("******");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write("     \\_______/ \\_______\\__|  \\__\\__|  \\__|\r\n");
+    }
 
     //Displays the Welcome message to the user
     public static void DisplayWelcomeMessage()
