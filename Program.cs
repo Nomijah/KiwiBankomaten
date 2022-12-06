@@ -83,7 +83,8 @@ namespace KiwiBankomaten
 
             do
             {
-                string userName = UserInterface.PromptForString("Please enter your account name\n\nAccount Name").Trim();
+                string userName = UserInterface.PromptForString("Ange ditt " +
+                    "användarnamn\n\nAnvändarnamn: ").Trim();
                 
                 // loop through customer dictionary to search for userName
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
@@ -101,7 +102,8 @@ namespace KiwiBankomaten
                     }
 
                 }
-                UserInterface.DisplayMessage("Användarnamnet som du försökte logga in med finns inte\nFörsök igen");
+                UserInterface.DisplayMessage("Användarnamnet du angett kunde " +
+                    "inte hittas.\nFörsök igen");
                 Utility.PressEnterToContinue();
                 Utility.RemoveLines(9); 
                 tries++;
@@ -121,19 +123,22 @@ namespace KiwiBankomaten
 
             do
             {
-                string userName = UserInterface.PromptForString("Please enter your account name\n\nAccount Name");  
+                string userName = UserInterface.PromptForString("Ange ditt " +
+                    "användarnamn\n\nAnvändarnamn: ");  
                 foreach (Admin item in DataBase.AdminList)
                 {
                     if (userName == item.UserName)
                     {
-                        adminKey = DataBase.AdminList.FindIndex(item => userName == item.UserName);
+                        adminKey = DataBase.AdminList.FindIndex(item => 
+                            userName == item.UserName);
 
                         loggedIn = Utility.CheckAdminPassWord(adminKey);
 
                         if (loggedIn) { return; }
                     }
                 }
-                UserInterface.DisplayMessage("Användarnamnet som du försökte logga in med finns inte\nFörsök igen");
+                UserInterface.DisplayMessage("Användarnamnet du angett kunde " +
+                    "inte hittas.\nFörsök igen");
                 Utility.PressEnterToContinue();
                 Utility.RemoveLines(9);
                 tries++; 
@@ -154,10 +159,12 @@ namespace KiwiBankomaten
                 // Creates an instance of the loggedIn user in database
                 Customer obj = DataBase.CustomerDict[userKey];
 
-                UserInterface.DisplayMessage($"{DataBase.CustomerDict[userKey].UserName}/CustomerMenu/");
+                UserInterface.DisplayMessage
+                    ($"{DataBase.CustomerDict[userKey].UserName}/CustomerMenu/");
 
-                UserInterface.DisplayMenu(new string[] {"Kontoöversikt", "Överför pengar mellan egna konton",
-                    "Öppna nytt konto", "Överför pengar till annan användare", "Låna pengar", "Logga ut"});
+                UserInterface.DisplayMenu(new string[] {"Kontoöversikt", 
+                    "Överför pengar mellan egna konton", "Öppna nytt konto", 
+                    "Överför pengar till annan användare", "Låna pengar", "Logga ut"});
 
                 string choice = UserInterface.PromptForString();
 
@@ -166,8 +173,10 @@ namespace KiwiBankomaten
                     case "1":
                         // Overviews the Accounts and their respective balances
                         Console.Clear();
-                        UserInterface.DisplayMessage($"{DataBase.CustomerDict[userKey].UserName}/CustomerMenu/AccountOverview/");
-                        obj.AccountOverview();
+                        UserInterface.DisplayMessage($"{DataBase.CustomerDict[userKey].UserName}" +
+                            $"/CustomerMenu/AccountOverview/");
+                        obj.BankAccountOverview();
+                        obj.LoanAccountOverview();
                         break;
                     case "2":
                         // Transfers a value between two accounts the user possesses
@@ -191,7 +200,7 @@ namespace KiwiBankomaten
                         break;
 
                     default:
-                        Console.WriteLine("Wrong input, enter available choice only!");
+                        Console.WriteLine("Ogiltigt val, ange ett nummer från listan.");
                         break;
                 }
                 Utility.PressEnterToContinue();
