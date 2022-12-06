@@ -7,23 +7,51 @@ namespace KiwiBankomaten
 {
     internal class Utility
     {
-        public static bool CheckPassWord(int userKey, int tries)
+        public static bool CheckPassWord(int userKey)
         {
             //if the user is locked, message is displayed and user is returned to mainmenu
-            CheckPassWordLimit(userKey, tries);
-           
-            if (UserInterface.PromptForString("Enter your password") == DataBase.CustomerDict[userKey].Password)
+
+            for (int i = 0; i <= 3; i++)
             {
-                Console.WriteLine("Password is correct");
-                return true;
+                CheckPassWordLimit(userKey, i);    
+
+                if (UserInterface.PromptForString("Enter your password") == DataBase.CustomerDict[userKey].Password)
+                {
+                    Console.WriteLine("Password is correct");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Wrong password"); //if wrong password is entered
+                    PressEnterToContinue();
+                    RemoveLines(5);
+                } 
             }
-            else
+            return false;
+        }
+
+        public static bool CheckAdminPassWord(int adminKey)
+        {
+            //if the user is locked, message is displayed and user is returned to mainmenu
+
+            for (int i = 0; i < 3; i++)
             {
-                Console.WriteLine("Wrong password"); //if wrong password is entered 
-                tries++;  //"tries"adds with one, and user is returned CheckPassWord again
-                CheckPassWord(userKey, tries);
-                return false;
+                if (UserInterface.PromptForString("Enter your password") == DataBase.AdminList[adminKey].Password)
+                {
+                    Console.WriteLine("Password is correct");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Wrong password"); //if wrong password is entered
+                    PressEnterToContinue();
+                    RemoveLines(5);
+                } 
             }
+            UserInterface.DisplayMessage("Du har inte lyckats logga in på 3 försök... fan va du suger på detta...");
+            PressEnterToContinue();
+            Program.RunProgram();
+            return false;
         }
 
         public static void CheckPassWordLimit(int userKey, int tries)
@@ -38,22 +66,6 @@ namespace KiwiBankomaten
                 PressEnterToContinue();
 
                 Program.RunProgram();
-            }
-        }
-        public static bool AdminCheckPassWord(int adminKey)
-        {
-            Console.WriteLine("Enter your password");
-            string userPassWord = (Console.ReadLine());
-
-            if (userPassWord == DataBase.AdminList[adminKey].Password)
-            {
-                Console.WriteLine("Password is correct");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Wrong password");
-                return false;
             }
         }
 

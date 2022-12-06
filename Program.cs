@@ -28,8 +28,11 @@ namespace KiwiBankomaten
                 string choice = UserInterface.PromptForString();
                 switch (choice)
                 {
+                    //Logs in the user
                     case "1":
-                        LogIn(out loggedIn, out userKey); //pressing 1 leads to using Login()
+                        
+                        //Logs in the user
+                        LogIn(out loggedIn, out userKey); 
                         if (loggedIn)
                         {
                             UserInterface.DisplayWelcomeMessageLoggedIn(userKey);
@@ -37,20 +40,29 @@ namespace KiwiBankomaten
                             Utility.PressEnterToContinue();
                             Console.Clear();
 
-                            CustomerMenu(userKey);//if login is successful, leads to CustomerMenu() 
+                            //if login is successful, leads to CustomerMenu() 
+                            CustomerMenu(userKey);
                         }
                         break;
-                    case "2"://Exit program
-                        Environment.Exit(0);//closes the program 
+                    
+                    //Exit program
+                    case "2":
+                        
+                        //closes the program 
+                        Environment.Exit(0);
                         break;
-                    case "admin": // Hidden admin login, which leads to AdminLogIn() and AdminMenu()
-                        adminKey = AdminLogIn(out loggedIn);
+                        
+                    // Hidden admin login, which leads to AdminLogIn() and AdminMenu()
+                    case "admin": 
+                        AdminLogIn(out loggedIn, out adminKey);
                         if (loggedIn)
                         {
                             Admin.AdminMenu();
                         }
                         break;
-                    default://If neither of these options are used the defaultmsg is displayed
+                        
+                    //If neither of these options are used the defaultmsg is displayed
+                    default:
                         Console.WriteLine("Felaktigt val, försök igen.");
                         Utility.PressEnterToContinue();
                         Console.Clear();
@@ -63,8 +75,8 @@ namespace KiwiBankomaten
         //Checks if user exist, returns userKey
         public static void LogIn(out bool loggedIn, out int userKey)
         {
-            userKey = 0; 
             int tries = 0;
+            userKey = 0; 
             loggedIn = false;
 
             UserInterface.DisplayWelcomeMessage();
@@ -72,17 +84,19 @@ namespace KiwiBankomaten
             do
             {
                 string userName = UserInterface.PromptForString("Please enter your account name\n\nAccount Name").Trim();
-
+                
                 // loop through customer dictionary to search for userName
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
                 {
                     if (userName == item.Value.UserName)
                     {
-                        tries = 0;
-                        userKey = item.Key;// stores userKey
+                        // stores userKey
+                        userKey = item.Key;
 
-                        loggedIn = Utility.CheckPassWord(userKey, tries); // calls CheckPassWord function to check password
-                                                                          // if login is successful
+                        // calls CheckPassWord function to check password
+                        loggedIn = Utility.CheckPassWord(userKey); 
+                                                                         
+                        // if login is successful
                         if (loggedIn) { return; }
                     }
 
@@ -97,31 +111,33 @@ namespace KiwiBankomaten
             return;
         }
 
-        public static int AdminLogIn(out bool loggedIn)
+        public static void AdminLogIn(out bool loggedIn, out int adminKey)
         {
-            int adminKey = 0;
+            int tries = 0;
+            adminKey = 0;
             loggedIn = false;
             
             UserInterface.DisplayWelcomeMessage();
-            string userName = UserInterface.PromptForString("Please enter your account name\n\nAccount Name");
 
-            foreach (Admin item in DataBase.AdminList)
+            do
             {
-                if (userName == item.UserName)
+                string userName = UserInterface.PromptForString("Please enter your account name\n\nAccount Name");  
+                foreach (Admin item in DataBase.AdminList)
                 {
-                    adminKey = DataBase.AdminList.FindIndex(item => userName == item.UserName);
-
-                    loggedIn = Utility.AdminCheckPassWord(adminKey);
-
-                    if (loggedIn)
+                    if (userName == item.UserName)
                     {
-                        Console.WriteLine("Successfully logged in");
-                        Console.WriteLine($"Welcome {userName}");
-                        return adminKey; //Returns adminKey so we know which admin is logged in
+                        adminKey = DataBase.AdminList.FindIndex(item => userName == item.UserName);
+
+                        loggedIn = Utility.CheckAdminPassWord(adminKey);
+
+                        if (loggedIn) { return; }
                     }
                 }
-            }
-            return 0;
+                UserInterface.DisplayMessage("Användarnamnet som du försökte logga in med finns inte\nFörsök igen");
+                Utility.PressEnterToContinue();
+                Utility.RemoveLines(9);
+                tries++; 
+            } while (tries != 3);
         }
 
         public static void LogOut()
