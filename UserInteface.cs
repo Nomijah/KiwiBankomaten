@@ -3,18 +3,24 @@ using System;
 
 public class UserInterface
 {
-    public static void DisplayIntroMessage()
+
+    //Displays the Welcome message to the user
+    public static void DisplayWelcomeMessage()
     {
         Console.Clear();
         Console.WriteLine("---------------------------------------------------");
         Console.WriteLine("Välkommen till KiwiBank!");
     }
-    public static void DisplayIntroMessageLoggedIn(int userKey)
+
+    // Displays the Welcome message when user is logged in
+    public static void DisplayWelcomeMessageLoggedIn(int userKey)
     {
+        Console.Clear();
         Console.WriteLine("---------------------------------------------------");
         Console.WriteLine("Välkommen {0}", DataBase.CustomerDict[userKey].UserName);
     }
 
+    // Displays a menu
     public static void DisplayMenu(string[] options)
     {
         Console.WriteLine("---------------------------------------------------");
@@ -80,6 +86,8 @@ public class UserInterface
         }
         return selection;
     }
+
+    // Asks for a value then returns that value as a string
     public static string PromptForString()
     {
         Console.WriteLine("---------------------------------------------------");
@@ -87,6 +95,7 @@ public class UserInterface
         return Console.ReadLine();
     }
 
+    // Asks for a value with a custom prompt then returns that value as a string
     public static string PromptForString(string prompt)
     {
         Console.WriteLine("---------------------------------------------------");
@@ -94,6 +103,7 @@ public class UserInterface
         return Console.ReadLine();
     }
 
+    // Replacement for Console.WriteLine()
     public static void DisplayMessage(string message)
     {
         Console.WriteLine("---------------------------------------------------");

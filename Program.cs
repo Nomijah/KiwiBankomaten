@@ -30,7 +30,7 @@ namespace KiwiBankomaten
                         LogIn(out loggedIn, out userKey); //pressing 1 leads to using Login()
                         if (loggedIn)
                         {
-                            UserInterface.DisplayIntroMessageLoggedIn(userKey);
+                            UserInterface.DisplayWelcomeMessageLoggedIn(userKey);
                             
                             Utility.PressEnterToContinue();
                             Console.Clear();
@@ -67,7 +67,7 @@ namespace KiwiBankomaten
             int tries = 0;
             loggedIn = false;
 
-            UserInterface.DisplayIntroMessage();
+            UserInterface.DisplayWelcomeMessage();
             string userName = UserInterface.PromptForString("Please enter your account name");
 
             // loop through customer dictionary to search for userName
@@ -102,7 +102,7 @@ namespace KiwiBankomaten
             int adminKey = 0;
             loggedIn = false;
             
-            UserInterface.DisplayIntroMessage();
+            UserInterface.DisplayWelcomeMessage();
             string userName = UserInterface.PromptForString("Please enter your account name");
 
             foreach (Admin item in DataBase.AdminList)
