@@ -62,6 +62,14 @@ namespace KiwiBankomaten
                 Tuple.Create("Barnsparkonto", 2.3m)
             };
 
+        public static List<Tuple<string, decimal>> LoanAccountTypes =
+    new List<Tuple<string, decimal>>
+    {
+                Tuple.Create("Bolån", 4.5m),
+                Tuple.Create("Billån", 6.3m),
+                Tuple.Create("Blancolån", 12.7m),
+    };
+
         // Prints out account types with interest values.
         public static void PrintAccountTypes()
         {
@@ -69,6 +77,15 @@ namespace KiwiBankomaten
             {
                 Console.WriteLine($"{i}. {BankAccountTypes[i - 1].Item1}, " +
                     $"ränta: {BankAccountTypes[i - 1].Item2}");
+            }
+        }
+
+        public static void PrintLoanAccountTypes()
+        {
+            for (int i = 1; i <= LoanAccountTypes.Count; i++)
+            {
+                Console.WriteLine($"{i}. {LoanAccountTypes[i - 1].Item1}, " +
+                    $"ränta: {LoanAccountTypes[i - 1].Item2}");
             }
         }
     }

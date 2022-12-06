@@ -156,8 +156,8 @@ namespace KiwiBankomaten
 
                 UserInterface.DisplayMessage($"{DataBase.CustomerDict[userKey].UserName}/CustomerMenu/");
 
-                UserInterface.DisplayMenu(new string[] {"Overview accounts and balances", "Transfer money personal accounts",
-                    "Create new account", "Kiwibank internal Transfer money ", "Logout"});
+                UserInterface.DisplayMenu(new string[] {"Kontoöversikt", "Överför pengar mellan egna konton",
+                    "Öppna nytt konto", "Överför pengar till annan användare", "Låna pengar", "Logga ut"});
 
                 string choice = UserInterface.PromptForString();
 
@@ -182,8 +182,11 @@ namespace KiwiBankomaten
                         obj.InternalMoneyTransfer(); 
                         break;
                     case "5":
+                        obj.LoanMoney();
+                        break;
+                    case "6":
                         // Logout
-                        LogOut(); 
+                        LogOut();
 
                         break;
 

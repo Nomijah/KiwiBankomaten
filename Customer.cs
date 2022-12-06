@@ -11,6 +11,7 @@ namespace KiwiBankomaten
     internal class Customer : User
     {
         private Dictionary<int, BankAccount> BankAccounts;
+        private Dictionary<int, LoanAccount> LoanAccounts;
 
         // Used for creating test customers.
         public Customer(int id, string username, string password, bool locked)
@@ -26,6 +27,10 @@ namespace KiwiBankomaten
                 { 2, new BankAccount("Sparkonto", 324000m, "SEK", 2.5m) },
                 { 3, new BankAccount("Utlandskonto", 74654.36m, "EUR", 1.3m) },
                 { 4, new BankAccount("Företagskonto", 624.86m, "USD", 0m) }
+            };
+            LoanAccounts = new Dictionary<int, LoanAccount>()
+            {
+                {1, new LoanAccount("Bolån", -1000000m, 4.5m) }
             };
         }
 
@@ -50,6 +55,7 @@ namespace KiwiBankomaten
             {
                 { 1, new BankAccount("Lönekonto", "SEK", 0m) }
             };
+            LoanAccounts = new Dictionary<int, LoanAccount>();
         }
 
         // Method for customers to open account.
@@ -227,6 +233,14 @@ namespace KiwiBankomaten
             {
                 Console.WriteLine($"-{account.Key}). {account.Value.AccountNumber} " +
                     $"{account.Value.AccountName}: {Utility.AmountDecimal(account.Value.Amount)} " +
+                    $"{account.Value.Currency}");
+            }
+
+            // Print out each loan account with key, number, value and currency
+            foreach (KeyValuePair<int, LoanAccount> account in LoanAccounts)
+            {
+                Console.WriteLine($"{account.Key}. {account.Value.AccountNumber} " +
+                    $"{account.Value.AccountName}: {AmountDecimal(account.Value.Amount)} " +
                     $"{account.Value.Currency}");
             }
         }
@@ -457,6 +471,143 @@ namespace KiwiBankomaten
             {
                 return true;
             }
+        }
+
+        // For customer to loan money
+        public void LoanMoney()
+        {
+            // Gets loan type from user            
+            Tuple<string, decimal> accountType = ChooseLoanAccountType();
+
+            Console.WriteLine("Hur mycket pengar vill du låna?");
+            Console.WriteLine($"Du kan max låna {AmountDecimal(CheckLoanLimit())} kronor.");
+            Utility.IsValueNumberCheck(out decimal amountMoney);
+            while (amountMoney > CheckLoanLimit())
+            {
+                Console.WriteLine($"Du kan inte låna mer än {AmountDecimal(CheckLoanLimit())} kronor.\n" +
+                    $"Hur mycket vill du låna?");
+                Utility.IsValueNumberCheck(out amountMoney);
+            }
+
+            // Gets the highest key present and adds one to get new key
+            int index;
+            if (LoanAccounts.Count < 1)
+            {
+                index = 1;
+            }
+            else
+            {
+                index = LoanAccounts.Keys.Max() + 1;
+            }
+            // Adds the new loan account to customers loan account dictionary
+            LoanAccounts.Add(index, new LoanAccount(accountType.Item1,
+                amountMoney - (amountMoney * 2), accountType.Item2));
+            // Adds the loaned amount to customers standard account
+            BankAccounts[1].Amount += amountMoney;
+
+        }
+
+        // Method for choosing what type of loan account.
+        public Tuple<string, decimal> ChooseLoanAccountType()
+        {
+            Console.Clear();
+            int userChoice = 0;
+            // Loop until user has entered a valid choice
+            while (userChoice == 0)
+            {
+                Console.WriteLine("Vilken typ av konto vill du öppna?");
+                DataBase.PrintLoanAccountTypes();
+                Console.Write($"Välj [1 - {DataBase.LoanAccountTypes.Count}]:");
+                string userInput = Console.ReadLine();
+                try
+                {
+                    userChoice = Convert.ToInt32(userInput);
+                    if (userChoice < 1 ||
+                        userChoice > DataBase.LoanAccountTypes.Count)
+                    {
+                        Console.WriteLine("Felaktigt val, numret du angett " +
+                            "finns inte i listan.");
+                        userChoice = 0;
+                        Utility.PressEnterToContinue();
+                    }
+                    else
+                    {
+                        string answer;
+                        // Check if user is happy with the choice
+                        do
+                        {
+                            Console.WriteLine($"Du har valt " +
+                                $"{DataBase.LoanAccountTypes[userChoice - 1].Item1}. " +
+                                $"med ränta " +
+                                $"{DataBase.LoanAccountTypes[userChoice - 1].Item2}%." +
+                                $" Vill du godkänna detta? [J/N]");
+                            answer = Console.ReadLine().ToUpper();
+                            switch (answer)
+                            {
+                                case "J": // If yes, do nothing
+                                    break;
+                                case "N": // If no, restart loop
+                                    userChoice = 0;
+                                    break;
+                                default:
+                                    Console.WriteLine("Felaktig inmatning, " +
+                                        "välj [J] för ja eller [N] för nej.");
+                                    break;
+                            }
+                            // Repeat loop until valid choice is given
+                        } while (answer != "J" && answer != "N");
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Felaktig inmatning, använd endast" +
+                        " siffror.");
+                    Utility.PressEnterToContinue();
+                }
+                Console.Clear();
+            }
+            // returns the interest rate of chosen account type
+
+            return DataBase.LoanAccountTypes[userChoice - 1];
+        }
+
+        // Returns the maximum loan amount of the customer
+        public decimal CheckLoanLimit()
+        {
+            decimal sum = 0;
+
+            // Sums all the users values together
+            foreach (BankAccount item in BankAccounts.Values)
+            {
+                if (item.Currency != "SEK")
+                {
+                    sum += ConvertToSek(item);
+                }
+                else
+                {
+                    sum += item.Amount;
+                }
+            }
+
+            // Subtracts current loans as the values in LoanAccounts is negative
+            foreach (LoanAccount item in LoanAccounts.Values)
+            {
+                sum += item.Amount/5;
+            }
+
+            return sum * 5;
+        }
+        // Converts foreign currency to SEK
+        public decimal ConvertToSek(BankAccount userAccount)
+        {
+            foreach (KeyValuePair<string, decimal> item in DataBase.ExchangeRates)
+            {
+                if (item.Key == userAccount.Currency)
+                {
+                    return userAccount.Amount * item.Value;
+                }
+            }
+            return 0;
         }
     }
 }
