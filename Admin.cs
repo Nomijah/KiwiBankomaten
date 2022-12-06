@@ -71,7 +71,7 @@ namespace KiwiBankomaten
             {
                 Console.Clear();
                 Console.WriteLine("Funktioner för admins:\n-1 Skapa ny användare\n-2 Uppdatera växlingskurs" +
-                    "\n-3 Välj en specifik användare\n-4 Redigera ett användarkonto\n-5 Logga ut");
+                    "\n-3 Visa alla användare\n-4 Redigera ett användarkonto\n-5 Logga ut");
                 switch (Console.ReadLine())
                 {
                     case "1":
@@ -124,15 +124,14 @@ namespace KiwiBankomaten
                 {
                     // Chosen customer account is saved for access to non-static methods and easier property access.
                     Customer selectedUser = DataBase.CustomerDict[userID];
-                    do
+                    while (true)
                     {
                         Console.Clear();
                         Console.WriteLine($"Du har valt användaren ID:{selectedUser.Id} - Användarnamn:{selectedUser.UserName}" +
                             $" - Lösenord:{selectedUser.Password} - Spärrad:{selectedUser.Locked}");
-                        Console.WriteLine("Vad vill du göra med användaren?\n-1 Visa bankkonton\n-2 Lås/Lås upp" +
+                        Console.WriteLine("Vad vill du göra med användaren?\n-1 Visa bankkonton\n-2 Spärra/Avspärra" +
                             "\n-3 Ändra lösenord\n-4 Återvänd till adminmenyn");
-                        string userChoice = Console.ReadLine();
-                        switch (userChoice)
+                        switch (Console.ReadLine())
                         {
                             // Prints all user's bank accounts.
                             case "1":
@@ -142,7 +141,6 @@ namespace KiwiBankomaten
                             // Lets admin lock or unlock user's account.
                             case "2":
                                 LockOrUnlockAccount(selectedUser);
-                                Console.ReadKey();
                                 break;
                             // Lets admin change password of user's account.
                             case "3":
@@ -151,11 +149,11 @@ namespace KiwiBankomaten
                             // Returns admin to the main admin menu.
                             case "4":
                                 return;
-                            default: 
+                            default:
                                 Console.WriteLine("Fel input, skriv in ett korrekt värde");
                                 break;
                         }
-                    } while (noError == false);
+                    }
                 }
                 else
                 {
