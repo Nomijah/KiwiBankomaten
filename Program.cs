@@ -57,7 +57,7 @@ namespace KiwiBankomaten
                         AdminLogIn(out loggedIn, out adminKey);
                         if (loggedIn)
                         {
-                            Admin.AdminMenu();
+                            Admin.AdminMenu(adminKey);
                         }
                         break;
                         

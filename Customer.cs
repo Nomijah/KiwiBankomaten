@@ -73,69 +73,23 @@ namespace KiwiBankomaten
         public decimal ChooseAccountType()
         {
             int userChoice = 0;
-            // Loop until user has entered a valid choice
-            while (userChoice == 0)
+            Console.Clear();
+            UserInterface.DisplayMessage("Vilken typ av konto vill du öppna?");
+            UserInterface.DisplayMessage("Tillgängliga Kontotyper");
+            DataBase.PrintAccountTypes();
+            do
             {
-                Console.Clear();
-                Console.WriteLine("---------------------------------------------------");
-                Console.WriteLine("Vilken typ av konto vill du öppna?");
-                Console.WriteLine("---------------------------------------------------");
-                DataBase.PrintAccountTypes();
-                Console.WriteLine("---------------------------------------------------");
-                Console.Write($"Välj [1 - {DataBase.BankAccountTypes.Count}]: ");
-                string userInput = Console.ReadLine();
-                
-
-                try
+                userChoice = 0;
+                while ((!int.TryParse(UserInterface.PromptForString(), out userChoice)) 
+                    || userChoice < 1 || userChoice > DataBase.BankAccountTypes.Count)
                 {
-                    userChoice = Convert.ToInt32(userInput);
-                    if (userChoice < 1 ||
-                        userChoice > DataBase.BankAccountTypes.Count)
-                    {
-                        Console.WriteLine("---------------------------------------------------");
-                        Console.WriteLine("Felaktigt val, numret du angett " +
-                            "finns inte i listan.");
-                        userChoice = 0;
-                        Utility.PressEnterToContinue();
-                    }
-                    else
-                    {
-                        string answer;
-                        // Check if user is happy with the choice
-                        do
-                        {
-                            Console.WriteLine("---------------------------------------------------");
-                            Console.WriteLine($"Du har valt " +
-                                $"{DataBase.BankAccountTypes[userChoice - 1].Item1}. " +
-                                $"med ränta " +
-                                $"{DataBase.BankAccountTypes[userChoice - 1].Item2}%." +
-                                $" Vill du godkänna detta? [J/N]");
-                            answer = Console.ReadLine().ToUpper();
-                            switch (answer)
-                            {
-                                case "J": // If yes, do nothing
-                                    break;
-                                case "N": // If no, restart loop
-                                    userChoice = 0;
-                                    break;
-                                default:
-                                    Console.WriteLine("Felaktig inmatning, " +
-                                        "välj [J] för ja eller [N] för nej.");
-                                    break;
-                            }
-                            // Repeat loop until valid choice is given
-                        } while (answer != "J" && answer != "N");
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("---------------------------------------------------");
-                    Console.WriteLine("Felaktig inmatning, använd endast" +
-                        " siffror.");
+                    UserInterface.DisplayMessage("Felaktigt val\n" +
+                        "Numret du angett finns inte i listan.");
                     Utility.PressEnterToContinue();
+                    Utility.RemoveLines(7);
                 }
-                Console.Clear();
-            }
+            } while (Utility.YesOrNo("Kontotyp: ", DataBase.BankAccountTypes[userChoice - 1].Item1));
+            
             // returns the interest rate of chosen account type
             return DataBase.BankAccountTypes[userChoice - 1].Item2;
         }
@@ -143,40 +97,16 @@ namespace KiwiBankomaten
         // Lets the customer choose a name for the account.
         private string ChooseAccountName()
         {
-            bool notReady = true;
             string accountName;
+
+            Console.Clear();
+            UserInterface.DisplayMessage("Vilket namn vill du ge ditt konto?");
             do
             {
-                Console.WriteLine("---------------------------------------------------");
-                Console.WriteLine("Vilket namn vill du ge ditt konto?");
-                Console.WriteLine("---------------------------------------------------");
-                Console.Write("KontoNamn: ");
-                accountName = Console.ReadLine();
-                string answer;
-                do
-                {
-                    Console.WriteLine("---------------------------------------------------");
-                    Console.WriteLine($"Ditt konto får namnet {accountName}. " +
-                        $"Vill du godkänna detta? [J/N]");
-                    answer = Console.ReadLine().ToUpper();
-                    switch (answer)
-                    {
-                        case "J":
-                            notReady = false;
-                            break;
-                        case "N":
-                            break;
-                        default:
-                            Console.WriteLine("---------------------------------------------------");
-                            Console.WriteLine("Felaktig inmatning, välj [J] " +
-                                "för ja eller N för nej.");
-                            Utility.PressEnterToContinue();
-                            break;
-                    }
-                    // Loop until valid choice is given
-                } while (answer != "J" && answer != "N");
+                accountName = UserInterface.PromptForString();
+
                 // Loop until user is happy with the choice
-            } while (notReady);
+            } while (Utility.YesOrNo("namn", accountName));
                 
             Console.Clear();
             return accountName;
@@ -185,44 +115,41 @@ namespace KiwiBankomaten
         // Lets the customer choose which currency the account shall be in.
         private string ChooseCurrency()
         {
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("Vilken valuta vill du använda till ditt konto?");
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("Tillgängliga valutor");
+            string currency;
+            UserInterface.DisplayMessage("Vilken valuta vill du använda till ditt konto?");
+            UserInterface.DisplayMessage("Tillgängliga valutor");
             DataBase.PrintCurrencies();
-
-            Console.WriteLine("---------------------------------------------------");
-            Console.Write("Ange valuta: ");
-            string currency = Console.ReadLine().ToUpper();
-            // Check if user input is correct, if not ask again
-            while (!DataBase.ExchangeRates.ContainsKey(currency))
+            do
             {
-                
-                Console.WriteLine("Valutan du angett finns inte i systemet," +
-                    "vänligen välj en valuta från listan.");
-                DataBase.PrintCurrencies();
-                Console.WriteLine("---------------------------------------------------");
-                Console.Write("Ange valuta: ");
-                currency = Console.ReadLine().ToUpper();
-            }
-            return currency;
+
+                // Check if user input is correct, if not ask again
+                while (!DataBase.ExchangeRates.ContainsKey(UserInterface.PromptForString(out currency).ToUpper()))
+                {
+                    UserInterface.DisplayMessage("Valutan du angett finns inte i systemet\n" +
+                        "Vänligen välj en valuta från listan");
+                    Utility.PressEnterToContinue();
+                    Utility.RemoveLines(7);
+                } 
+            } while (Utility.YesOrNo("Valuta", currency.ToUpper()));
+
+            return currency.ToUpper();
         }
 
         // Method for adding money into newly created account.
         public void InsertMoneyIntoNewAccount(decimal interest)
         {
+            string answer;
             // Used to ensure money amount is valid, has to be a positive number.
             bool noError;
-
             // Amount of money to be inserted into new account.
             decimal insertAmount;
 
-            Console.WriteLine($"Vill du sätta in {BankAccounts[BankAccounts.Keys.Max()].Currency} i ditt nya konto? J/N");
-            string answer;
+            Console.Clear();
+            UserInterface.DisplayMessage($"Vill du sätta in {BankAccounts[BankAccounts.Keys.Max()].Currency} i ditt nya konto? J/N");
             // Will only proceed if user selects J or N.
             do
             {
-                answer = Console.ReadLine().ToUpper();
+                answer = UserInterface.PromptForString().ToUpper();
                 switch (answer)
                 {
                     case "J":
@@ -232,6 +159,8 @@ namespace KiwiBankomaten
                     default:
                         Console.WriteLine("Felaktig inmatning, välj [J] " +
                             "för ja eller N för nej.");
+                        Utility.PressEnterToContinue();
+                        Utility.RemoveLines(4);
                         break;
                 }
             } while (answer != "J" && answer != "N");
@@ -240,16 +169,18 @@ namespace KiwiBankomaten
             {
                 Console.Clear();
                 noError = true;
-                Console.WriteLine("Skriv in mängden pengar du vill sätta in");
+                UserInterface.DisplayMessage("Skriv in mängden pengar du vill sätta in");
                 // Checks if amount to be inserted is a number and checks if it is a positive number.
-                if (decimal.TryParse(Console.ReadLine(), out insertAmount) && insertAmount >= 0)
+                if (decimal.TryParse(UserInterface.PromptForString(), out insertAmount) && insertAmount >= 0)
                 {
                     // Adds money into newly created account.
                     BankAccounts[BankAccounts.Keys.Max()].Amount += insertAmount;
                 }
                 else
                 {
-                    Console.WriteLine("Det där är inte ett giltigt värde");
+                    UserInterface.DisplayMessage("Det där är inte ett giltigt värde");
+                    Utility.PressEnterToContinue();
+                    Utility.RemoveLines(6);
                     noError = false;
                 }
             } while (noError == false);
@@ -261,20 +192,22 @@ namespace KiwiBankomaten
         public void ViewInterestSavingsOfNewAccount(decimal interest, decimal insertAmount)
         {
             decimal interestAmount = insertAmount * interest / 100;
-            Console.WriteLine("Såhär mycket ränta kommer du tjäna med den angivna summan: ");
-            Console.WriteLine("1 år : " + Math.Round(interestAmount, 2));
+            UserInterface.DisplayMessage($"Såhär mycket ränta kommer du tjäna med {insertAmount} {BankAccounts.Last().Value.Currency}");
+            UserInterface.DisplayMessage("1 år : " + Math.Round(interestAmount, 2));
             // Calculates amount of money account will earn in interest in 5 years.
             for (int i = 0; i < 4; i++)
             {
                 interestAmount += (insertAmount + interestAmount) * interest / 100;
             }
             Console.WriteLine("5 år : " + Math.Round(interestAmount, 2));
+
             // Calculates amount of money account will earn in interest in 10 years.
             for (int i = 0; i < 5; i++)
             {
                 interestAmount += (insertAmount + interestAmount) * interest / 100;
             }
             Console.WriteLine("10 år : " + Math.Round(interestAmount, 2));
+
         }
 
         // Prints out users accounts.

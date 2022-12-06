@@ -115,6 +115,28 @@ namespace KiwiBankomaten
             }
         }
 
+        public static bool YesOrNo(string input, string accountName)
+        {
+            UserInterface.DisplayMessage($"Ditt konto får {input} {accountName}\n" +
+                $"Vill du godkänna detta? [J/N]");
+            switch (UserInterface.PromptForString().ToUpper())
+            {
+                case "J":
+                    return false;
+                case "N":
+                    RemoveLines(7);
+                    return true;
+                default:
+                    UserInterface.DisplayMessage("Felaktig inmatning\nVälj [J] " +
+                        "för ja eller N för nej.");
+                    PressEnterToContinue();
+                    RemoveLines(10);
+                    YesOrNo(input, accountName);
+                    break;
+            }
+            return false;
+        }
+
         public static void RemoveLines(int lines)
         {
             for (int i = 0; i < lines; i++)

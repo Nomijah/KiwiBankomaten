@@ -12,11 +12,24 @@ public class UserInterface
         Console.WriteLine("Välkommen till KiwiBank!");
     }
 
+    public static void DisplayAdminMessage()
+    {
+        Console.Clear();
+        Console.WriteLine("---------------------------------------------------");
+        Console.WriteLine("Admin Menyn! Super Secret!");
+    }
+
     // Displays the Welcome message when user is logged in
     public static void DisplayWelcomeMessageLoggedIn(int userKey)
     {
         Console.WriteLine("---------------------------------------------------");
-        Console.WriteLine("Välkommen {0}", DataBase.CustomerDict[userKey].UserName);
+        Console.WriteLine("Välkommen: {0}", DataBase.CustomerDict[userKey].UserName);
+    }
+
+    public static void DisplayAdminMessageLoggedIn(int adminKey)
+    {
+        Console.WriteLine("---------------------------------------------------");
+        Console.WriteLine("Välkommen Admin: {0}", DataBase.AdminList[adminKey].UserName);
     }
 
     // Displays a menu
@@ -94,12 +107,30 @@ public class UserInterface
         return Console.ReadLine();
     }
 
+    // Asks for a value then returns that value as a string
+    public static string PromptForString(out string value)
+    {
+        Console.WriteLine("---------------------------------------------------");
+        Console.Write("Ange ditt val: ");
+        value = Console.ReadLine();
+        return value;
+    }
+
     // Asks for a value with a custom prompt then returns that value as a string
     public static string PromptForString(string prompt)
     {
         Console.WriteLine("---------------------------------------------------");
         Console.Write($"{prompt}: ");
         return Console.ReadLine();
+    }
+
+    // Asks for a value with a custom prompt then returns that value as a string
+    public static int PromptForInt(int value)
+    {
+        Console.WriteLine("---------------------------------------------------");
+        Console.Write("Ange ditt val: ");
+        value = (int)IsValueNumberCheck();
+        return value;
     }
 
     // Replacement for Console.WriteLine()
