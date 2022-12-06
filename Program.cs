@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 
 namespace KiwiBankomaten
@@ -21,6 +22,7 @@ namespace KiwiBankomaten
             //looping menu, which will run when the program is started 
             do
             {
+                UserInterface.DisplayWelcomeMessage();
                 UserInterface.DisplayMenu(new string[] {"Logga in", "Avsluta"});
                 loggedIn = false;
                 string choice = UserInterface.PromptForString();
@@ -55,8 +57,6 @@ namespace KiwiBankomaten
                         RunProgram();
                         break;
                 }
-                Thread.Sleep(2000);//leaves eventual message readable for 2 sec
-                Console.Clear();// clearing console, 
             } while (loggedIn != true);
         }
         
@@ -68,31 +68,31 @@ namespace KiwiBankomaten
             loggedIn = false;
 
             UserInterface.DisplayWelcomeMessage();
-            string userName = UserInterface.PromptForString("Please enter your account name");
 
-            // loop through customer dictionary to search for userName
-            foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
+            do
             {
-                if (userName == item.Value.UserName)
-                {
-                    userKey = item.Key;// stores userKey
-                    loggedIn = Utility.CheckPassWord(userKey, tries); // calls CheckPassWord function to check password
-                    loggedIn = true; //defines bool since it will change otherwise, dont change!
+                string userName = UserInterface.PromptForString("Please enter your account name\n\nAccount Name").Trim();
 
-                    // if login is successful
-                    if (loggedIn)
+                // loop through customer dictionary to search for userName
+                foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
+                {
+                    if (userName == item.Value.UserName)
                     {
-                        // clearing console, 
-                        Console.Clear();
-                        
-                        return;
+                        tries = 0;
+                        userKey = item.Key;// stores userKey
+
+                        loggedIn = Utility.CheckPassWord(userKey, tries); // calls CheckPassWord function to check password
+                                                                          // if login is successful
+                        if (loggedIn) { return; }
                     }
+
                 }
-                else
-                {//if name is not found, bool is false, and the WriteLine below is shown once after the try
-                    loggedIn = false;
-                }
-            }
+                UserInterface.DisplayMessage("Användarnamnet som du försökte logga in med finns inte\nFörsök igen");
+                Utility.PressEnterToContinue();
+                Utility.RemoveLines(9); 
+                tries++;
+            } while (tries != 3);
+            
             Console.WriteLine("Ingen användare med det namnet hittades.");
             return;
         }
@@ -103,7 +103,7 @@ namespace KiwiBankomaten
             loggedIn = false;
             
             UserInterface.DisplayWelcomeMessage();
-            string userName = UserInterface.PromptForString("Please enter your account name");
+            string userName = UserInterface.PromptForString("Please enter your account name\n\nAccount Name");
 
             foreach (Admin item in DataBase.AdminList)
             {

@@ -9,12 +9,10 @@ namespace KiwiBankomaten
     {
         public static bool CheckPassWord(int userKey, int tries)
         {
-            CheckPassWordLimit(userKey, tries);
-            
-            string userPassWord = UserInterface.PromptForString("Enter your password"); // lets user enter password
-
             //if the user is locked, message is displayed and user is returned to mainmenu
-            if (userPassWord == DataBase.CustomerDict[userKey].Password)
+            CheckPassWordLimit(userKey, tries);
+           
+            if (UserInterface.PromptForString("Enter your password") == DataBase.CustomerDict[userKey].Password)
             {
                 Console.WriteLine("Password is correct");
                 return true;
@@ -28,7 +26,7 @@ namespace KiwiBankomaten
             }
         }
 
-        public static bool CheckPassWordLimit(int userKey, int tries)
+        public static void CheckPassWordLimit(int userKey, int tries)
         {
             //if the user is locked, message is displayed and user is returned to mainmenu
             if (tries == 3 || DataBase.CustomerDict[userKey].Locked == true)
@@ -41,8 +39,6 @@ namespace KiwiBankomaten
 
                 Program.RunProgram();
             }
-            return true;
-
         }
         public static bool AdminCheckPassWord(int adminKey)
         {
@@ -107,9 +103,9 @@ namespace KiwiBankomaten
             }
         }
 
-        public static void RemoveLastThreeLines()
+        public static void RemoveLines(int lines)
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < lines; i++)
             {
                 Console.SetCursorPosition(0, Console.CursorTop - 1);
                 Console.Write(new string(' ', Console.BufferWidth));

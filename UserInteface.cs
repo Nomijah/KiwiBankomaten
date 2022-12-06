@@ -15,7 +15,6 @@ public class UserInterface
     // Displays the Welcome message when user is logged in
     public static void DisplayWelcomeMessageLoggedIn(int userKey)
     {
-        Console.Clear();
         Console.WriteLine("---------------------------------------------------");
         Console.WriteLine("Välkommen {0}", DataBase.CustomerDict[userKey].UserName);
     }
@@ -43,7 +42,7 @@ public class UserInterface
             Console.WriteLine("Ogiltigt val, vänligen försök igen.");
             Utility.PressEnterToContinue();
             // Remove three lines of text from the console
-            Utility.RemoveLastThreeLines();
+            Utility.RemoveLines(3);
             Console.Write("Ange ditt val: ");
         }
         return selection;
@@ -62,7 +61,7 @@ public class UserInterface
             Console.WriteLine("Ogiltigt val, vänligen försök igen.");
             Utility.PressEnterToContinue();
             // Remove three lines of text from the console
-            Utility.RemoveLastThreeLines();
+            Utility.RemoveLines(3);
             Console.Write("Ange ditt val: ");
         }
         return selection;
@@ -81,7 +80,7 @@ public class UserInterface
             Console.WriteLine("Ogiltigt val, vänligen försök igen.");
             Utility.PressEnterToContinue();
             // Remove three lines of text from the console
-            Utility.RemoveLastThreeLines();
+            Utility.RemoveLines(3);
             Console.Write($"{prompt}: ");
         }
         return selection;
