@@ -15,21 +15,26 @@ namespace KiwiBankomaten
             bool loggedIn;
             int userKey = 0;
             int adminKey = -1;
-                
+
+            Console.Clear();
+
             //looping menu, which will run when the program is started 
-            do 
+            do
             {
+                UserInterface.DisplayMenu(new string[] {"Logga in", "Avsluta"});
                 loggedIn = false;
-                Console.WriteLine("---------------------------------------------------");
-                Console.WriteLine("Välj ett av alternativen nedan:");
-                Console.WriteLine("-1) Logga in\n-2) Stäng av");
-                string choice = Console.ReadLine();
+                string choice = UserInterface.PromptForString();
                 switch (choice)
                 {
                     case "1":
                         LogIn(out loggedIn, out userKey); //pressing 1 leads to using Login()
                         if (loggedIn)
                         {
+                            UserInterface.DisplayIntroMessageLoggedIn(userKey);
+                            
+                            Utility.PressEnterToContinue();
+                            Console.Clear();
+
                             CustomerMenu(userKey);//if login is successful, leads to CustomerMenu() 
                         }
                         break;
@@ -62,10 +67,8 @@ namespace KiwiBankomaten
             int tries = 0;
             loggedIn = false;
 
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("Welcome to KiwiBank");
-            Console.WriteLine("Please enter your account name:");
-            string userName = Console.ReadLine();
+            UserInterface.DisplayIntroMessage();
+            string userName = UserInterface.PromptForString("Please enter your account name");
 
             // loop through customer dictionary to search for userName
             foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
@@ -98,10 +101,9 @@ namespace KiwiBankomaten
         {
             int adminKey = 0;
             loggedIn = false;
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("Welcome to KiwiBank");
-            Console.WriteLine("Please enter your account name:");
-            string userName = Console.ReadLine();
+            
+            UserInterface.DisplayIntroMessage();
+            string userName = UserInterface.PromptForString("Please enter your account name");
 
             foreach (Admin item in DataBase.AdminList)
             {
@@ -136,25 +138,22 @@ namespace KiwiBankomaten
                 // Creates an instance of the loggedIn user in database
                 Customer obj = DataBase.CustomerDict[userKey];
 
-                Console.WriteLine("---------------------------------------------------");
-                Console.WriteLine($"Welcome {obj.UserName}");
-                Console.WriteLine("---------------------------------------------------");
+                UserInterface.DisplayMessage($"{DataBase.CustomerDict[userKey].UserName}/CustomerMenu/");
 
-                Console.WriteLine("Enter a number as input to navigate in the menu:");
-                Console.WriteLine("-1) Overview accounts and balances\n-2) Transfer money personal accounts" +
-                    "\n-3) Create new account \n-4) Kiwibank internal Transfer money \n-5) Logout");
-                
-                string choice = Console.ReadLine();
+                UserInterface.DisplayMenu(new string[] {"Overview accounts and balances", "Transfer money personal accounts",
+                    "Create new account", "Kiwibank internal Transfer money ", "Logout"});
+
+                string choice = UserInterface.PromptForString();
 
                 switch (choice)
                 {
                     case "1":
-                        Console.WriteLine("---------------------------------------------------");
                         // Overviews the Accounts and their respective balances
+                        Console.Clear();
+                        UserInterface.DisplayMessage($"{DataBase.CustomerDict[userKey].UserName}/CustomerMenu/AccountOverview/");
                         obj.AccountOverview();
                         break;
                     case "2":
-                        Console.WriteLine("---------------------------------------------------");
                         // Transfers a value between two accounts the user possesses
                         obj.TransferBetweenCustomerAccounts(); 
                         break;
@@ -163,7 +162,6 @@ namespace KiwiBankomaten
                         obj.OpenAccount(); 
                         break;
                     case "4":
-                        Console.WriteLine("---------------------------------------------------");
                         // Transfer money to other user in bank
                         obj.InternalMoneyTransfer(); 
                         break;
@@ -177,7 +175,6 @@ namespace KiwiBankomaten
                         Console.WriteLine("Wrong input, enter available choice only!");
                         break;
                 }
-                Console.WriteLine("---------------------------------------------------");
                 Utility.PressEnterToContinue();
 
                 // clearing console, 

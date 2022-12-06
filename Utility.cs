@@ -7,28 +7,6 @@ namespace KiwiBankomaten
 {
     internal class Utility
     {
-        // Checks whether or not "decimal amountMoney" is valid input
-        public static void IsValueNumberCheck(out decimal amountMoney)
-        {
-            // Gets user input => Checks if it's a decimal => Checks if it's larger than 0
-            while (!(decimal.TryParse(Console.ReadLine(), out amountMoney) && amountMoney > 0))
-            {
-                Console.WriteLine("Please input a positive number that is greater than 0.");
-            }
-        }
-
-        // Checks whether or not "int transferFromOrToWhichAccount" is valid input
-        public static void IsValueNumberCheck(out int transferFromOrToWhichAccount, int maxValue)
-        {
-            int minValue = 1;
-            // Gets user input => Checks if it's an integer => Checks if it's in the set range
-            while (!(int.TryParse(Console.ReadLine(), out transferFromOrToWhichAccount) && minValue <= transferFromOrToWhichAccount && maxValue >= transferFromOrToWhichAccount))
-            {
-                Console.WriteLine("Please input a Number that is within the specified range. \n[{0} - {1}]", minValue, maxValue);
-            }
-        }
-
-
         public static bool CheckPassWord(int userKey, int tries)
         {
             if (tries == 3) //Checks to see if user failed login trice, before requesting Password again
@@ -38,13 +16,14 @@ namespace KiwiBankomaten
             //if the user is locked, message is displayed and user is returned to mainmenu
             if (DataBase.CustomerDict[userKey].Locked == true)
             {
-                Console.WriteLine("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin ");
-                Utility.PressEnterToContinue();
+                UserInterface.DisplayMessage("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin");
+                PressEnterToContinue();
+                Console.Clear();
                 Program.RunProgram();
                 return false; //Returns to Login
             }
-            Console.WriteLine("Enter your password");
-            string userPassWord = (Console.ReadLine()); // lets user enter password
+            
+            string userPassWord = UserInterface.PromptForString("Enter your password"); // lets user enter password
 
             //if the user is locked, message is displayed and user is returned to mainmenu
             if (userPassWord == DataBase.CustomerDict[userKey].Password)
@@ -88,7 +67,7 @@ namespace KiwiBankomaten
         // Stops the program until the user presses "Enter"
         public static void PressEnterToContinue()
         {
-            Console.WriteLine("Klicka Enter för att fortsätta.");
+            UserInterface.DisplayMessage("Klicka Enter för att fortsätta.");
             // Gets the input from the user
             ConsoleKey enterPressed = Console.ReadKey(true).Key;
             // Loops if the user Presses any button other than "Enter"
@@ -102,7 +81,7 @@ namespace KiwiBankomaten
         public static bool ContinueOrAbort()
         {
 
-            Console.WriteLine("Klicka Enter för att försöka igen eller Esc för" +
+            UserInterface.DisplayMessage("Klicka Enter för att försöka igen eller Esc för" +
                 " att återgå till huvudmenyn.");
             // Gets the input from the user
             ConsoleKey userInput = Console.ReadKey(true).Key;
@@ -121,6 +100,16 @@ namespace KiwiBankomaten
             {
                 return true;
             }
+        }
+
+        public static void RemoveLastThreeLines()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                Console.Write(new string(' ', Console.BufferWidth));
+            }
+            Console.SetCursorPosition(0, Console.CursorTop);
         }
     }
 }

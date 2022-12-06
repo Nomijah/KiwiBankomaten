@@ -280,7 +280,7 @@ namespace KiwiBankomaten
         // Prints out users accounts.
         public void AccountOverview()
         {
-        
+            Console.WriteLine("---------------------------------------------------");
             // Print out each account with key, number, name, value and currency
             foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
             {
@@ -293,34 +293,33 @@ namespace KiwiBankomaten
         // Shows the Customer the Accounts that was involved in the transaction
         public void AccountOverview(int fromWhichAccount, int toWhichAccount)
         {
-            Console.WriteLine("\nMoney was sent from : ");
+            Console.WriteLine("Money was sent from : ");
             Console.WriteLine($"KontoNamn : {BankAccounts[fromWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[fromWhichAccount].Amount, 2)} {BankAccounts[fromWhichAccount].Currency}\n");
             Console.WriteLine("Money was sent to : ");
-            Console.WriteLine($"KontoNamn : {BankAccounts[toWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[toWhichAccount].Amount, 2)} {BankAccounts[toWhichAccount].Currency}\n");
+            Console.WriteLine($"KontoNamn : {BankAccounts[toWhichAccount].AccountName} - KontoSaldo : {Math.Round(BankAccounts[toWhichAccount].Amount, 2)} {BankAccounts[toWhichAccount].Currency}");
         }
 
         //Initalizes the transfer between accounts
         public void TransferBetweenCustomerAccounts()
         {
-            decimal amountMoney;
-            int transferFromWhichAccount;
-            int transferToWhichAccount;
+            decimal amountMoney = 0;
+            int transferFrom = 0;
+            int transferTo = 0;
 
-            Console.Clear();
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("Enter a number as input to navigate in the menu:");
-            AccountOverview(); // Shows the Customer their Accounts and the balances in said Accounts
-            Console.WriteLine("---------------------------------------------------");
+            DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
 
             Console.WriteLine("Från vilket konto vill du föra över pengarna?");
-            Utility.IsValueNumberCheck(out transferFromWhichAccount, BankAccounts.Count);
+            transferFrom = UserInterface.IsValueNumberCheck(BankAccounts.Count);
+
+            DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
+
 
             bool correctAmount = false;
             do
             {
                 Console.WriteLine("Hur mycket pengar vill du föra över?");
-                Utility.IsValueNumberCheck(out amountMoney);
-                if (!CheckAccountValue(transferFromWhichAccount, amountMoney))
+                amountMoney = UserInterface.IsValueNumberCheck();
+                if (!CheckAccountValue(transferFrom, amountMoney))
                 {
                     Console.WriteLine("Summan du har angett finns inte på kontot, " +
                         "försök igen.");
@@ -331,16 +330,46 @@ namespace KiwiBankomaten
                 }
             } while (!correctAmount);
 
+            DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
+
             Console.WriteLine("Vilket konto vill du föra över pengarna till?");
             // Gets User input and Checks if it's Valid
-            Utility.IsValueNumberCheck(out transferToWhichAccount, BankAccounts.Count);
+            transferTo = UserInterface.IsValueNumberCheck(BankAccounts.Count);
 
-            TransferMoney(BankAccounts[transferToWhichAccount].AccountNumber,
-                    BankAccounts[transferFromWhichAccount].AccountNumber, amountMoney);
+            DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
+
+            TransferMoney(BankAccounts[transferTo].AccountNumber,
+                    BankAccounts[transferFrom].AccountNumber, amountMoney);
+
+            UserInterface.DisplayMessage($"{UserName}/CustomerMenu/TransferBetweenCustomerAccounts/AccountOverview/");
+            Console.WriteLine("---------------------------------------------------");
+
+            AccountOverview(transferFrom, transferTo);
+
+        }
+        public void DisplayTransferBetweenCustomerAccounts(int transferFrom, decimal amountMoney, int transferTo)
+        {
+            Console.Clear();
+            UserInterface.DisplayMessage($"{UserName}/CustomerMenu/TransferBetweenCustomerAccounts/");
+            if (transferFrom == 0)
+            {
+                UserInterface.DisplayMessage($"From: X Amount: X To: X");
+            }
+            else if (amountMoney == 0)
+            {
+                UserInterface.DisplayMessage($"From: {transferFrom} Amount: X To: X");
+            }
+            else if (transferTo == 0)
+            {
+                UserInterface.DisplayMessage($"From: {transferFrom} Amount: {Utility.AmountDecimal(amountMoney)} To: X");
+            }
+            else
+            {
+                UserInterface.DisplayMessage($"From: {transferFrom} Amount: {Utility.AmountDecimal(amountMoney)} To: {transferTo}");
+            }
+            AccountOverview(); // Shows the Customer their Accounts and the balances in said Accounts
 
             Console.WriteLine("---------------------------------------------------");
-            AccountOverview(transferFromWhichAccount, transferToWhichAccount);
-
         }
 
         // Method for transferring money with currency exchange.
@@ -397,6 +426,7 @@ namespace KiwiBankomaten
             }
             Console.WriteLine("Överföringen lyckades.");
             Utility.PressEnterToContinue();
+            Console.Clear();
         }
 
         public void InternalMoneyTransfer()
@@ -409,13 +439,13 @@ namespace KiwiBankomaten
             AccountOverview();
 
             Console.WriteLine("Från vilket konto vill du föra över pengarna?");
-            Utility.IsValueNumberCheck(out transferFromWhichAccount, BankAccounts.Count);
+            transferFromWhichAccount = UserInterface.IsValueNumberCheck(BankAccounts.Count);
 
             bool correctAmount = false;
             do
             {
                 Console.WriteLine("Hur mycket pengar vill du föra över?");
-                Utility.IsValueNumberCheck(out amountMoney);
+                amountMoney = UserInterface.IsValueNumberCheck();
                 if (!CheckAccountValue(transferFromWhichAccount, amountMoney))
                 {
                     Console.WriteLine("Summan du har angett finns inte på kontot, " +
@@ -431,7 +461,7 @@ namespace KiwiBankomaten
             do
             {
                 Console.WriteLine("Skriv det 8-siffriga kontonummer du vill föra över pengar till:");
-                Utility.IsValueNumberCheck(out transferToWhichAccount);
+                transferToWhichAccount = UserInterface.IsValueNumberCheck();
                 correctAccountNumber = CheckIfAccountExists((int)transferToWhichAccount);
                 if (!correctAccountNumber)
                 {
