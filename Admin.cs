@@ -148,34 +148,31 @@ namespace KiwiBankomaten
                         }
                     } while (!DataBase.ExchangeRates.ContainsKey(currency));
 
-                    // Checks if the currency the admin wants to change actually exists in the database.
-                    if (DataBase.ExchangeRates.ContainsKey(currency))
+                    // Loops until admin inputs a valid positive number.
+                    do
                     {
-                        // Loops until admin inputs a valid positive number.
-                        do
+                        Console.Clear();
+                        Console.WriteLine($"Växlingskursen för {currency} - {DataBase.ExchangeRates[currency]}");
+                        Console.WriteLine("Var vänlig skriv in den nya växlingskursen för valutan");
+                        noError = Decimal.TryParse(Console.ReadLine(), out newValue);
+                        if (noError == false || newValue < 0)
                         {
-                            Console.Clear();
-                            Console.WriteLine($"Växlingskursen för {currency} - {DataBase.ExchangeRates[currency]}");
-                            Console.WriteLine("Var vänlig skriv in den nya växlingskursen för valutan");
-                            noError = Decimal.TryParse(Console.ReadLine(), out newValue);
-                            if (noError == false || newValue < 0)
-                            {
-                                Console.WriteLine("Ogiltigt värde, mata in en positiv siffra");
-                                Utility.PressEnterToContinue();
-                            }
-                        } while (noError == false || newValue < 0);
-                        do
-                        {
-                            Console.WriteLine($"Växlingskursen för {currency} kommer ändras till {newValue}. godkänner du detta? J/N");
-                            answer = Console.ReadLine().ToUpper();
-                        } while (answer != "J" && answer != "N");
-                        if (answer == "J")
-                        {
-                            DataBase.ExchangeRates[currency] = newValue;
-                            Console.WriteLine($"Växlingskursen för {currency} har ändrats till {newValue}");
+                            Console.WriteLine("Ogiltigt värde, mata in en positiv siffra");
                             Utility.PressEnterToContinue();
                         }
+                    } while (noError == false || newValue < 0);
+                    do
+                    {
+                        Console.WriteLine($"Växlingskursen för {currency} kommer ändras till {newValue}. godkänner du detta? J/N");
+                        answer = Console.ReadLine().ToUpper();
+                    } while (answer != "J" && answer != "N");
+                    if (answer == "J")
+                    {
+                        DataBase.ExchangeRates[currency] = newValue;
+                        Console.WriteLine($"Växlingskursen för {currency} har ändrats till {newValue}");
+                        Utility.PressEnterToContinue();
                     }
+                    
                 }
                 else
                 {
