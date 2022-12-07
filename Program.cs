@@ -8,7 +8,9 @@ namespace KiwiBankomaten
     {
         static void Main(string[] args)
         {
-            RunProgram();
+            DataSaver k = new DataSaver();
+            k.saver( );
+           // RunProgram();
         }
         public static void RunProgram()
         {
