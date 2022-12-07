@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace KiwiBankomaten
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] args )
         {
-            DataSaver k = new DataSaver();
-            k.saver( );
-           // RunProgram();
+            DataSaver test = new DataSaver();
+            DataSaver.DSaver();
+            DataSaver.DataReading("File1");
+
+
+
+            // RunProgram();
         }
         public static void RunProgram()
         {
