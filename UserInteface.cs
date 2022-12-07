@@ -47,6 +47,7 @@ public class UserInterface
         Console.Write("******");
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.Write("     \\_______/ \\_______\\__|  \\__\\__|  \\__|\r\n");
+        Console.ForegroundColor = ConsoleColor.White;
     }
 
     //Displays the Welcome message to the user
