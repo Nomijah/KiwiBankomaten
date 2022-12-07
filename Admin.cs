@@ -97,7 +97,8 @@ namespace KiwiBankomaten
                 UserInterface.DisplayAdminMessageLoggedIn(adminKey);
                 UserInterface.DisplayMenu(new string[] { "Skapa ny användare", 
                     "Uppdatera växlingskurs","Visa alla användare", 
-                    "Redigera ett användarkonto", "Logga ut" });
+                    "Redigera ett användarkonto",
+                    "Uppdatera bankkontotyper","Logga ut" });
                 switch (UserInterface.PromptForString())
                 {
                     case "1":
@@ -105,16 +106,24 @@ namespace KiwiBankomaten
                         break;
                     // Shows list of exchange rates with their values and asks
                     // if admin wants to change them.
-                    case "2": UpdateExchangeRate();
+                    case "2": 
+                        UpdateExchangeRate();
                         break;
-                    case "3": Console.Clear(); 
+                    case "3": 
+                        Console.Clear(); 
                         ViewAllUsers();
-                        Console.ReadKey();
+                        Utility.PressEnterToContinue();
                         break;
-                    case "4": Console.Clear();
+                    case "4": 
+                        Console.Clear();
                         EditUserAccount();
                         break;
-                    case "5": loggedIn = false;
+                    case "5": 
+                        UpdateAccountTypes();
+                        Utility.PressEnterToContinue();
+                        break;
+                    case "6": 
+                        loggedIn = false;
                         Console.Clear();
                         break;
                     // Loop repeats and switch is run again if none of the
@@ -269,7 +278,8 @@ namespace KiwiBankomaten
                             // Prints all user's bank accounts.
                             case "1":
                                 selectedUser.BankAccountOverview();
-                                Console.ReadKey();
+                                selectedUser.LoanAccountOverview();
+                                Utility.PressEnterToContinue();
                                 break;
                             // Lets admin lock or unlock user's account.
                             case "2":
@@ -363,11 +373,62 @@ namespace KiwiBankomaten
                     else
                     {
                         Console.WriteLine("Du konfirmerade inte lösenordet");
-                        Console.ReadKey();
+                        Utility.PressEnterToContinue();
                     }
                 }
                 else { return; }
             }
+
+        }
+        public static void ViewAccountTypes(int selection)
+        {
+            int i = 1;
+            switch (selection)
+            {
+                case 1: 
+                    foreach (KeyValuePair<string, decimal> type in DataBase.BankAccountTypes)
+                    {
+                        Console.WriteLine($"-{i} {type.Key} - {type.Value}");
+                        i++;
+                    }
+                    break;
+                case 2:
+                    foreach (KeyValuePair<string, decimal> type in DataBase.LoanAccountTypes)
+                    {
+                        Console.WriteLine($"-{i} {type.Key} - {type.Value}");
+                        i++;
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Ogiltigt värde, det här borde inte kunna hända. Kontakta en admin.");
+                    break;
+            }
+        }
+        public static void UpdateAccountTypes()
+        {
+            string answer;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Olika typer av bankkonto, namn och ränta:");
+                ViewAccountTypes(1);
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("Olika typer av lånekonto, namn och ränta:");
+                ViewAccountTypes(2);
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("Vilket typ av konto vill du ändra?\n-1 Bankkonto" +
+                    "\n-2 Lånekonto\n-3 Återvänd till adminmenyn");
+                answer = Console.ReadLine();
+                switch (answer)
+                {
+                    case "1":
+                        UpdateBankAccountTypes();
+                        break;
+                }
+            } while (answer != "1" && answer != "2" && answer != "3");
+        }
+        public static void UpdateBankAccountTypes()
+        {
 
         }
     }

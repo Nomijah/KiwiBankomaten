@@ -78,28 +78,28 @@ namespace KiwiBankomaten
         // Lets the customer choose what type of account to open.
         public decimal ChooseAccountType()
         {
-            int userChoice = 0;
+            string userChoice = "";
             Console.Clear();
             UserInterface.DisplayMessage($"{UserName}/CustomerMenu/" +
                 $"CreateAccount/");
-            UserInterface.DisplayMessage("Vilken typ av konto vill du öppna?");
+            UserInterface.DisplayMessage("Vilken typ av konto vill du öppna? " +
+                "Välj genom att skriva in namnet av kontotypen.");
             UserInterface.DisplayMessage("Tillgängliga Kontotyper");
             DataBase.PrintAccountTypes();
             do
             {
-                userChoice = 0;
-                while ((!int.TryParse(UserInterface.PromptForString(), out userChoice)) 
-                    || userChoice < 1 || userChoice > DataBase.BankAccountTypes.Count)
+                userChoice = Console.ReadLine();
+                if (!DataBase.BankAccountTypes.ContainsKey(userChoice))
                 {
                     UserInterface.DisplayMessage("Felaktigt val\n" +
-                        "Numret du angett finns inte i listan.");
+                        "Kontotypen du angett finns inte i listan.");
                     Utility.PressEnterToContinue();
                     Utility.RemoveLines(7);
                 }
-            } while (Utility.YesOrNo("Kontotyp: ", DataBase.BankAccountTypes[userChoice - 1].Item1));
-            
+            } while (!DataBase.BankAccountTypes.ContainsKey(userChoice));
+
             // returns the interest rate of chosen account type
-            return DataBase.BankAccountTypes[userChoice - 1].Item2;
+            return DataBase.BankAccountTypes[userChoice];
         }
 
         // Lets the customer choose a name for the account.
@@ -484,7 +484,7 @@ namespace KiwiBankomaten
         public void LoanMoney()
         {
             // Gets loan type from user            
-            Tuple<string, decimal> accountType = ChooseLoanAccountType();
+            string userChoice = ChooseLoanAccountType();
 
             Console.WriteLine("Hur mycket pengar vill du låna?");
             Console.WriteLine($"Du kan max låna {Utility.AmountDecimal(CheckLoanLimit())} kronor.");
@@ -507,8 +507,8 @@ namespace KiwiBankomaten
                 index = LoanAccounts.Keys.Max() + 1;
             }
             // Adds the new loan account to customers loan account dictionary
-            LoanAccounts.Add(index, new LoanAccount(accountType.Item1,
-                amountMoney - (amountMoney * 2), accountType.Item2));
+            LoanAccounts.Add(index, new LoanAccount(userChoice,
+                amountMoney - (amountMoney * 2), DataBase.LoanAccountTypes[userChoice]));
             // Adds the loaned amount to customers standard account
             BankAccounts[1].Amount += amountMoney;
 
@@ -520,67 +520,55 @@ namespace KiwiBankomaten
         }
 
         // Method for choosing what type of loan account.
-        public Tuple<string, decimal> ChooseLoanAccountType()
+        public string ChooseLoanAccountType()
         {
+            string answer = "";
+            string userChoice = "";
             Console.Clear();
-            int userChoice = 0;
             // Loop until user has entered a valid choice
-            while (userChoice == 0)
+            while (!DataBase.LoanAccountTypes.ContainsKey(userChoice) || answer == "N")
             {
                 Console.WriteLine("Vilken typ av konto vill du öppna?");
                 DataBase.PrintLoanAccountTypes();
-                Console.Write($"Välj [1 - {DataBase.LoanAccountTypes.Count}]:");
-                string userInput = Console.ReadLine();
-                try
+                Console.Write($"Välj:");
+                userChoice = Console.ReadLine();
+                if (!DataBase.LoanAccountTypes.ContainsKey(userChoice))
                 {
-                    userChoice = Convert.ToInt32(userInput);
-                    if (userChoice < 1 ||
-                        userChoice > DataBase.LoanAccountTypes.Count)
-                    {
-                        Console.WriteLine("Felaktigt val, numret du angett " +
-                            "finns inte i listan.");
-                        userChoice = 0;
-                        Utility.PressEnterToContinue();
-                    }
-                    else
-                    {
-                        string answer;
-                        // Check if user is happy with the choice
-                        do
-                        {
-                            Console.WriteLine($"Du har valt " +
-                                $"{DataBase.LoanAccountTypes[userChoice - 1].Item1}. " +
-                                $"med ränta " +
-                                $"{DataBase.LoanAccountTypes[userChoice - 1].Item2}%." +
-                                $" Vill du godkänna detta? [J/N]");
-                            answer = Console.ReadLine().ToUpper();
-                            switch (answer)
-                            {
-                                case "J": // If yes, do nothing
-                                    break;
-                                case "N": // If no, restart loop
-                                    userChoice = 0;
-                                    break;
-                                default:
-                                    Console.WriteLine("Felaktig inmatning, " +
-                                        "välj [J] för ja eller [N] för nej.");
-                                    break;
-                            }
-                            // Repeat loop until valid choice is given
-                        } while (answer != "J" && answer != "N");
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Felaktig inmatning, använd endast" +
-                        " siffror.");
+                    Console.WriteLine("Felaktigt val, kontotypen du angett " +
+                        "finns inte i listan.");
                     Utility.PressEnterToContinue();
+                }
+                else
+                {
+                    do
+                    {
+                        // Check if user is happy with the choice
+                        Console.Clear();
+                        Console.WriteLine($"Du har valt " +
+                            $"{userChoice}. " +
+                            $"med ränta " +
+                            $"{DataBase.LoanAccountTypes[userChoice]}%." +
+                            $" Vill du godkänna detta? [J/N]");
+                        answer = Console.ReadLine().ToUpper();
+                        switch (answer)
+                        {
+                            case "J": // If yes, do nothing
+                                break;
+                            case "N": // If no, restart loop
+                                break;
+                            default:
+                                Console.WriteLine("Felaktig inmatning, " +
+                                    "välj [J] för ja eller [N] för nej.");
+                                break;
+                        }
+                    }while (answer != "J" && answer != "N") ;
                 }
                 Console.Clear();
             }
+
             // returns the interest rate of chosen account type
 
-            return DataBase.LoanAccountTypes[userChoice - 1];
+            return userChoice;
         }
 
         // Returns the maximum loan amount of the customer
