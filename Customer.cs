@@ -538,6 +538,7 @@ namespace KiwiBankomaten
                     do
                     {
                         // Check if user is happy with the choice
+                        Console.Clear();
                         Console.WriteLine($"Du har valt " +
                             $"{userChoice}. " +
                             $"med ränta " +
@@ -557,9 +558,8 @@ namespace KiwiBankomaten
                         }
                     }while (answer != "J" && answer != "N") ;
                 }
-
-            }
                 Console.Clear();
+            }
 
             // returns the interest rate of chosen account type
 

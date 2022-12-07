@@ -112,7 +112,7 @@ namespace KiwiBankomaten
                     case "3": 
                         Console.Clear(); 
                         ViewAllUsers();
-                        Console.ReadKey();
+                        Utility.PressEnterToContinue();
                         break;
                     case "4": 
                         Console.Clear();
@@ -120,7 +120,7 @@ namespace KiwiBankomaten
                         break;
                     case "5": 
                         UpdateAccountTypes();
-                        Console.ReadKey();
+                        Utility.PressEnterToContinue();
                         break;
                     case "6": 
                         loggedIn = false;
@@ -278,7 +278,8 @@ namespace KiwiBankomaten
                             // Prints all user's bank accounts.
                             case "1":
                                 selectedUser.BankAccountOverview();
-                                Console.ReadKey();
+                                selectedUser.LoanAccountOverview();
+                                Utility.PressEnterToContinue();
                                 break;
                             // Lets admin lock or unlock user's account.
                             case "2":
@@ -372,7 +373,7 @@ namespace KiwiBankomaten
                     else
                     {
                         Console.WriteLine("Du konfirmerade inte lösenordet");
-                        Console.ReadKey();
+                        Utility.PressEnterToContinue();
                     }
                 }
                 else { return; }
