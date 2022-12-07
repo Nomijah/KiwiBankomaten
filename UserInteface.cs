@@ -54,6 +54,7 @@ public class UserInterface
     public static void DisplayWelcomeMessage()
     {
         Console.Clear();
+        DisplayLogo();
         Console.WriteLine("---------------------------------------------------");
         Console.WriteLine("Välkommen till KiwiBank!");
     }
