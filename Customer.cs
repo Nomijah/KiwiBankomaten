@@ -512,6 +512,11 @@ namespace KiwiBankomaten
             // Adds the loaned amount to customers standard account
             BankAccounts[1].Amount += amountMoney;
 
+            Console.WriteLine($"Summan har nu anlänt på {BankAccounts[1].AccountName}");
+            Console.WriteLine("Nytt lånekonto har skapats");
+
+            LoanAccountOverview();
+
         }
 
         // Method for choosing what type of loan account.
@@ -599,7 +604,7 @@ namespace KiwiBankomaten
             // Subtracts current loans as the values in LoanAccounts is negative
             foreach (LoanAccount item in LoanAccounts.Values)
             {
-                sum += item.Amount/5;
+                sum += item.Amount;
             }
 
             return sum * 5;
