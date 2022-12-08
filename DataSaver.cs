@@ -121,11 +121,14 @@ namespace KiwiBankomaten
 
 
 
-
+        //Problemet med 1 textfil är att det är text och inte objekt, så det blir svårt att koppla ihop vilken text som tillhör vilken
+        //problemet med flera textfiler är att det blir svårt att koppla ihop? eller för många filer
 
         //    X    Make DataSaver possible for other files than File1
         //    X    Connect the "DataBase"-Files to each other.
         //    X    hur välförståeligt behöver detta vara för admin/användare?
+
+
 
         //    X    Implement DataReading Method to admin menu, to see files and read them     när den funkar fullständigt
         //    X    Make DataSaver not public to the user, only workable       efter all testning, när det funkar
