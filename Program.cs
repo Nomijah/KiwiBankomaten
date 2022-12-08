@@ -11,7 +11,7 @@ namespace KiwiBankomaten
         {
             DataSaver test = new DataSaver();
             DataSaver.DSaver();
-            DataSaver.DataReading("File1");
+            //DataSaver.DataReading("File1");
 
 
 
