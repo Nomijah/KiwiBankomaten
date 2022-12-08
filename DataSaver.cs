@@ -14,15 +14,8 @@ namespace KiwiBankomaten
 {
     public class DataSaver
     {
-        //Datasyncer could be run through out the program to sync all data.
-
-
-
+        // DSaver checks if file exists, if false, creates file and writes databaseinfo
         public static void DSaver()
-        {
-            ExistCheck();
-        }
-        public static void ExistCheck()
         {
             // Starts to check if file exists. If it does not it will create a local file
             string FileOnDesktop = @"C:\Users\danie\Desktop\File1.txt";
@@ -45,6 +38,7 @@ namespace KiwiBankomaten
                 // closes stream
                 sw.Close();
                 Console.WriteLine("Fil skapades");
+                DataSyncer();
             }
             else
             {
@@ -53,78 +47,94 @@ namespace KiwiBankomaten
             }
         }
 
-
-        //DataSyncer must read to compare if file is same as database value
-        //if its the same  --> sync is finished
-        //if its not the same ---> write/sync data to file
+        // Datasyncer could be run throughout the program to sync all data.
+        // If the data is not synced it will sync it.
         public static void DataSyncer()
         {
-            //if the file does not contain the count value of database customerdictionary
-
-            StreamReader checker = new StreamReader(@"C:\Users\danie\Desktop\File1.txt");
-            checker.ReadToEnd();
-
             // Store each line in array of strings of the file, to be able to compare with database
             string[] lines = File.ReadAllLines(@"C:\Users\danie\Desktop\File1.txt");
 
+            // List of string with samevalues, to compare with filelines
             List<string> sameValues = new List<string>();
-            //sameValues.Add("List of data");
-            // creates array to be able to compare each customer in database
-            //string[,] sameValues = new string[10, 7];
+
+            bool ValuesAreSynced = false;
+            int SyncingPoint = 0;
 
             // foreach line in file, we will compare to every value of a customers properties
             foreach (string fileLine in lines)
             {
-                
+                // if the value is found, we have found same value                    
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
                 {
                     if (fileLine.Equals("Key: " + item.Key))
                     {
                         sameValues.Add($"Key: {item.Key} is equal");
+                        SyncingPoint++;
                     }
                     if (fileLine.Equals("Id: " + item.Value.Id))
                     {
                         sameValues.Add($"Id: {item.Value.Id} is equal");
+                        SyncingPoint++;
                     }
                     if (fileLine.Equals("Username: " + item.Value.UserName))
                     {
                         sameValues.Add($"Username: {item.Value.UserName} is equal");
+                        SyncingPoint++;
                     }
                     if (fileLine.Equals("Password: " + item.Value.Password))
                     {
                         sameValues.Add($"Password: {item.Value.Password} is equal");
+                        SyncingPoint++;
                     }
                     if (fileLine.Equals("Isadmin: " + item.Value.IsAdmin))
                     {
-                        sameValues.Add($"Isadmin: {item.Value.IsAdmin} is equal");
+                        sameValues.Add($"Isadmin: {item.Value.IsAdmin} is equal"); 
+                        SyncingPoint++;
+                        break;   // Using break since it will add every found "isadmin: false", which is 6x
                     }
                     if (fileLine.Equals("Locked: " + item.Value.Locked))
                     {
                         sameValues.Add($"Locked: {item.Value.Locked} is equal");
+                        SyncingPoint++;
+                        break;
                     }
                 }
             }
-            foreach (string s in sameValues)
+            // if the value is different the file is not synced with the database
+            if (SyncingPoint == DataBase.CustomerDict.Count*6) // 6 items * 6 properties
             {
-                Console.WriteLine(s);
+                ValuesAreSynced= true; 
             }
+            if(ValuesAreSynced)
+            {
+                Console.WriteLine("Synkning är färdig!");
+            }
+            else
+            {  // If the values are not synced in the file, we delete the file and write them to the file
+                Console.WriteLine("Alla värden är inte synkade ännu");
 
+                string UnsyncedFile = @"C:\Users\danie\Desktop\File1.txt";
+                File.Delete(UnsyncedFile);
+                DSaver();
+            }
         }
-            ////Asking user to enter the text that we want to write into the MyFile.txt file
-            //Console.WriteLine("Enter the Text that you want to write on File");
-
-            //// To read the input from the user
-            //string str = Console.ReadLine();
-
-            //// To write the data into the stream
-            //sw.Write(str);
 
 
 
 
 
+        //    X    Make DataSaver possible for other files than File1
+        //    X    Connect the "DataBase"-Files to each other.
+        //    X    hur välförståeligt behöver detta vara för admin/användare?
 
-        // Method to read and show data from chosen file.           IMPLEMENT TO ADMIN MENU
+        //    X    Implement DataReading Method to admin menu, to see files and read them     när den funkar fullständigt
+        //    X    Make DataSaver not public to the user, only workable       efter all testning, när det funkar
+        //    X    Implement DataSaver method in program so that it will sync files during changes and when pressing exit
+        //på passande platser osv.
+
+
+        // Method to read and show data from chosen file.
+        //DataSaver.DataReading("File1");  HOW TO USE
         public static void DataReading(string name)
         {
             // Takes in parameter which is the name of the file. Example, write "File1" 
