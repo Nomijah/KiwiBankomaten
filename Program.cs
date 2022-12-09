@@ -9,10 +9,10 @@ namespace KiwiBankomaten
     {
         static void Main(string[] args )
         {
-            DataSaver test = new DataSaver();
-            DataSaver.DSaver();
+            //DataSaver test = new DataSaver();
+            //DataSaver.DSaver();
 
-            // RunProgram();
+            RunProgram();
         }
         public static void RunProgram()
         {

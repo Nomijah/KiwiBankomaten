@@ -119,10 +119,10 @@ namespace KiwiBankomaten
             }
         }
 
+        ///   REMOVE SYNCING  OCH BARA
 
-
-        //Problemet med 1 textfil är att det är text och inte objekt, så det blir svårt att koppla ihop vilken text som tillhör vilken
-        //problemet med flera textfiler är att det blir svårt att koppla ihop? eller för många filer
+        // Problemet med 1 textfil är att det är text och inte objekt, så det blir svårt att koppla ihop vilken text som tillhör vilken
+        // problemet med flera textfiler är att det blir svårt att koppla ihop? eller för många filer
 
         //Tasks:
         // - primary
@@ -136,9 +136,13 @@ namespace KiwiBankomaten
         //    X    Implement DataSaver method in program so that it will sync files during changes and when pressing exit
         //         på passande platser osv.
 
-        //fil 1  customerdictionary  - innehåller 6 st key, id, username, isadmin, locked samt tillhörande värden
 
-        //fil 2
+
+
+
+        // fil 1  customerdictionary  - innehåller 6 st key, id, username, isadmin, locked samt tillhörande värden
+
+        // fil 2
         /// Customer
         /// har dictionary bankokonton
         /// id 4
