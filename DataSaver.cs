@@ -31,7 +31,6 @@ namespace KiwiBankomaten
                     sw.WriteLine("Id: " + item.Value.Id);
                     sw.WriteLine("Username: " + item.Value.UserName);
                     sw.WriteLine("Password: " + item.Value.Password);
-                    sw.WriteLine("Isadmin: " + item.Value.IsAdmin);
                     sw.WriteLine("Locked: " + item.Value.Locked);
                     sw.WriteLine("----------------------");
                 }
@@ -85,12 +84,6 @@ namespace KiwiBankomaten
                     {
                         sameValues.Add($"Password: {item.Value.Password} is equal");
                         SyncingPoint++;
-                    }
-                    if (fileLine.Equals("Isadmin: " + item.Value.IsAdmin))
-                    {
-                        sameValues.Add($"Isadmin: {item.Value.IsAdmin} is equal"); 
-                        SyncingPoint++;
-                        break;   // Using break since it will add every found "isadmin: false", which is 6x
                     }
                     if (fileLine.Equals("Locked: " + item.Value.Locked))
                     {
