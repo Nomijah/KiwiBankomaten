@@ -29,7 +29,6 @@ namespace KiwiBankomaten
             }
             UserName = username;
             Password = password;
-            IsAdmin = true;
         }
         // Admin method for creating new users.
         public static void CreateNewUser() 

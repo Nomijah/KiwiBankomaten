@@ -48,7 +48,6 @@ namespace KiwiBankomaten
             }
             UserName = username;
             Password = password;
-            IsAdmin = false;
             Locked = false;
 
             BankAccounts = new Dictionary<int, BankAccount>()
