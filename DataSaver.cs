@@ -119,10 +119,7 @@ namespace KiwiBankomaten
             }
         }
 
-        ///   REMOVE SYNCING  OCH BARA
-
-        // Problemet med 1 textfil är att det är text och inte objekt, så det blir svårt att koppla ihop vilken text som tillhör vilken
-        // problemet med flera textfiler är att det blir svårt att koppla ihop? eller för många filer
+        ///   REMOVE SYNCINGPROCESSEN OCH RADERA/ SKAPA NY FIL HELT ENKELT
 
         //Tasks:
         // - primary
