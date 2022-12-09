@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace KiwiBankomaten
@@ -31,7 +32,7 @@ namespace KiwiBankomaten
         // Dictionary with currencies and exchange rates.
         public static Dictionary<string, decimal> ExchangeRates =
             new Dictionary<string, decimal>()
-        {
+            {
                 {"SEK", 1m },
                 {"USD", 10.42m },
                 {"EUR", 10.85m },
@@ -53,22 +54,43 @@ namespace KiwiBankomaten
         }
 
         // Dictionary with account types and interest.
-        public static List<Tuple<string, decimal>> BankAccountTypes =
-            new List<Tuple<string, decimal>>
+        public static Dictionary<string, decimal> BankAccountTypes =
+            new Dictionary<string, decimal>
             {
-                Tuple.Create("Lönekonto", 0m),
-                Tuple.Create("Korttidssparkonto", 1.2m ),
-                Tuple.Create("Långtidssparkonto", 1.7m ),
-                Tuple.Create("Barnsparkonto", 2.3m)
+                { "Lönekonto", 0m },
+                { "Korttidssparkonto", 1.2m },
+                { "Långtidssparkonto", 1.7m },
+                { "Barnsparkonto", 2.3m }
+            };
+
+        public static Dictionary<string, decimal> LoanAccountTypes =
+            new Dictionary<string, decimal>
+            {
+                { "Bolån", 4.5m },
+                { "Billån", 6.3m },
+                { "Blancolån", 12.7m }
             };
 
         // Prints out account types with interest values.
         public static void PrintAccountTypes()
         {
-            for (int i = 1; i <= BankAccountTypes.Count; i++)
+            int i = 1;
+            foreach (KeyValuePair<string, decimal> type in BankAccountTypes)
             {
-                Console.WriteLine($"{i}. {BankAccountTypes[i - 1].Item1}, " +
-                    $"ränta: {BankAccountTypes[i - 1].Item2}");
+                Console.WriteLine($"{i}. {type.Key}, " +
+                    $"ränta: {type.Value}");
+                i++;
+            }
+        }
+
+        public static void PrintLoanAccountTypes()
+        {
+            int i = 1;
+            foreach (KeyValuePair<string, decimal> type in LoanAccountTypes)
+            {
+                Console.WriteLine($"{i}. {type.Key}, " +
+                    $"ränta: {type.Value}");
+                i++;
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 
 namespace KiwiBankomaten
@@ -19,149 +20,198 @@ namespace KiwiBankomaten
             bool loggedIn;
             int userKey = 0;
             int adminKey = -1;
-            do   //looping menu, which will run when the program is started 
+
+            Console.Clear();
+
+            //looping menu, which will run when the program is started 
+            do
             {
+                UserInterface.DisplayWelcomeMessage();
+                UserInterface.DisplayMenu(new string[] {"Logga in", "Avsluta"});
                 loggedIn = false;
-                Console.WriteLine("Välj ett av alternativen nedan:");
-                Console.WriteLine("-1) Logga in\n-2) Stäng av");
-                string choice = Console.ReadLine();
+                string choice = UserInterface.PromptForString();
                 switch (choice)
                 {
+                    //Logs in the user
                     case "1":
-                        userKey = LogIn(out loggedIn); //pressing 1 leads to using Login()
+                        
+                        //Logs in the user
+                        LogIn(out loggedIn, out userKey); 
                         if (loggedIn)
                         {
-                            CustomerMenu(userKey);//if login is successful, leads to CustomerMenu() 
+                            UserInterface.DisplayWelcomeMessageLoggedIn(userKey);
+                            
+                            Utility.PressEnterToContinue();
+                            Console.Clear();
+
+                            //if login is successful, leads to CustomerMenu() 
+                            CustomerMenu(userKey);
                         }
                         break;
-                    case "2"://Exit program
-                        Environment.Exit(0);//closes the program 
+                    
+                    //Exit program
+                    case "2":
+                        
+                        //closes the program 
+                        Environment.Exit(0);
                         break;
-                    case "admin": // Hidden admin login, which leads to AdminLogIn() and AdminMenu()
-                        adminKey = AdminLogIn(out loggedIn);
+                        
+                    // Hidden admin login, which leads to AdminLogIn() and AdminMenu()
+                    case "admin": 
+                        AdminLogIn(out loggedIn, out adminKey);
                         if (loggedIn)
                         {
-                            Admin.AdminMenu();
+                            Admin.AdminMenu(adminKey);
                         }
                         break;
-                    default://If neither of these options are used the defaultmsg is displayed
+                        
+                    //If neither of these options are used the defaultmsg is displayed
+                    default:
                         Console.WriteLine("Felaktigt val, försök igen.");
+                        Utility.PressEnterToContinue();
+                        Console.Clear();
+                        RunProgram();
                         break;
                 }
-                Thread.Sleep(2000);//leaves eventual message readable for 2 sec
-                Console.Clear();// clearing console, 
             } while (loggedIn != true);
         }
         
         //Checks if user exist, returns userKey
-        public static int LogIn(out bool loggedIn)
+        public static void LogIn(out bool loggedIn, out int userKey)
         {
-            int userKey = 0; 
             int tries = 0;
+            userKey = 0; 
             loggedIn = false;
 
-            Console.WriteLine("Welcome to KiwiBank");
-            Console.WriteLine("Please enter your account name:");
-            string userName = Console.ReadLine();
+            UserInterface.DisplayWelcomeMessage();
 
-            // loop through customer dictionary to search for userName
-            foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
+            do
             {
-                if (userName == item.Value.UserName)
+                string userName = UserInterface.PromptForString("Ange ditt " +
+                    "användarnamn\n\nAnvändarnamn: ").Trim();
+                
+                // loop through customer dictionary to search for userName
+                foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
                 {
-                    userKey = item.Key;// stores userKey
-                    loggedIn = Utility.CheckPassWord(userKey, tries); // calls CheckPassWord function to check password
-                    loggedIn = true; //defines bool since it will change otherwise, dont change!
-
-                    // if login is successful
-                    if (loggedIn)
+                    if (userName == item.Value.UserName)
                     {
-                        Console.WriteLine("Successfully logged in");
-                        Console.WriteLine($"Welcome {userName}");
-                        return userKey; //Returns userKey so we know which user is logged in
+                        // stores userKey
+                        userKey = item.Key;
+
+                        // calls CheckPassWord function to check password
+                        loggedIn = Utility.CheckPassWord(userKey); 
+                                                                         
+                        // if login is successful
+                        if (loggedIn) { return; }
                     }
+
                 }
-                else
-                {//if name is not found, bool is false, and the WriteLine below is shown once after the try
-                    loggedIn = false;
-                }
-            }
-            if (!loggedIn) // if user is not logged in, values is false and message is shown
-            {
-                Console.WriteLine("Ingen användare med det namnet hittades.");
-            }
-            return 0;
+                UserInterface.DisplayMessage("Användarnamnet du angett kunde " +
+                    "inte hittas.\nFörsök igen");
+                Utility.PressEnterToContinue();
+                Utility.RemoveLines(9); 
+                tries++;
+            } while (tries != 3);
+            
+            Console.WriteLine("Ingen användare med det namnet hittades.");
+            return;
         }
 
-        public static int AdminLogIn(out bool loggedIn)
+        public static void AdminLogIn(out bool loggedIn, out int adminKey)
         {
-            int adminKey = 0;
+            int tries = 0;
+            adminKey = 0;
             loggedIn = false;
-            Console.WriteLine("Welcome to KiwiBank");
-            Console.WriteLine("Please enter your account name:");
-            string userName = Console.ReadLine();
+            
+            UserInterface.DisplayWelcomeMessage();
 
-            foreach (Admin item in DataBase.AdminList)
+            do
             {
-                if (userName == item.UserName)
+                string userName = UserInterface.PromptForString("Ange ditt " +
+                    "användarnamn\n\nAnvändarnamn: ");  
+                foreach (Admin item in DataBase.AdminList)
                 {
-                    adminKey = DataBase.AdminList.FindIndex(item => userName == item.UserName);
-
-                    loggedIn = Utility.AdminCheckPassWord(adminKey);
-
-                    if (loggedIn)
+                    if (userName == item.UserName)
                     {
-                        Console.WriteLine("Successfully logged in");
-                        Console.WriteLine($"Welcome {userName}");
-                        return adminKey; //Returns adminKey so we know which admin is logged in
+                        adminKey = DataBase.AdminList.FindIndex(item => 
+                            userName == item.UserName);
+
+                        loggedIn = Utility.CheckAdminPassWord(adminKey);
+
+                        if (loggedIn) { return; }
                     }
                 }
-            }
-            return 0;
+                UserInterface.DisplayMessage("Användarnamnet du angett kunde " +
+                    "inte hittas.\nFörsök igen");
+                Utility.PressEnterToContinue();
+                Utility.RemoveLines(9);
+                tries++; 
+            } while (tries != 3);
         }
 
         public static void LogOut()
         {
-            RunProgram(); // Makes the program go back to the log in menu
+            // Makes the program go back to the log in menu
+            RunProgram(); 
         }
 
         public static void CustomerMenu(int userKey)
         {
-            do   //looping menu  
+            // Looping menu  
+            do 
             {
-                //Creates an instance of the loggedIn user in database
+                // Creates an instance of the loggedIn user in database
                 Customer obj = DataBase.CustomerDict[userKey];
 
-                Console.WriteLine("Enter a number as input to navigate in the menu:");
-                Console.WriteLine("-1) Overview accounts and balances\n-2) Transfer money personal accounts" +
-                    "\n-3) Create new account \n-4) Kiwibank internal Transfer money \n-5) Logout");
-                string choice = Console.ReadLine();
+                UserInterface.DisplayMessage
+                    ($"{DataBase.CustomerDict[userKey].UserName}/CustomerMenu/");
+
+                UserInterface.DisplayMenu(new string[] {"Kontoöversikt", 
+                    "Överför pengar mellan egna konton", "Öppna nytt konto", 
+                    "Överför pengar till annan användare", "Låna pengar", "Logga ut"});
+
+                string choice = UserInterface.PromptForString();
 
                 switch (choice)
                 {
                     case "1":
-                        obj.AccountOverview(); // Overviews the Accounts and their respective balances
+                        // Overviews the Accounts and their respective balances
+                        Console.Clear();
+                        UserInterface.DisplayMessage($"{DataBase.CustomerDict[userKey].UserName}" +
+                            $"/CustomerMenu/AccountOverview/");
+                        obj.BankAccountOverview();
+                        obj.LoanAccountOverview();
                         break;
                     case "2":
-                        obj.TransferBetweenCustomerAccounts(); // Transfers a value between two accounts the user possesses
+                        // Transfers a value between two accounts the user possesses
+                        obj.TransferBetweenCustomerAccounts(); 
                         break;
                     case "3":
-                        obj.OpenAccount(); //Opens account for the specific user
+                        // Opens account for the specific user
+                        obj.OpenAccount(); 
                         break;
                     case "4":
-                        obj.InternalMoneyTransfer(); //Transfer money to other user in bank
+                        // Transfer money to other user in bank
+                        obj.InternalMoneyTransfer(); 
                         break;
                     case "5":
-                        LogOut(); //Logout
+                        obj.LoanMoney();
+                        break;
+                    case "6":
+                        // Logout
+                        LogOut();
 
                         break;
 
                     default:
-                        Console.WriteLine("Wrong input, enter available choice only!");
+                        Console.WriteLine("Ogiltigt val, ange ett nummer från listan.");
                         break;
                 }
                 Utility.PressEnterToContinue();
-                Console.Clear();// clearing console, 
+
+                // clearing console, 
+                Console.Clear();
+
             } while (true);
         }
             
