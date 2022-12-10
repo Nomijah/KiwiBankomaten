@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KiwiBankomaten
 {
@@ -68,6 +69,32 @@ namespace KiwiBankomaten
                 { "Billån", 6.3m },
                 { "Blancolån", 12.7m }
             };
+        // Method returns string key of a bank account type based on its index.
+        public static string GetKeyFromBankTypeIndex(int index)
+        {
+            try
+            {
+                return BankAccountTypes.ElementAt(index).Key;
+            }
+            // If index does not exist, return an empty string.
+            catch
+            {
+                return "";
+            }
+        }
+        // Method returns string key of a loan account type based on its index.
+        public static string GetKeyFromLoanTypeIndex(int index)
+        {
+            try
+            {
+                return LoanAccountTypes.ElementAt(index).Key;
+            }
+            // If index does not exist, return an empty string.
+            catch
+            {
+                return "";
+            }
+        }
 
         // Prints out account types with interest values.
         public static void PrintAccountTypes()

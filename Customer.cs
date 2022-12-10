@@ -73,28 +73,55 @@ namespace KiwiBankomaten
         // Lets the customer choose what type of account to open.
         public decimal ChooseAccountType()
         {
-            string userChoice = "";
-            Console.Clear();
-            UserInterface.DisplayMessage($"{UserName}/CustomerMenu/" +
-                $"CreateAccount/");
-            UserInterface.DisplayMessage("Vilken typ av konto vill du öppna? " +
-                "Välj genom att skriva in namnet av kontotypen.");
-            UserInterface.DisplayMessage("Tillgängliga Kontotyper");
-            DataBase.PrintAccountTypes();
+            int typeIndex;
+            string answer = "";
             do
             {
-                userChoice = Console.ReadLine();
-                if (!DataBase.BankAccountTypes.ContainsKey(userChoice))
+                Console.Clear();
+                UserInterface.DisplayMessage($"{UserName}/CustomerMenu/" +
+                    $"CreateAccount/");
+                UserInterface.DisplayMessage("Vilken typ av konto vill du öppna? " +
+                    "Välj genom att skriva in en mostvarande siffra.");
+                UserInterface.DisplayMessage("Tillgängliga Kontotyper");
+                DataBase.PrintAccountTypes();
+                Int32.TryParse(Console.ReadLine(), out typeIndex);
+                typeIndex -= 1;
+                if (!DataBase.BankAccountTypes.ContainsKey(DataBase.GetKeyFromBankTypeIndex(typeIndex)))
                 {
                     UserInterface.DisplayMessage("Felaktigt val\n" +
                         "Kontotypen du angett finns inte i listan.");
                     Utility.PressEnterToContinue();
-                    Utility.RemoveLines(7);
                 }
-            } while (!DataBase.BankAccountTypes.ContainsKey(userChoice));
+                else
+                {
+                    do
+                    {
+                        // Check if user is happy with the choice
+                        Console.Clear();
+                        Console.WriteLine($"Du har valt " +
+                            $"{DataBase.GetKeyFromBankTypeIndex(typeIndex)}. " +
+                            $"med ränta " +
+                            $"{DataBase.BankAccountTypes[DataBase.GetKeyFromBankTypeIndex(typeIndex)]}%." +
+                            $" Vill du godkänna detta? [J/N]");
+                        answer = Console.ReadLine().ToUpper();
+                        switch (answer)
+                        {
+                            case "J": // If yes, do nothing
+                                break;
+                            case "N": // If no, restart loop
+                                break;
+                            default:
+                                Console.WriteLine("Felaktig inmatning, " +
+                                    "välj [J] för ja eller [N] för nej.");
+                                break;
+                        }
+                    } while (answer != "J" && answer != "N");
+                }
+
+            } while (!DataBase.BankAccountTypes.ContainsKey(DataBase.GetKeyFromBankTypeIndex(typeIndex)) || answer == "N");
 
             // returns the interest rate of chosen account type
-            return DataBase.BankAccountTypes[userChoice];
+            return DataBase.BankAccountTypes[DataBase.GetKeyFromBankTypeIndex(typeIndex)];
         }
 
         // Lets the customer choose a name for the account.
@@ -518,16 +545,17 @@ namespace KiwiBankomaten
         public string ChooseLoanAccountType()
         {
             string answer = "";
-            string userChoice = "";
+            int typeIndex = -1;
             Console.Clear();
             // Loop until user has entered a valid choice
-            while (!DataBase.LoanAccountTypes.ContainsKey(userChoice) || answer == "N")
+            while (!DataBase.LoanAccountTypes.ContainsKey(DataBase.GetKeyFromLoanTypeIndex(typeIndex)) || answer == "N")
             {
-                Console.WriteLine("Vilken typ av konto vill du öppna?");
+                Console.WriteLine("Vilken typ av konto vill du öppna? Välj genom att skriva in en mostvarande siffra.");
                 DataBase.PrintLoanAccountTypes();
                 Console.Write($"Välj:");
-                userChoice = Console.ReadLine();
-                if (!DataBase.LoanAccountTypes.ContainsKey(userChoice))
+                Int32.TryParse(Console.ReadLine(), out typeIndex);
+                typeIndex -= 1;
+                if (!DataBase.LoanAccountTypes.ContainsKey(DataBase.GetKeyFromLoanTypeIndex(typeIndex)))
                 {
                     Console.WriteLine("Felaktigt val, kontotypen du angett " +
                         "finns inte i listan.");
@@ -540,9 +568,9 @@ namespace KiwiBankomaten
                         // Check if user is happy with the choice
                         Console.Clear();
                         Console.WriteLine($"Du har valt " +
-                            $"{userChoice}. " +
+                            $"{DataBase.GetKeyFromLoanTypeIndex(typeIndex)}. " +
                             $"med ränta " +
-                            $"{DataBase.LoanAccountTypes[userChoice]}%." +
+                            $"{DataBase.LoanAccountTypes[DataBase.GetKeyFromLoanTypeIndex(typeIndex)]}%." +
                             $" Vill du godkänna detta? [J/N]");
                         answer = Console.ReadLine().ToUpper();
                         switch (answer)
@@ -563,7 +591,7 @@ namespace KiwiBankomaten
 
             // returns the interest rate of chosen account type
 
-            return userChoice;
+            return DataBase.GetKeyFromLoanTypeIndex(typeIndex);
         }
 
         // Returns the maximum loan amount of the customer
