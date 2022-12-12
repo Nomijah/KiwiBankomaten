@@ -649,6 +649,7 @@ namespace KiwiBankomaten
         {
             bool noError;
             int accountChoice;
+            List<Log> reversedList;
             do
             {
                 BankAccountOverview();
@@ -661,13 +662,15 @@ namespace KiwiBankomaten
                 }
             } while (!noError || !BankAccounts.Keys.Contains(accountChoice));
             Console.Clear();
-            // Log list is reversed so latest entries appear at the top.
-            BankAccounts[accountChoice].LogList.Reverse();
-            foreach (Log l in BankAccounts[accountChoice].LogList)
+            // We copy the LogList to a new one to ensure we never alter the original.
+            // The list is reversed so we print the entries in order of newest to oldest.
+            reversedList = new List<Log>(BankAccounts[accountChoice].LogList);
+            reversedList.Reverse();
+            foreach (Log l in reversedList)
             {
                 l.PrintLog();
             }
-            BankAccounts[accountChoice].LogList.Reverse();
+            reversedList.Reverse();
         }
     }
 }
