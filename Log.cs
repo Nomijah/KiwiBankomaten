@@ -27,6 +27,7 @@ namespace KiwiBankomaten
                     if (fromWhichAccount == b.AccountNumber)
                     {
                         Currency = b.Currency;
+                        break;
                     }
                 }
             }
@@ -45,6 +46,7 @@ namespace KiwiBankomaten
                     if (fromWhichAccount == b.AccountNumber)
                     {
                         Currency = b.Currency;
+                        break;
                     }
                 }
             }
