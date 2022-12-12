@@ -545,7 +545,8 @@ namespace KiwiBankomaten
             Console.WriteLine($"Summan har nu anlänt på {BankAccounts[1].AccountName}");
             Console.WriteLine("Nytt lånekonto har skapats.");
 
-            // Adds transaction to log, 
+            // Adds transaction to log, first bank account is shown as
+            // having received money from the loan account.
             BankAccounts[1].LogList.Add(new Log(amountMoney, LoanAccounts[index].AccountNumber));
 
             LoanAccountOverview();
@@ -643,6 +644,7 @@ namespace KiwiBankomaten
             }
             return 0;
         }
+        // User selects which bank account they want to view the log for.
         public void ViewLog()
         {
             bool noError;
@@ -659,6 +661,7 @@ namespace KiwiBankomaten
                 }
             } while (!noError || !BankAccounts.Keys.Contains(accountChoice));
             Console.Clear();
+            // Log list is reversed so latest entries appear at the top.
             BankAccounts[accountChoice].LogList.Reverse();
             foreach (Log l in BankAccounts[accountChoice].LogList)
             {
