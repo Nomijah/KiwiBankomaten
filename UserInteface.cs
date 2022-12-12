@@ -99,10 +99,10 @@ public class UserInterface
         // Gets user input => Checks if it's a decimal => Checks if it's larger than 0
         while (!decimal.TryParse(Console.ReadLine(), out selection) || selection <= 0)
         {
-            Console.WriteLine("Ogiltigt val, vänligen försök igen.");
+            UserInterface.DisplayMessage("Ogiltigt inmatning. Inmatningen måste vara ett positivt nummer " +
+                "\nVänligen försök igen.");
             Utility.PressEnterToContinue();
-            // Remove three lines of text from the console
-            Utility.RemoveLines(3);
+            Utility.RemoveLines(6);
             Console.Write("Ange ditt val: ");
         }
         return selection;
@@ -118,10 +118,10 @@ public class UserInterface
         // Gets user input => Checks if it's an integer => Checks if it's in the set range
         while (!int.TryParse(Console.ReadLine(), out selection) || selection < min || selection > max)
         {
-            Console.WriteLine("Ogiltigt val, vänligen försök igen.");
+            UserInterface.DisplayMessage($"Ogiltigt inmatning. Inmatningen måste vara inom [{min} - {max}] " +
+               "\nVänligen försök igen.");
             Utility.PressEnterToContinue();
-            // Remove three lines of text from the console
-            Utility.RemoveLines(3);
+            Utility.RemoveLines(6);
             Console.Write("Ange ditt val: ");
         }
         return selection;
@@ -137,10 +137,10 @@ public class UserInterface
         // Gets user input => Checks if it's an integer => Checks if it's in the set range
         while (!int.TryParse(Console.ReadLine(), out selection) || selection < min || selection > max)
         {
-            Console.WriteLine("Ogiltigt val, vänligen försök igen.");
+            UserInterface.DisplayMessage($"Ogiltigt inmatning. Inmatningen måste vara inom [{min} - {max}] " +
+                "\nVänligen försök igen.");
             Utility.PressEnterToContinue();
-            // Remove three lines of text from the console
-            Utility.RemoveLines(3);
+            Utility.RemoveLines(6);
             Console.Write($"{prompt}: ");
         }
         return selection;
@@ -183,6 +183,14 @@ public class UserInterface
     // Replacement for Console.WriteLine()
     public static void DisplayMessage(string message)
     {
+        Console.WriteLine("---------------------------------------------------");
+        Console.WriteLine(message);
+    }
+    
+    // Replacement for Console.WriteLine()
+    public static void ClearDisplayMessage(string message)
+    {
+        Console.Clear();
         Console.WriteLine("---------------------------------------------------");
         Console.WriteLine(message);
     }
