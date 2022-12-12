@@ -35,7 +35,7 @@ namespace KiwiBankomaten
             bool error; 
             do
             {
-                string userType;
+                int userType;
                 string userName = "";
                 string passWord = "";
                 error = false;
@@ -44,19 +44,15 @@ namespace KiwiBankomaten
                 UserInterface.DisplayMessage("Vilken sorts användare vill du skapa?");
                 UserInterface.DisplayMenu(new string[] {"Customer", "Admin"});
 
-                while (UserInterface.PromptForString(out userType) != "1" && userType != "2")
+                while (UserInterface.PromptForInt(out userType) != 1 && userType != 2)
                 {
                     UserInterface.DisplayMessage("Fel input, skriv in ett korrekt värde");
                     Utility.PressEnterToContinue();
                 }
 
-                Console.Clear();
-                UserInterface.DisplayMessage("Vilket användarnamn ska den nya användaren ha?");
-                userName = UserInterface.PromptForString();
+                userName = UserInterface.QuestionForString("Vilket användarnamn ska den nya användaren ha?");
 
-                Console.Clear();
-                UserInterface.DisplayMessage("Vilket lösenord ska den nya användaren ha?");
-                passWord = UserInterface.PromptForString();
+                passWord = UserInterface.QuestionForString("Vilket lösenord ska den nya användaren ha?");
 
                 Console.Clear();
 
@@ -64,14 +60,14 @@ namespace KiwiBankomaten
                 {
                     // Adds customer account to CustomerDict with name and
                     // password set from user input.
-                    case "1": 
+                    case 1: 
                         DataBase.CustomerDict.Add(DataBase.CustomerDict.Last().Key + 1, 
                             new Customer(userName, passWord));
                         UserInterface.DisplayMessage($"Customer {userName} har " +
                             $"skapats med nyckeln {DataBase.CustomerDict.Last().Key}.");
                         break;
                     // Adds admin account to AdminList with name and password set from user input.
-                    case "2": 
+                    case 2: 
                         DataBase.AdminList.Add(new Admin(userName, passWord));
                         UserInterface.DisplayMessage($"Admin {userName} har skapats.");
                         break;

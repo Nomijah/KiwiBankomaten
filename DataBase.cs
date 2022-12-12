@@ -99,6 +99,7 @@ namespace KiwiBankomaten
         // Prints out account types with interest values.
         public static void PrintAccountTypes()
         {
+            UserInterface.DisplayMessage("Kontotyper:");
             int i = 1;
             foreach (KeyValuePair<string, decimal> type in BankAccountTypes)
             {
@@ -110,6 +111,7 @@ namespace KiwiBankomaten
 
         public static void PrintLoanAccountTypes()
         {
+            UserInterface.DisplayMessage("Kontotyper:");
             int i = 1;
             foreach (KeyValuePair<string, decimal> type in LoanAccountTypes)
             {

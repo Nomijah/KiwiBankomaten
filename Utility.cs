@@ -12,14 +12,14 @@ namespace KiwiBankomaten
             {
                 CheckPassWordLimit(userKey, i);    
 
-                if (UserInterface.PromptForString("Enter your password") == DataBase.CustomerDict[userKey].Password)
+                if (UserInterface.QuestionForString("Ange ditt Lösenord", "Lösenord: ") == DataBase.CustomerDict[userKey].Password)
                 {
-                    Console.WriteLine("Password is correct");
+                    Console.WriteLine("  Password is correct");
                     return true;
                 }
                 else
                 {
-                    Console.WriteLine("Wrong password"); //if wrong password is entered
+                    Console.WriteLine("  Wrong password"); //if wrong password is entered
                     PressEnterToContinue();
                     RemoveLines(5);
                 } 
@@ -77,7 +77,7 @@ namespace KiwiBankomaten
         // Stops the program until the user presses "Enter"
         public static void PressEnterToContinue()
         {
-            UserInterface.DisplayMessage("Klicka Enter för att fortsätta.");
+            UserInterface.DisplayMessage(" Klicka Enter för att fortsätta.");
             // Gets the input from the user
             ConsoleKey enterPressed = Console.ReadKey(true).Key;
             // Loops if the user Presses any button other than "Enter"
@@ -91,14 +91,14 @@ namespace KiwiBankomaten
         public static bool ContinueOrAbort()
         {
 
-            UserInterface.DisplayMessage("Klicka Enter för att försöka igen eller Esc för" +
+            UserInterface.DisplayMessage(" Klicka Enter för att försöka igen eller Esc för" +
                 " att återgå till huvudmenyn.");
             // Gets the input from the user
             ConsoleKey userInput = Console.ReadKey(true).Key;
             // Loops if the user Presses any button other than "Enter"
             while (userInput != ConsoleKey.Enter && userInput != ConsoleKey.Escape)
             {
-                Console.WriteLine("Felaktig inmatning, välj Enter för att försöka " +
+                UserInterface.DisplayMessage("|Felaktig inmatning, välj Enter för att försöka " +
                     "igen eller Esc för att återgå till huvudmenyn.");
                 userInput = Console.ReadKey(true).Key;
             }
@@ -114,9 +114,8 @@ namespace KiwiBankomaten
 
         public static bool YesOrNo(string input, string accountName)
         {
-            UserInterface.DisplayMessage($"Ditt konto får {input} {accountName}\n" +
-                $"Vill du godkänna detta? [J/N]");
-            switch (UserInterface.PromptForString().ToUpper())
+            switch (UserInterface.QuestionForString($"Ditt konto får {input} {accountName}\n" +
+                $"Vill du godkänna detta? [J/N]").ToUpper())
             {
                 case "J":
                     return false;
@@ -142,6 +141,12 @@ namespace KiwiBankomaten
                 Console.Write(new string(' ', Console.BufferWidth));
             }
             Console.SetCursorPosition(0, Console.CursorTop);
+        }
+
+        public static void MoveCursorTo(int value)
+        {
+            Console.SetCursorPosition(value, Console.CursorTop);
+            Console.WriteLine("|");
         }
     }
 }

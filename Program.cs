@@ -10,6 +10,7 @@ namespace KiwiBankomaten
             //DataSaver test = new DataSaver();
             //DataSaver.DSaver();
 
+            Console.WindowWidth = 87;
             RunProgram();
         }
         public static void RunProgram()
@@ -23,7 +24,7 @@ namespace KiwiBankomaten
             //looping menu, which will run when the program is started 
             do
             {
-                UserInterface.DisplayWelcomeMessage();
+                UserInterface.DisplayLogoMessage();
                 UserInterface.DisplayMenu(new string[] {"Logga in", "Avsluta"});
                 loggedIn = false;
                 string choice = UserInterface.PromptForString();
@@ -80,12 +81,12 @@ namespace KiwiBankomaten
             userKey = 0; 
             loggedIn = false;
 
-            UserInterface.DisplayWelcomeMessage();
+            UserInterface.DisplayLogoMessage();
 
             do
             {
-                string userName = UserInterface.PromptForString("Ange ditt " +
-                    "användarnamn\n\nAnvändarnamn: ").Trim();
+                string userName = UserInterface.QuestionForString("Ange ditt " +
+                    "Användarnamn", "Namn: ").Trim();
                 
                 // loop through customer dictionary to search for userName
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
@@ -120,12 +121,12 @@ namespace KiwiBankomaten
             adminKey = 0;
             loggedIn = false;
             
-            UserInterface.DisplayWelcomeMessage();
+            UserInterface.DisplayLogoMessage();
 
             do
             {
                 string userName = UserInterface.PromptForString("Ange ditt " +
-                    "användarnamn\n\nAnvändarnamn: ");  
+                    "användarnamn");  
                 foreach (Admin item in DataBase.AdminList)
                 {
                     if (userName == item.UserName)
@@ -160,7 +161,7 @@ namespace KiwiBankomaten
                 // Creates an instance of the loggedIn user in database
                 Customer obj = DataBase.CustomerDict[userKey];
 
-                UserInterface.DisplayMessage
+                UserInterface.CurrentMethod
                     ($"{DataBase.CustomerDict[userKey].UserName}/CustomerMenu/");
 
                 UserInterface.DisplayMenu(new string[] {"Kontoöversikt", 
@@ -174,7 +175,7 @@ namespace KiwiBankomaten
                     case "1":
                         // Overviews the Accounts and their respective balances
                         Console.Clear();
-                        UserInterface.DisplayMessage($"{DataBase.CustomerDict[userKey].UserName}" +
+                        UserInterface.CurrentMethod($"{DataBase.CustomerDict[userKey].UserName}" +
                             $"/CustomerMenu/AccountOverview/");
                         obj.BankAccountOverview();
                         obj.LoanAccountOverview();
