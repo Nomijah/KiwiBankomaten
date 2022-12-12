@@ -667,6 +667,7 @@ namespace KiwiBankomaten
             {
                 l.PrintLog();
             }
+            BankAccounts[accountChoice].LogList.Reverse();
         }
     }
 }
