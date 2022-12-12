@@ -14,105 +14,34 @@ namespace KiwiBankomaten
 {
     public class DataSaver
     {
-        // DSaver checks if file exists, if false, creates file and writes databaseinfo
-        public static void DSaver()
+        // DSaver checks if file exists, if false, creates file and writes databaseinfo.
+        public static void DSaver(string fileName)
         {
-            // Starts to check if file exists. If it does not it will create a local file
-            string FileOnDesktop = @"C:\Users\danie\Desktop\File1.txt";
-            if (!File.Exists(FileOnDesktop))
+            // CREATING FILE LOCALLY
+            StreamWriter sw = new StreamWriter(fileName);
+            // Writes data on file
+            if (fileName == "Customers.txt")
             {
-                Console.WriteLine("Kunde inte hitta fil.\nSkapar en lokal fil.");
-                // CREATING FILE LOCALLY
-                StreamWriter sw = new StreamWriter(@"C:\Users\danie\Desktop\File1.txt");
-                // Writes data on file
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
                 {
-                    sw.WriteLine("Key: " + item.Key);
-                    sw.WriteLine("Id: " + item.Value.Id);
-                    sw.WriteLine("Username: " + item.Value.UserName);
-                    sw.WriteLine("Password: " + item.Value.Password);
-                    sw.WriteLine("Locked: " + item.Value.Locked);
-                    sw.WriteLine("----------------------");
-                }
-                // closes stream
-                sw.Close();
-                Console.WriteLine("Fil skapades");
-                DataSyncer();
-            }
-            else
-            {
-                Console.WriteLine("Hittade fil");
-                DataSyncer();
-            }
-        }
-
-        // Datasyncer could be run throughout the program to sync all data.
-        // If the data is not synced it will sync it.
-        public static void DataSyncer()
-        {
-            // Store each line in array of strings of the file, to be able to compare with database
-            string[] lines = File.ReadAllLines(@"C:\Users\danie\Desktop\File1.txt");
-
-            // List of string with samevalues, to compare with filelines
-            List<string> sameValues = new List<string>();
-
-            bool ValuesAreSynced = false;
-            int SyncingPoint = 0;
-
-            // foreach line in file, we will compare to every value of a customers properties
-            foreach (string fileLine in lines)
-            {
-                // if the value is found, we have found same value                    
-                foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
-                {
-                    if (fileLine.Equals("Key: " + item.Key))
-                    {
-                        sameValues.Add($"Key: {item.Key} is equal");
-                        SyncingPoint++;
-                    }
-                    if (fileLine.Equals("Id: " + item.Value.Id))
-                    {
-                        sameValues.Add($"Id: {item.Value.Id} is equal");
-                        SyncingPoint++;
-                    }
-                    if (fileLine.Equals("Username: " + item.Value.UserName))
-                    {
-                        sameValues.Add($"Username: {item.Value.UserName} is equal");
-                        SyncingPoint++;
-                    }
-                    if (fileLine.Equals("Password: " + item.Value.Password))
-                    {
-                        sameValues.Add($"Password: {item.Value.Password} is equal");
-                        SyncingPoint++;
-                    }
-                    if (fileLine.Equals("Locked: " + item.Value.Locked))
-                    {
-                        sameValues.Add($"Locked: {item.Value.Locked} is equal");
-                        SyncingPoint++;
-                        break;
-                    }
+                    sw.Write("Key: " + item.Key +
+                    " Id: " + item.Value.Id +
+                    " Username: " + item.Value.UserName +
+                    " Password: " + item.Value.Password +
+                    " Locked: " + item.Value.Locked);
+                    sw.WriteLine();
                 }
             }
-            // if the value is different the file is not synced with the database
-            if (SyncingPoint == DataBase.CustomerDict.Count*6) // 6 items * 6 properties
+            else if (fileName == "BankAccounts.txt")
             {
-                ValuesAreSynced= true; 
-            }
-            if(ValuesAreSynced)
-            {
-                Console.WriteLine("Synkning är färdig!");
-            }
-            else
-            {  // If the values are not synced in the file, we delete the file and write them to the file
-                Console.WriteLine("Alla värden är inte synkade ännu");
 
-                string UnsyncedFile = @"C:\Users\danie\Desktop\File1.txt";
-                File.Delete(UnsyncedFile);
-                DSaver();
             }
+            // closes stream
+            sw.Close();
+            Console.WriteLine("Fil skapades");
         }
 
-        ///   REMOVE SYNCINGPROCESSEN OCH RADERA/ SKAPA NY FIL HELT ENKELT
+
 
         //Tasks:
         // - primary
@@ -189,3 +118,4 @@ namespace KiwiBankomaten
         }
     }
 }
+
