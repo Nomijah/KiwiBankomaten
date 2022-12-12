@@ -410,12 +410,14 @@ namespace KiwiBankomaten
                     {
                         // Add converted value to target account.
                         b.Amount += (amountMoney / toRate) * fromRate;
+                        // Adds transaction to log.
                         b.LogList.Add(new Log(amountMoney, fromAccountNum));
                     }
                     else if (fromAccountNum == b.AccountNumber)
                     {
                         // Withdraw from the source account.
                         b.Amount -= amountMoney;
+                        // Adds transaction to log.
                         b.LogList.Add(new Log(amountMoney,fromAccountNum, toAccountNum));
                     }
                 }
@@ -543,6 +545,7 @@ namespace KiwiBankomaten
             Console.WriteLine($"Summan har nu anlänt på {BankAccounts[1].AccountName}");
             Console.WriteLine("Nytt lånekonto har skapats.");
 
+            // Adds transaction to log, 
             BankAccounts[1].LogList.Add(new Log(amountMoney, LoanAccounts[index].AccountNumber));
 
             LoanAccountOverview();

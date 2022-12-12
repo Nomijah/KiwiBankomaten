@@ -12,6 +12,7 @@ namespace KiwiBankomaten
         public string Currency { get; set; }
         public int FromWhichAccount { get; set; }
         public int ToWhichAccount { get; set; }
+        // Is used to see if account is receiving or sending money.
         public bool ReceivingMoney { get; set; }
 
         // Used when receiving money from another account.
