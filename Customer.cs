@@ -647,12 +647,8 @@ namespace KiwiBankomaten
             do
             {
                 BankAccountOverview();
-                Console.WriteLine("Vilket konto vill du se överföringslogg på? Skriv 0 för att gå tillbaka.");
+                Console.WriteLine("Vilket konto vill du se överföringslogg på?");
                 noError = Int32.TryParse(Console.ReadLine(), out accountChoice);
-                if (accountChoice == 0)
-                {
-                    return;
-                }
                 if (!noError || !BankAccounts.Keys.Contains(accountChoice))
                 {
                     Console.WriteLine("Kontot du valde existerar inte. Skriv in en giltig siffra.");

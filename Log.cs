@@ -58,14 +58,14 @@ namespace KiwiBankomaten
             if (ReceivingMoney)
             {
                 Console.WriteLine($"Date: {TimeOfTransfer}\n" +
-                    $"Amount received: {AmountTransferred} {Currency}\n" +
+                    $"Amount received: {Utility.AmountDecimal(AmountTransferred)} {Currency}\n" +
                     $"From account: {FromWhichAccount}\n" +
                     $"-------------------------------");
             }
             else
             {
                 Console.WriteLine($"Date: {TimeOfTransfer}\n" +
-                    $"Amount sent: {AmountTransferred} {Currency}\n" +
+                    $"Amount sent: {Utility.AmountDecimal(AmountTransferred)} {Currency}\n" +
                     $"To account: {ToWhichAccount}\n" +
                     $"-------------------------------");
             }
