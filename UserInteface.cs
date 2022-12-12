@@ -51,12 +51,10 @@ public class UserInterface
     }
 
     //Displays the Welcome message to the user
-    public static void DisplayWelcomeMessage()
+    public static void DisplayLogoMessage()
     {
         Console.Clear();
         DisplayLogo();
-        Console.WriteLine("---------------------------------------------------");
-        Console.WriteLine("Välkommen till KiwiBank!");
     }
 
     public static void DisplayAdminMessage()
@@ -153,8 +151,6 @@ public class UserInterface
         Console.Write("Ange ditt val: ");
         return Console.ReadLine();
     }
-
-    // Asks for a value then returns that value as a string
     public static string PromptForString(out string value)
     {
         Console.WriteLine("---------------------------------------------------");
@@ -172,7 +168,35 @@ public class UserInterface
     }
 
     // Asks for a value with a custom prompt then returns that value as a string
-    public static int PromptForInt(int value)
+    public static string PromptForString(string question, string prompt)
+    {
+        Console.WriteLine("---------------------------------------------------");
+        Console.WriteLine($"{question}\n");
+        Console.Write($"{prompt}: ");
+        return Console.ReadLine();
+    }
+    // Asks for a value then returns that value as a string
+    public static string QuestionForString(string question)
+    {
+        Console.WriteLine("---------------------------------------------------");
+        Console.WriteLine($"{question}\n");
+        Console.Write("Ange ditt val: ");
+        return Console.ReadLine();
+    }
+
+    // Asks for a value then returns that value as a string
+    public static string QuestionForString(string question, out string value)
+    {
+        Console.WriteLine("---------------------------------------------------");
+        Console.WriteLine($"{question}\n");
+        Console.Write("Ange ditt val: ");
+        value = Console.ReadLine();
+        return value;
+    }
+
+
+    // Asks for a value with a custom prompt then returns that value as a string
+    public static int PromptForInt(out int value)
     {
         Console.WriteLine("---------------------------------------------------");
         Console.Write("Ange ditt val: ");
