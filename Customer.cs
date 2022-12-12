@@ -670,7 +670,7 @@ namespace KiwiBankomaten
             {
                 l.PrintLog();
             }
-            // Reversed list is un-reversed so we don't 
+            // Reversed list is un-reversed so we don't print out the wrong order next time.
             reversedList.Reverse();
         }
     }
