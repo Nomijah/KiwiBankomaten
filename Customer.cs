@@ -6,7 +6,7 @@ namespace KiwiBankomaten
 {
     internal class Customer : User
     {
-        private Dictionary<int, BankAccount> BankAccounts;
+        public Dictionary<int, BankAccount> BankAccounts;
         private Dictionary<int, LoanAccount> LoanAccounts;
 
         // Used for creating test customers.
@@ -211,6 +211,9 @@ namespace KiwiBankomaten
                 {
                     // Adds money into newly created account.
                     BankAccounts[BankAccounts.Keys.Max()].Amount += insertAmount;
+                    // Adds this transfer to the logbook with date, money amount and which account the money was sent to.
+                    BankAccounts[BankAccounts.Keys.Max()].LogList.Add(new Log
+                        (insertAmount, BankAccounts[BankAccounts.Keys.Max()].AccountNumber));
                 }
                 else
                 {
@@ -407,14 +410,17 @@ namespace KiwiBankomaten
                     {
                         // Add converted value to target account.
                         b.Amount += (amountMoney / toRate) * fromRate;
+                        b.LogList.Add(new Log(amountMoney, fromAccountNum));
                     }
                     else if (fromAccountNum == b.AccountNumber)
                     {
                         // Withdraw from the source account.
                         b.Amount -= amountMoney;
+                        b.LogList.Add(new Log(amountMoney,fromAccountNum, toAccountNum));
                     }
                 }
             }
+          
             Console.WriteLine("Överföringen lyckades.");
             Utility.PressEnterToContinue();
             Console.Clear();
@@ -537,6 +543,8 @@ namespace KiwiBankomaten
             Console.WriteLine($"Summan har nu anlänt på {BankAccounts[1].AccountName}");
             Console.WriteLine("Nytt lånekonto har skapats.");
 
+            BankAccounts[1].LogList.Add(new Log(amountMoney, LoanAccounts[index].AccountNumber));
+
             LoanAccountOverview();
 
         }
@@ -631,6 +639,32 @@ namespace KiwiBankomaten
                 }
             }
             return 0;
+        }
+        public void ViewLog()
+        {
+            bool noError;
+            int accountChoice;
+            do
+            {
+                BankAccountOverview();
+                Console.WriteLine("Vilket konto vill du se överföringslogg på? Skriv 0 för att gå tillbaka.");
+                noError = Int32.TryParse(Console.ReadLine(), out accountChoice);
+                if (accountChoice == 0)
+                {
+                    return;
+                }
+                if (!noError || !BankAccounts.Keys.Contains(accountChoice))
+                {
+                    Console.WriteLine("Kontot du valde existerar inte. Skriv in en giltig siffra.");
+                    Utility.PressEnterToContinue();
+                }
+            } while (!noError || !BankAccounts.Keys.Contains(accountChoice));
+            Console.Clear();
+            BankAccounts[accountChoice].LogList.Reverse();
+            foreach (Log l in BankAccounts[accountChoice].LogList)
+            {
+                l.PrintLog();
+            }
         }
     }
 }
