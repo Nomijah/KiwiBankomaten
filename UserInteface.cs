@@ -116,13 +116,11 @@ public class UserInterface
     {
         Console.Clear();
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-
         DisplayLogo();
     }
 
     public static void CurrentMethod(string message)
     {
-        Console.Clear();
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
         Console.Write($" |{message}");
         Utility.MoveCursorTo(85);

@@ -22,10 +22,10 @@ namespace KiwiBankomaten
             Console.Clear();
 
             //looping menu, which will run when the program is started 
+            UserInterface.DisplayLogoMessage();
+            UserInterface.DisplayMenu(new string[] {"Logga in", "Avsluta"});
             do
             {
-                UserInterface.DisplayLogoMessage();
-                UserInterface.DisplayMenu(new string[] {"Logga in", "Avsluta"});
                 loggedIn = false;
                 string choice = UserInterface.PromptForString();
                 switch (choice)
@@ -65,10 +65,9 @@ namespace KiwiBankomaten
                         
                     //If neither of these options are used the defaultmsg is displayed
                     default:
-                        Console.WriteLine("Felaktigt val, försök igen.");
+                        UserInterface.CurrentMethod("Felaktigt val, försök igen.");
                         Utility.PressEnterToContinue();
-                        Console.Clear();
-                        RunProgram();
+                        Utility.RemoveLines(6);
                         break;
                 }
             } while (loggedIn != true);
@@ -104,10 +103,11 @@ namespace KiwiBankomaten
                     }
 
                 }
-                UserInterface.DisplayMessage("Användarnamnet du angett kunde " +
-                    "inte hittas.\nFörsök igen");
+                UserInterface.CurrentMethod("Användarnamnet du angett kunde " +
+                    "inte hittas, försök igen");
+
                 Utility.PressEnterToContinue();
-                Utility.RemoveLines(9); 
+                Utility.RemoveLines(8); 
                 tries++;
             } while (tries != 3);
             
@@ -161,6 +161,8 @@ namespace KiwiBankomaten
                 // Creates an instance of the loggedIn user in database
                 Customer obj = DataBase.CustomerDict[userKey];
 
+                UserInterface.DisplayLogoMessage();
+
                 UserInterface.CurrentMethod
                     ($"{DataBase.CustomerDict[userKey].UserName}/CustomerMenu/");
 
@@ -174,9 +176,8 @@ namespace KiwiBankomaten
                 {
                     case "1":
                         // Overviews the Accounts and their respective balances
-                        Console.Clear();
-                        UserInterface.CurrentMethod($"{DataBase.CustomerDict[userKey].UserName}" +
-                            $"/CustomerMenu/AccountOverview/");
+                       
+                        
                         obj.BankAccountOverview();
                         obj.LoanAccountOverview();
                         break;

@@ -8,9 +8,9 @@ namespace KiwiBankomaten
         {
             //if the user is locked, message is displayed and user is returned to mainmenu
 
-            for (int i = 0; i <= 3; i++)
+            for (int i = 4 - 1; i >= 0; i--)
             {
-                CheckPassWordLimit(userKey, i);    
+                CheckPassWordLimit(userKey, i);
 
                 if (UserInterface.QuestionForString("Ange ditt Lösenord", "Lösenord: ") == DataBase.CustomerDict[userKey].Password)
                 {
@@ -19,10 +19,17 @@ namespace KiwiBankomaten
                 }
                 else
                 {
-                    Console.WriteLine("  Wrong password"); //if wrong password is entered
-                    PressEnterToContinue();
-                    RemoveLines(5);
-                } 
+                    if (!(i <= 1))
+                    {
+                        UserInterface.CurrentMethod($"Fel lösenord, du har nu {i - 1} försök kvar. Försök igen");
+                        PressEnterToContinue();
+                        RemoveLines(8);
+                    }
+                    else
+                    {
+                        CheckPassWordLimit(userKey, i);
+                    }
+                }
             }
             return false;
         }
@@ -54,12 +61,12 @@ namespace KiwiBankomaten
         public static void CheckPassWordLimit(int userKey, int tries)
         {
             //if the user is locked, message is displayed and user is returned to mainmenu
-            if (tries == 3 || DataBase.CustomerDict[userKey].Locked == true)
+            if (tries <= 0 || DataBase.CustomerDict[userKey].Locked == true)
             {
                 DataBase.CustomerDict[userKey].Locked = true;//locks user if 3 fails occur
 
-                UserInterface.DisplayMessage("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin");
-                
+                UserInterface.CurrentMethod("Du har angett fel lösenord 3 gånger, ditt konto är låst. Kontakta admin");
+
                 PressEnterToContinue();
 
                 Program.RunProgram();
