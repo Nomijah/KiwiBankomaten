@@ -9,7 +9,10 @@ namespace KiwiBankomaten
         {
             DataSaver test = new DataSaver();
             DataSaver.DSaver("Customers.txt");
-
+            DataSaver.DSaver("BankAccounts.txt");
+            DataSaver.UpdateFromFile("Customers.txt");
+            Admin.ViewAllUsers();
+            Console.ReadKey();
             RunProgram();
         }
         public static void RunProgram()

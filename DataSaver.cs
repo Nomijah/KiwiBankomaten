@@ -14,34 +14,119 @@ namespace KiwiBankomaten
 {
     public class DataSaver
     {
-        // DSaver checks if file exists, if false, creates file and writes databaseinfo.
+        // Checks if DataBase files exists on startup. If they do not,
+        // it creates all necessary files from DataBase class. If they do
+        // exist it writes to DataBase from files.
+        public static void CheckDataBase()
+        {
+
+        }
+
+        // Writes info from DataBase to file.
         public static void DSaver(string fileName)
         {
             // CREATING FILE LOCALLY
             StreamWriter sw = new StreamWriter(fileName);
-            // Writes data on file
+            // Writes data on matching file
             if (fileName == "Customers.txt")
             {
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
                 {
-                    sw.Write("Key: " + item.Key +
-                    " Id: " + item.Value.Id +
-                    " Username: " + item.Value.UserName +
-                    " Password: " + item.Value.Password +
-                    " Locked: " + item.Value.Locked);
+                    sw.Write("Id: {0} Username: {1} " +
+                        "Password: {2} Locked: {3} ", 
+                        item.Value.Id, item.Value.UserName, 
+                        item.Value.Password, item.Value.Locked); ;
                     sw.WriteLine();
                 }
             }
             else if (fileName == "BankAccounts.txt")
             {
+                foreach (Customer c in DataBase.CustomerDict.Values)
+                {
+                    foreach (KeyValuePair<int, BankAccount> item in c.BankAccounts)
+                    {
+                        sw.Write("Customer ID: {0} Account Key: {1} AccountNr: {2} " +
+                            "Name: {3} Amount: {4} Currency: {5} Interest: {6}",
+                            c.Id, item.Key, item.Value.AccountNumber,
+                            item.Value.AccountName,item.Value.Amount,
+                            item.Value.Currency,item.Value.Interest);
+                        sw.WriteLine();
+                    }
+                }
 
+            }
+
+            else if (fileName == "Admins.txt")
+            {
+
+            }
+            else if (fileName == "Currencies.txt")
+            {
+
+            }
+            else if (fileName == "BankAccountTypes.txt")
+            {
+
+            }
+            else if (fileName == "LoanAccountTypes.txt")
+            {
+
+            }
+            else
+            {
+                Console.WriteLine("File doesn't exist.");
             }
             // closes stream
             sw.Close();
             Console.WriteLine("Fil skapades");
         }
 
+        public static void UpdateFromFile(string fileName)
+        {
+            StreamReader sr = new StreamReader(fileName);
 
+            // Writes data on matching file
+            if (fileName == "Customers.txt")
+            {
+                // Clear dictionary
+                DataBase.CustomerDict.Clear();
+                string[] lines = sr.ReadToEnd().Split("\n");
+                foreach (string item in lines)
+                {
+                    string[] temp = item.Split(" ");
+                    DataBase.CustomerDict.Add(Convert.ToInt32(temp[1]),
+                        new Customer(Convert.ToInt32(temp[1]), temp[3],
+                        temp[5], Convert.ToBoolean(temp[7])));
+                }
+            }
+            else if (fileName == "BankAccounts.txt")
+            {
+
+            }
+
+            else if (fileName == "Admins.txt")
+            {
+
+            }
+            else if (fileName == "Currencies.txt")
+            {
+
+            }
+            else if (fileName == "BankAccountTypes.txt")
+            {
+
+            }
+            else if (fileName == "LoanAccountTypes.txt")
+            {
+
+            }
+            else
+            {
+                Console.WriteLine("File doesn't exist.");
+            }
+
+            sr.Close();
+        }
 
         //Tasks:
         // - primary
@@ -93,13 +178,12 @@ namespace KiwiBankomaten
 
 
         // Method to read and show data from chosen file.
-        //DataSaver.DataReading("File1");  HOW TO USE
-        public static void DataReading(string name)
+        // DataSaver.DataReading("Customer.txt");  HOW TO USE
+        public static void DataReading(string fileName)
         {
             // Takes in parameter which is the name of the file. Example, write "File1" 
-            string choice = @"C:\Users\danie\Desktop\" + name + ".txt";
-            StreamReader sr = new StreamReader($"{choice}");
-            Console.WriteLine($"Content of the File ({name}): \n");
+            StreamReader sr = new StreamReader(fileName);
+            Console.WriteLine($"Content of the File ({fileName}): \n");
 
             // This is use to specify from where to start reading input stream
             sr.BaseStream.Seek(0, SeekOrigin.Begin);
