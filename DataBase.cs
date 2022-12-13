@@ -106,7 +106,7 @@ namespace KiwiBankomaten
             int i = 1;
             foreach (KeyValuePair<string, decimal> type in BankAccountTypes)
             {
-                Console.Write($" |{i}. {type.Key}, " +
+                Console.Write($" |-{i}). {type.Key}, " +
                     $"ränta: {type.Value}");
                 Utility.MoveCursorTo(85);
                 i++;

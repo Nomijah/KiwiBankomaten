@@ -194,21 +194,25 @@ namespace KiwiBankomaten
         public void ViewInterestSavingsOfNewAccount(decimal interest, decimal insertAmount)
         {
             decimal interestAmount = insertAmount * interest / 100;
-            UserInterface.DisplayMessage($"Såhär mycket ränta kommer du tjäna med {insertAmount} {BankAccounts.Last().Value.Currency}");
-            UserInterface.DisplayMessage("1 år : " + Math.Round(interestAmount, 2));
+            UserInterface.CurrentMethod($"Såhär mycket ränta kommer du tjäna med {insertAmount} {BankAccounts.Last().Value.Currency}");
+            UserInterface.CurrentMethod("1 år : " + Math.Round(interestAmount, 2));
+
             // Calculates amount of money account will earn in interest in 5 years.
             for (int i = 0; i < 4; i++)
             {
                 interestAmount += (insertAmount + interestAmount) * interest / 100;
             }
-            Console.WriteLine("5 år : " + Math.Round(interestAmount, 2));
+            Console.Write(" |5 år : " + Math.Round(interestAmount, 2));
+            Utility.MoveCursorTo(85);
 
             // Calculates amount of money account will earn in interest in 10 years.
             for (int i = 0; i < 5; i++)
             {
                 interestAmount += (insertAmount + interestAmount) * interest / 100;
             }
-            Console.WriteLine("10 år : " + Math.Round(interestAmount, 2));
+            Console.Write(" |10 år : " + Math.Round(interestAmount, 2));
+            Utility.MoveCursorTo(85);
+
 
         }
 
