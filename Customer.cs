@@ -77,7 +77,7 @@ namespace KiwiBankomaten
             bool answer = false;
             UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
                 $"CreateAccount/");
-            UserInterface.DisplayMessage("Vilken typ av konto vill du öppna?");
+            UserInterface.CurrentMethod("Vilken typ av konto vill du öppna?");
             DataBase.PrintAccountTypes();
             while (!DataBase.BankAccountTypes.ContainsKey(DataBase.GetKeyFromBankTypeIndex(typeIndex)) || !answer)
             {
@@ -86,7 +86,7 @@ namespace KiwiBankomaten
                 typeIndex -= 1;
                 if (!DataBase.BankAccountTypes.ContainsKey(DataBase.GetKeyFromBankTypeIndex(typeIndex)))
                 {
-                    UserInterface.DisplayMessage("Felaktigt val, kontotypen du angett " +
+                    UserInterface.CurrentMethod("Felaktigt val, kontotypen du angett " +
                         "finns inte i listan.");
                     Utility.PressEnterToContinue();
                     Utility.RemoveLines(6);
@@ -94,7 +94,8 @@ namespace KiwiBankomaten
                 else
                 {
                     // Check if user is happy with the choice
-                    answer = !Utility.YesOrNo("kontotyp", DataBase.GetKeyFromBankTypeIndex(typeIndex));
+                    answer = !Utility.YesOrNo($"Ditt konto får Kontotyp [{DataBase.GetKeyFromBankTypeIndex(typeIndex)}]",
+                $"Vill du godkänna detta? [J/N]");
                 }
             }
 
@@ -106,16 +107,21 @@ namespace KiwiBankomaten
         private string ChooseAccountName()
         {
             string accountName;
-
-            UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
-                $"CreateAccount/");
-            UserInterface.DisplayMessage("Vilket namn vill du ge ditt konto?");
+            Utility.RemoveLinesVariable(13, DataBase.BankAccountTypes.Count - 1);
+            
+            UserInterface.CurrentMethod("Vilket namn vill du ge ditt konto?");
             do
             {
-                accountName = UserInterface.PromptForString("Namn:");
+                while (UserInterface.PromptForString(out accountName) == "")
+                {
+                    UserInterface.CurrentMethod($"Ett namn måste ha minst En karaktär. Ditt namn [{accountName}]");
+                    Utility.PressEnterToContinue();
+                    Utility.RemoveLines(6);
+                }
 
                 // Loop until user is happy with the choice
-            } while (Utility.YesOrNo("namn", accountName));
+            } while (Utility.YesOrNo($"Ditt konto får Namn [{accountName}]",
+                $"Vill du godkänna detta? [J/N]"));
                 
             return accountName;
         }
@@ -124,10 +130,9 @@ namespace KiwiBankomaten
         private string ChooseCurrency()
         {
             string currency;
-            UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
-                $"CreateAccount/");
-            UserInterface.DisplayMessage("Vilken valuta vill du använda till ditt konto?");
-            UserInterface.DisplayMessage("Tillgängliga valutor");
+            Utility.RemoveLines(10);
+            
+            UserInterface.CurrentMethod("Vilken valuta vill du använda till ditt konto?");
             DataBase.PrintCurrencies();
             do
             {
@@ -135,12 +140,13 @@ namespace KiwiBankomaten
                 // Check if user input is correct, if not ask again
                 while (!DataBase.ExchangeRates.ContainsKey(UserInterface.PromptForString(out currency).ToUpper()))
                 {
-                    UserInterface.DisplayMessage("Valutan du angett finns inte i systemet\n" +
-                        "Vänligen välj en valuta från listan");
+                    UserInterface.CurrentMethod("Valutan du angett finns inte i systemet. " +
+                        "Välj en Valuta från listan");
                     Utility.PressEnterToContinue();
-                    Utility.RemoveLines(7);
+                    Utility.RemoveLines(6);
                 } 
-            } while (Utility.YesOrNo("Valuta", currency.ToUpper()));
+            } while (Utility.YesOrNo($"Ditt konto får Valuta [{currency.ToUpper()}]",
+                $"Vill du godkänna detta? [J/N]"));
 
             return currency.ToUpper();
         }
@@ -154,27 +160,14 @@ namespace KiwiBankomaten
             // Amount of money to be inserted into new account.
             decimal insertAmount;
 
-            UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
-                $"CreateAccount/");
-            UserInterface.DisplayMessage($"Vill du sätta in {BankAccounts[BankAccounts.Keys.Max()].Currency} i ditt nya konto? J/N");
+            Utility.RemoveLinesVariable(13, DataBase.ExchangeRates.Count - 1);
+
             // Will only proceed if user selects J or N.
-            do
+            if (Utility.YesOrNo($"Vill du sätta in [{BankAccounts[BankAccounts.Keys.Max()].Currency}] i ditt nya konto? [J/N]"))
             {
-                answer = UserInterface.PromptForString().ToUpper();
-                switch (answer)
-                {
-                    case "J":
-                        break;
-                    case "N":
-                        return;
-                    default:
-                        Console.WriteLine("Felaktig inmatning, välj [J] " +
-                            "för ja eller N för nej.");
-                        Utility.PressEnterToContinue();
-                        Utility.RemoveLines(5);
-                        break;
-                }
-            } while (answer != "J" && answer != "N");
+                return;
+            }
+
             // Loop runs until user has chosen a valid amount of money to put into account.
             do
             {
@@ -303,15 +296,13 @@ namespace KiwiBankomaten
         public void DisplayLocalTransfer(int transferFrom,
             decimal amountMoney, int transferTo)
         {
-            Utility.RemoveLines(12);
+            Utility.RemoveLinesVariable(9, BankAccounts.Count - 1);
             DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
         }
         public void DisplayGlobalTransfer(int transferFrom,
             decimal amountMoney, int transferTo)
         {
-            UserInterface.DisplayLogoMessage();
-            UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
-                    $"InternalMoneyTransfer/");
+            Utility.RemoveLinesVariable(9, BankAccounts.Count - 1);
             DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
         }
 
@@ -395,7 +386,7 @@ namespace KiwiBankomaten
             }
             UserInterface.CurrentMethod("Överföringen lyckades.");
             Utility.PressEnterToContinue();
-            Utility.RemoveLines(14);
+            Utility.RemoveLinesVariable(11, BankAccounts.Count - 1);
         }
 
         public void InternalMoneyTransfer()
@@ -404,10 +395,12 @@ namespace KiwiBankomaten
             int transferFrom = 0;
             int transferTo = 0;
 
-            DisplayGlobalTransfer(transferFrom, amountMoney, transferTo);
+            UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
+                    $"InternalMoneyTransfer/");
 
-            UserInterface.DisplayMessage("Från vilket konto vill du föra över pengarna?");
-            transferFrom = UserInterface.IsValueNumberCheck(BankAccounts.Count);
+            DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
+
+            UserInterface.QuestionForIntMax("Från vilket konto vill du föra över pengarna?", out transferFrom, BankAccounts.Count);
 
             DisplayGlobalTransfer(transferFrom, amountMoney, transferTo);
 
@@ -418,8 +411,7 @@ namespace KiwiBankomaten
             bool correctAccountNumber = false;
             do
             {
-                UserInterface.DisplayMessage("Skriv det 8-siffriga kontonummer du vill föra över pengar till:");
-                transferTo = (int)UserInterface.IsValueNumberCheck();
+                UserInterface.QuestionForIntMax("Skriv det 8-siffriga kontonummer du vill föra över pengar till:", out transferTo, 100000000);
 
                 DisplayGlobalTransfer(transferFrom, amountMoney, transferTo);
 
@@ -557,7 +549,8 @@ namespace KiwiBankomaten
                 else
                 {
                     // Check if user is happy with the choice
-                    answer = !Utility.YesOrNo("kontotyp", DataBase.GetKeyFromLoanTypeIndex(typeIndex));
+                    answer = !Utility.YesOrNo($"Ditt konto får Kontotyp [{DataBase.GetKeyFromLoanTypeIndex(typeIndex)}]",
+                $"Vill du godkänna detta? [J/N]");
                 }
             }
 

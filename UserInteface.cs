@@ -125,6 +125,14 @@ public class UserInterface
         Console.Write($" |{message}");
         Utility.MoveCursorTo(85);
     }
+    public static void CurrentMethod(string message, string message2)
+    {
+        Console.WriteLine(" +-----------------------------------------------------------------------------------+");
+        Console.Write($" |{message}");
+        Utility.MoveCursorTo(85);
+        Console.Write($" |{message2}");
+        Utility.MoveCursorTo(85);
+    }
 
     public static void DisplayAdminMessage()
     {
@@ -306,7 +314,7 @@ public class UserInterface
         Console.Write($" |{question}");
         Utility.MoveCursorTo(85);
         
-        value = (int)IsValueNumberCheck(max);
+        value = IsValueNumberCheck(max);
         return value;
     }
 

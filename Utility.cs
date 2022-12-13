@@ -126,30 +126,60 @@ namespace KiwiBankomaten
             }
         }
 
-        public static bool YesOrNo(string input, string accountName)
+        public static bool YesOrNo(string input, string input2)
         {
-            switch (UserInterface.QuestionForString($"Ditt konto får {input} {accountName}\n" +
-                $"Vill du godkänna detta? [J/N]").ToUpper())
+            do
             {
-                case "J":
-                    return false;
-                case "N":
-                    RemoveLines(7);
-                    return true;
-                default:
-                    UserInterface.DisplayMessage("Felaktig inmatning\nVälj [J] " +
-                        "för ja eller N för nej.");
-                    PressEnterToContinue();
-                    RemoveLines(10);
-                    YesOrNo(input, accountName);
-                    break;
-            }
-            return false;
+                UserInterface.CurrentMethod(input);
+                switch (UserInterface.QuestionForString(input2).ToUpper())
+                {
+                    case "J":
+                        return false;
+                    case "N":
+                        RemoveLines(8);
+                        return true;
+                    default:
+                        UserInterface.CurrentMethod("Felaktig inmatning", "Välj [J] för ja eller N för nej.");
+                        PressEnterToContinue();
+                        RemoveLines(11);
+                        break;
+
+                }
+            } while (true);
+        }
+        public static bool YesOrNo(string input)
+        {
+
+            do
+            {
+                switch (UserInterface.QuestionForString(input).ToUpper())
+                {
+                    case "J":
+                        return false;
+                    case "N":
+                        return true;
+                    default:
+                        UserInterface.CurrentMethod("Felaktig inmatning", "Välj [J] för ja eller N för nej.");
+                        PressEnterToContinue();
+                        RemoveLines(9);
+                        break;
+
+                } 
+            } while (true);
         }
 
         public static void RemoveLines(int lines)
         {
             for (int i = 0; i < lines; i++)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                Console.Write(new string(' ', Console.BufferWidth));
+            }
+            Console.SetCursorPosition(0, Console.CursorTop);
+        }
+        public static void RemoveLinesVariable(int baseLines, int variable)
+        {
+            for (int i = 0; i < baseLines + variable; i++)
             {
                 Console.SetCursorPosition(0, Console.CursorTop - 1);
                 Console.Write(new string(' ', Console.BufferWidth));

@@ -189,6 +189,8 @@ namespace KiwiBankomaten
                 {
                     case "1":
                         // Overviews the Accounts and their respective balances
+                        UserInterface.CurrentMethod($"{obj.UserName}/CustomerMenu/" +
+                    $"AccountOverview/");
                         obj.BankAccountOverview();
                         obj.LoanAccountOverview();
                         break;
