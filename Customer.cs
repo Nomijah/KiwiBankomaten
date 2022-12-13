@@ -273,7 +273,10 @@ namespace KiwiBankomaten
             int transferFrom = 0;
             int transferTo = 0;
 
-            DisplayLocalTransfer(transferFrom, amountMoney, transferTo);
+            UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
+                    $"TransferBetweenCustomerAccounts/");
+
+            DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
 
             UserInterface.QuestionForIntMax("Från vilket konto vill du föra över pengarna?",out transferFrom, BankAccounts.Count);
 
@@ -300,9 +303,7 @@ namespace KiwiBankomaten
         public void DisplayLocalTransfer(int transferFrom,
             decimal amountMoney, int transferTo)
         {
-            UserInterface.DisplayLogoMessage();
-            UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
-                    $"TransferBetweenCustomerAccounts/");
+            Utility.RemoveLines(12);
             DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
         }
         public void DisplayGlobalTransfer(int transferFrom,
