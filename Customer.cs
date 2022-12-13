@@ -107,7 +107,6 @@ namespace KiwiBankomaten
         {
             string accountName;
 
-            Console.Clear();
             UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
                 $"CreateAccount/");
             UserInterface.DisplayMessage("Vilket namn vill du ge ditt konto?");
@@ -118,7 +117,6 @@ namespace KiwiBankomaten
                 // Loop until user is happy with the choice
             } while (Utility.YesOrNo("namn", accountName));
                 
-            Console.Clear();
             return accountName;
         }
 
@@ -156,7 +154,6 @@ namespace KiwiBankomaten
             // Amount of money to be inserted into new account.
             decimal insertAmount;
 
-            Console.Clear();
             UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
                 $"CreateAccount/");
             UserInterface.DisplayMessage($"Vill du sätta in {BankAccounts[BankAccounts.Keys.Max()].Currency} i ditt nya konto? J/N");
@@ -225,11 +222,10 @@ namespace KiwiBankomaten
         // Prints out users bank accounts.
         public void BankAccountOverview()
         {
-            Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-
+            
             // Print out each account with key, number, name, value and currency
-            Console.Write(" |Bankkonton:");
-            Utility.MoveCursorTo(85);
+            UserInterface.CurrentMethod("Bankkonton:");
+
             foreach (KeyValuePair<int, BankAccount> account in BankAccounts)
             {
                 Console.Write($" |-{account.Key}). {account.Value.AccountNumber} " +
@@ -259,15 +255,12 @@ namespace KiwiBankomaten
         // Shows the Customer the Accounts that was involved in the transaction
         public void AccountOverview(int fromWhichAccount, int toWhichAccount)
         {
-            Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-
-            Console.Write(" |Money was sent from : ");
-            Utility.MoveCursorTo(85);
+            UserInterface.CurrentMethod("Money was sent from : ");
             Console.Write($" |KontoNamn : {BankAccounts[fromWhichAccount].AccountName} - KontoSaldo : " +
-                $"{Utility.AmountDecimal(BankAccounts[fromWhichAccount].Amount)} {BankAccounts[fromWhichAccount].Currency}\n");
+                $"{Utility.AmountDecimal(BankAccounts[fromWhichAccount].Amount)} {BankAccounts[fromWhichAccount].Currency}");
             Utility.MoveCursorTo(85);
-            Console.Write(" |Money was sent to : ");
-            Utility.MoveCursorTo(85);
+
+            UserInterface.CurrentMethod("Money was sent to : ");
             Console.Write($" |KontoNamn : {BankAccounts[toWhichAccount].AccountName} - KontoSaldo : " +
                 $"{Utility.AmountDecimal(BankAccounts[toWhichAccount].Amount)} {BankAccounts[toWhichAccount].Currency}");
             Utility.MoveCursorTo(85);
@@ -307,6 +300,7 @@ namespace KiwiBankomaten
         public void DisplayLocalTransfer(int transferFrom,
             decimal amountMoney, int transferTo)
         {
+            UserInterface.DisplayLogoMessage();
             UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
                     $"TransferBetweenCustomerAccounts/");
             DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
@@ -314,6 +308,7 @@ namespace KiwiBankomaten
         public void DisplayGlobalTransfer(int transferFrom,
             decimal amountMoney, int transferTo)
         {
+            UserInterface.DisplayLogoMessage();
             UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
                     $"InternalMoneyTransfer/");
             DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
@@ -325,20 +320,20 @@ namespace KiwiBankomaten
             
             if (transferFrom == 0)
             {
-                UserInterface.DisplayMessage($"From: X Amount: X To: X");
+                UserInterface.DisplayMessage($" From: X Amount: X To: X");
             }
             else if (amountMoney == 0)
             {
-                UserInterface.DisplayMessage($"From: {transferFrom} Amount: X To: X");
+                UserInterface.DisplayMessage($" From: {transferFrom} Amount: X To: X");
             }
             else if (transferTo == 0)
             {
-                UserInterface.DisplayMessage($"From: {transferFrom} " +
+                UserInterface.DisplayMessage($" From: {transferFrom} " +
                     $"Amount: {Utility.AmountDecimal(amountMoney)} To: X");
             }
             else
             {
-                UserInterface.DisplayMessage($"From: {transferFrom} " +
+                UserInterface.DisplayMessage($" From: {transferFrom} " +
                     $"Amount: {Utility.AmountDecimal(amountMoney)} To: {transferTo}");
             }
             BankAccountOverview(); // Shows the Customer their Accounts and the balances in said Accounts
@@ -397,10 +392,9 @@ namespace KiwiBankomaten
                     }
                 }
             }
-            UserInterface.DisplayMessage
-                ("Överföringen lyckades.");
+            UserInterface.CurrentMethod("Överföringen lyckades.");
             Utility.PressEnterToContinue();
-            Console.Clear();
+            Utility.RemoveLines(14);
         }
 
         public void InternalMoneyTransfer()
