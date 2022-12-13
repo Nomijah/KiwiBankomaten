@@ -128,7 +128,6 @@ public class UserInterface
 
     public static void DisplayAdminMessage()
     {
-        Console.Clear();
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
         Console.Write(" |Admin Menyn! Super Secret!");
         Utility.MoveCursorTo(85);
@@ -145,7 +144,7 @@ public class UserInterface
     public static void DisplayAdminMessageLoggedIn(int adminKey)
     {
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.WriteLine(" |Välkommen Admin: {0}", DataBase.AdminList[adminKey].UserName);
+        Console.Write(" |Välkommen Admin: {0}", DataBase.AdminList[adminKey].UserName);
         Utility.MoveCursorTo(85);
     }
 

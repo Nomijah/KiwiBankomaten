@@ -83,11 +83,13 @@ namespace KiwiBankomaten
         {
             // Used to log admin out if set to false.
             bool loggedIn = true;
+
+            Utility.RemoveLines(16);
+
             // Loop that runs so long as the admin has not chosen to log out.
             while (loggedIn == true) 
             {
-                Console.Clear();
-                UserInterface.DisplayAdminMessageLoggedIn(adminKey);
+                UserInterface.CurrentMethod($"{DataBase.AdminList[adminKey].UserName}/AdminMenu/");
                 UserInterface.DisplayMenu(new string[] { "Skapa ny användare", 
                     "Uppdatera växlingskurs","Visa alla användare", 
                     "Redigera ett användarkonto",

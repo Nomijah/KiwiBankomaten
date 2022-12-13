@@ -8,11 +8,11 @@ namespace KiwiBankomaten
         {
             //if the user is locked, message is displayed and user is returned to mainmenu
 
-            for (int i = 4 - 1; i >= 0; i--)
+            for (int i = 3 - 1; i >= 0; i--)
             {
                 CheckPassWordLimit(userKey, i);
 
-                if (UserInterface.QuestionForString("Ange ditt Lösenord", "Lösenord: ") == DataBase.CustomerDict[userKey].Password)
+                if (UserInterface.QuestionForString("Ange ditt Lösenord", "Lösenord") == DataBase.CustomerDict[userKey].Password)
                 {
                     UserInterface.CurrentMethod("Rätt Lösenord. Du loggas nu in");
                     return true;
@@ -21,7 +21,7 @@ namespace KiwiBankomaten
                 {
                     if (!(i <= 1))
                     {
-                        UserInterface.CurrentMethod($"Fel lösenord, du har nu {i - 1} försök kvar. Försök igen");
+                        UserInterface.CurrentMethod($"Fel lösenord, du har nu {i} försök kvar. Försök igen");
                         PressEnterToContinue();
                         RemoveLines(8);
                     }
@@ -38,22 +38,29 @@ namespace KiwiBankomaten
         {
             //if the user is locked, message is displayed and user is returned to mainmenu
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 3 - 1; i >= 0; i--)
             {
-                if (UserInterface.PromptForString("Enter your password") == DataBase.AdminList[adminKey].Password)
+
+                if (UserInterface.QuestionForString("Ange ditt Lösenord", "Lösenord") == DataBase.AdminList[adminKey].Password)
                 {
-                    Console.WriteLine("Password is correct");
+                    UserInterface.CurrentMethod("Rätt Lösenord. Du loggas nu in");
                     return true;
                 }
                 else
                 {
-                    Console.WriteLine("Wrong password"); //if wrong password is entered
-                    PressEnterToContinue();
-                    RemoveLines(5);
-                } 
+                    if (!(i <= 0))
+                    {
+                        UserInterface.CurrentMethod($"Fel Lösenord. Du har nu {i} försök kvar, vänligen försök igen");
+                        Utility.PressEnterToContinue();
+                        Utility.RemoveLines(8);
+                    }
+                    else
+                    {
+                        UserInterface.CurrentMethod("Fel Lösenord. Ingen användare med det lösenordet hittades.");
+                        Utility.PressEnterToContinue();
+                    }
+                }
             }
-            UserInterface.DisplayMessage("Du har inte lyckats logga in på 3 försök... fan va du suger på detta...");
-            PressEnterToContinue();
             Program.RunProgram();
             return false;
         }
