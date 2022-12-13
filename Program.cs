@@ -19,8 +19,6 @@ namespace KiwiBankomaten
             int userKey = 0;
             int adminKey = -1;
 
-            Console.Clear();
-
             //looping menu, which will run when the program is started 
             UserInterface.DisplayLogoMessage();
             UserInterface.DisplayMenu(new string[] {"Logga in", "Avsluta"});
@@ -40,10 +38,13 @@ namespace KiwiBankomaten
                             UserInterface.DisplayWelcomeMessageLoggedIn(userKey);
                             
                             Utility.PressEnterToContinue();
-                            Console.Clear();
 
                             //if login is successful, leads to CustomerMenu() 
                             CustomerMenu(userKey);
+                        }
+                        else
+                        {
+                            RunProgram();
                         }
                         break;
                     
@@ -82,11 +83,11 @@ namespace KiwiBankomaten
 
             UserInterface.DisplayLogoMessage();
 
-            do
+            for (int i = 3 - 1; i >= 0; i--)
             {
                 string userName = UserInterface.QuestionForString("Ange ditt " +
                     "Användarnamn", "Namn: ").Trim();
-                
+
                 // loop through customer dictionary to search for userName
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
                 {
@@ -96,22 +97,24 @@ namespace KiwiBankomaten
                         userKey = item.Key;
 
                         // calls CheckPassWord function to check password
-                        loggedIn = Utility.CheckPassWord(userKey); 
-                                                                         
+                        loggedIn = Utility.CheckPassWord(userKey);
+
                         // if login is successful
                         if (loggedIn) { return; }
-                    }
-
+                    }   
                 }
-                UserInterface.CurrentMethod("Användarnamnet du angett kunde " +
-                    "inte hittas, försök igen");
-
-                Utility.PressEnterToContinue();
-                Utility.RemoveLines(8); 
-                tries++;
-            } while (tries != 3);
-            
-            Console.WriteLine("Ingen användare med det namnet hittades.");
+                if (!(i <= 0))
+                {
+                    UserInterface.CurrentMethod($"Fel Användarnamn. Du har nu {i} försök kvar, vänligen försök igen");
+                    Utility.PressEnterToContinue();
+                    Utility.RemoveLines(8);
+                }
+                else
+                {
+                    UserInterface.CurrentMethod("Fel Användarnamn. Ingen användare med det namnet hittades.");
+                    Utility.PressEnterToContinue();
+                }
+            }
             return;
         }
 
@@ -164,7 +167,7 @@ namespace KiwiBankomaten
                 UserInterface.DisplayLogoMessage();
 
                 UserInterface.CurrentMethod
-                    ($"{DataBase.CustomerDict[userKey].UserName}/CustomerMenu/");
+                    ($"{obj.UserName}/CustomerMenu/");
 
                 UserInterface.DisplayMenu(new string[] {"Kontoöversikt", 
                     "Överför pengar mellan egna konton", "Öppna nytt konto", 
@@ -172,12 +175,12 @@ namespace KiwiBankomaten
 
                 string choice = UserInterface.PromptForString();
 
+                Utility.RemoveLines(6);
+
                 switch (choice)
                 {
                     case "1":
                         // Overviews the Accounts and their respective balances
-                       
-                        
                         obj.BankAccountOverview();
                         obj.LoanAccountOverview();
                         break;

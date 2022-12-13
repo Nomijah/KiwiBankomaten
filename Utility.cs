@@ -14,7 +14,7 @@ namespace KiwiBankomaten
 
                 if (UserInterface.QuestionForString("Ange ditt Lösenord", "Lösenord: ") == DataBase.CustomerDict[userKey].Password)
                 {
-                    Console.WriteLine("  Password is correct");
+                    UserInterface.CurrentMethod("Rätt Lösenord. Du loggas nu in");
                     return true;
                 }
                 else
