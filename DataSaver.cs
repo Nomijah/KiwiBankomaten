@@ -15,35 +15,45 @@ namespace KiwiBankomaten
 {
     public class DataSaver
     {
-        // DSaver creates file and writes databaseinfo.
+        // Checks if DataBase files exists on startup. If they do not,
+        // it creates all necessary files from DataBase class. If they do
+        // exist it writes to DataBase from files.
+        public static void CheckDataBase()
+        {
+
+        }
+
+        // Writes info from DataBase to file.
         public static void DSaver(string fileName)
         {
             StreamWriter sw = new StreamWriter(fileName);
-            // Writes data on files, according to input name
+            // Writes data on matching file
             if (fileName == "Customers.txt")
             {    
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
-                {  // Writes information on a single line 
-                    sw.Write("Key: " + item.Key +
-                    " Id: " + item.Value.Id +
-                    " Username: " + item.Value.UserName +
-                    " Password: " + item.Value.Password +
-                    " Locked: " + item.Value.Locked);
+                {
+                    sw.Write("Id: {0} Username: {1} " +
+                        "Password: {2} Locked: {3} ", 
+                        item.Value.Id, item.Value.UserName, 
+                        item.Value.Password, item.Value.Locked); ;
                     sw.WriteLine();
                 }
             }
             //        INTERNAL Dictionary<int, BankAccount> BankAccounts;
             else if (fileName == "BankAccounts.txt")
             {
-                ////foreach (KeyValuePair<int, BankAccount> item in Customer.BankAccounts) 
-                //{
-                //sw.Write("Key: " + item.Key +
-                //" Id: " + item.Value.Id +
-                //" Username: " + item.Value.UserName +
-                //" Password: " + item.Value.Password +
-                //" Locked: " + item.Value.Locked);
-                //sw.WriteLine();
-                //}
+                foreach (Customer c in DataBase.CustomerDict.Values)
+                {
+                    foreach (KeyValuePair<int, BankAccount> item in c.BankAccounts)
+                    {
+                        sw.Write("Customer ID: {0} Account Key: {1} AccountNr: {2} " +
+                            "Name: {3} Amount: {4} Currency: {5} Interest: {6}",
+                            c.Id, item.Key, item.Value.AccountNumber,
+                            item.Value.AccountName,item.Value.Amount,
+                            item.Value.Currency,item.Value.Interest);
+                        sw.WriteLine();
+                    }
+                }
 
             }
             //        INTERNAL Dictionary<int, BankAccount> LoanAccounts;
@@ -87,10 +97,59 @@ namespace KiwiBankomaten
                     sw.WriteLine();
                 }
             }
+                        else
+            {
+                Console.WriteLine("File doesn't exist.");
+            }
             sw.Close();   // Closes stream
         }
 
+        public static void UpdateFromFile(string fileName)
+        {
+            StreamReader sr = new StreamReader(fileName);
 
+            // Writes data on matching file
+            if (fileName == "Customers.txt")
+            {
+                // Clear dictionary
+                DataBase.CustomerDict.Clear();
+                string[] lines = sr.ReadToEnd().Split("\n");
+                foreach (string item in lines)
+                {
+                    string[] temp = item.Split(" ");
+                    DataBase.CustomerDict.Add(Convert.ToInt32(temp[1]),
+                        new Customer(Convert.ToInt32(temp[1]), temp[3],
+                        temp[5], Convert.ToBoolean(temp[7])));
+                }
+            }
+            else if (fileName == "BankAccounts.txt")
+            {
+
+            }
+
+            else if (fileName == "Admins.txt")
+            {
+
+            }
+            else if (fileName == "Currencies.txt")
+            {
+
+            }
+            else if (fileName == "BankAccountTypes.txt")
+            {
+
+            }
+            else if (fileName == "LoanAccountTypes.txt")
+            {
+
+            }
+            else
+            {
+                Console.WriteLine("File doesn't exist.");
+            }
+
+            sr.Close();
+        }
 
 
 

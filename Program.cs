@@ -7,7 +7,7 @@ namespace KiwiBankomaten
     {
         static void Main(string[] args )
         {
-            DataSaver.DSaver("Admins5.txt"); //Creates file
+            DataSaver.DSaver("Admins.txt"); //Creates file
             DataSaver.DSaver("Currencies.txt");//Creates file
             DataSaver.DSaver("Customers.txt");//Creates file
             DataSaver.DSaver("BankAccountTypes.txt");//Creates file
