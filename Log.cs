@@ -60,16 +60,16 @@ namespace KiwiBankomaten
         {
             if (ReceivingMoney)
             {
-                Console.WriteLine($"Date: {TimeOfTransfer}\n" +
-                    $"Amount received: {Utility.AmountDecimal(AmountTransferred)} {Currency}\n" +
-                    $"From account: {FromWhichAccount}\n" +
+                Console.WriteLine($"Datum: {TimeOfTransfer}\n" +
+                    $"Mängd mottaget: {Utility.AmountDecimal(AmountTransferred)} {Currency}\n" +
+                    $"Från konto: {FromWhichAccount}\n" +
                     $"-------------------------------");
             }
             else
             {
-                Console.WriteLine($"Date: {TimeOfTransfer}\n" +
-                    $"Amount sent: {Utility.AmountDecimal(AmountTransferred)} {Currency}\n" +
-                    $"To account: {ToWhichAccount}\n" +
+                Console.WriteLine($"Datum: {TimeOfTransfer}\n" +
+                    $"Mängd skickat: {Utility.AmountDecimal(AmountTransferred)} {Currency}\n" +
+                    $"Till konto: {ToWhichAccount}\n" +
                     $"-------------------------------");
             }
 
