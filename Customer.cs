@@ -154,7 +154,6 @@ namespace KiwiBankomaten
         // Method for adding money into newly created account.
         public void InsertMoneyIntoNewAccount(decimal interest)
         {
-            string answer;
             // Used to ensure money amount is valid, has to be a positive number.
             bool noError;
             // Amount of money to be inserted into new account.
