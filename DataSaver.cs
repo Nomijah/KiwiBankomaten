@@ -41,7 +41,7 @@ namespace KiwiBankomaten
             // Writes data on matching file
             // Customer dictionary.
             if (fileName == "Customers.txt")
-            {    
+            {
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
                 {
                     sw.Write("Id: {0} Username: {1} " +
@@ -94,7 +94,7 @@ namespace KiwiBankomaten
             else if (fileName == "ExchangeRates.txt")
             {
                 foreach (KeyValuePair<string, decimal> item in DataBase.ExchangeRates)
-                { 
+                {
                     sw.Write("Currency: " + item.Key +
                     " Value: " + item.Value);
                     sw.WriteLine();
@@ -129,6 +129,7 @@ namespace KiwiBankomaten
             Console.WriteLine("Fil skapades");
         }
 
+        // Writes from file to DataBase.
         public static void UpdateFromFile(string fileName)
         {
             StreamReader sr = new StreamReader(fileName);
@@ -293,7 +294,7 @@ namespace KiwiBankomaten
             Console.WriteLine("\nFör att se fil, ange en siffra:");
             Console.WriteLine("1) Adminlista");
             Console.WriteLine("2) CustomerDictionary");
-            Console.WriteLine("3) Currencies");
+            Console.WriteLine("3) ExchangeRates");
             Console.WriteLine("4) BankaccountTypes");
             Console.WriteLine("5) LoanAccountTypes");
             Console.WriteLine("6) Bankaccounts");
@@ -308,7 +309,7 @@ namespace KiwiBankomaten
                     DataReading("Customers.txt");
                     break;
                 case "3":
-                    DataReading("Currencies.txt");
+                    DataReading("ExchangeRates.txt");
                     break;
                 case "4":
                     DataReading("BankAccountTypes.txt");
