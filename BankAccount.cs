@@ -45,6 +45,17 @@ namespace KiwiBankomaten
             AccountNumberCounter++;
         }
 
+        // Use this constructor for DataSaver.UpdateFromFile.
+        public BankAccount(int _accountNumber, string _name, decimal _amount,
+            string _currency, decimal _interest)
+        {
+            this._accountName = _name;
+            this._amount = _amount;
+            this._currency = _currency;
+            this._interest = _interest;
+            this._accountNumber = _accountNumber;
+        }
+
         public BankAccount()
         {
 

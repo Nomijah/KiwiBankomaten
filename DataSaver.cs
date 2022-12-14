@@ -1,176 +1,337 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using static System.Net.Mime.MediaTypeNames;
-using System.ComponentModel;
-using System.Security.Cryptography.X509Certificates;
-using System.Linq;
-using System.Xml.Linq;
-using System.Collections;
-using System.Net.Sockets;
 
 namespace KiwiBankomaten
 {
     public class DataSaver
     {
-        // DSaver checks if file exists, if false, creates file and writes databaseinfo
-        public static void DSaver()
+        // A list of all database files used for the app.
+        internal static List<string> fileNames = new List<string>()
+            { "Customers.txt", "BankAccounts.txt", "LoanAccounts.txt",
+            "Admins.txt", "ExchangeRates.txt", "BankAccountTypes.txt",
+            "LoanAccountTypes.txt"};
+
+        // Checks if DataBase files exists on startup. If they do not,
+        // it creates necessary files from DataBase class. If they do
+        // exist it writes to DataBase from files.
+        public static void LoadDataBase()
         {
-            // Starts to check if file exists. If it does not it will create a local file
-            string FileOnDesktop = @"C:\Users\danie\Desktop\File1.txt";
-            if (!File.Exists(FileOnDesktop))
+            foreach (string fileName in fileNames)
             {
-                Console.WriteLine("Kunde inte hitta fil.\nSkapar en lokal fil.");
-                // CREATING FILE LOCALLY
-                StreamWriter sw = new StreamWriter(@"C:\Users\danie\Desktop\File1.txt");
-                // Writes data on file
-                foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
+                try
                 {
-                    sw.WriteLine("Key: " + item.Key);
-                    sw.WriteLine("Id: " + item.Value.Id);
-                    sw.WriteLine("Username: " + item.Value.UserName);
-                    sw.WriteLine("Password: " + item.Value.Password);
-                    sw.WriteLine("Locked: " + item.Value.Locked);
-                    sw.WriteLine("----------------------");
+                    // Tries to read from local file. If it doesn't exist, the
+                    // catch exception activates and the file is created.
+                    StreamReader sr = new StreamReader(fileName);
+                    sr.Close();
+                    UpdateFromFile(fileName);
                 }
-                // closes stream
-                sw.Close();
-                Console.WriteLine("Fil skapades");
-                DataSyncer();
-            }
-            else
-            {
-                Console.WriteLine("Hittade fil");
-                DataSyncer();
+                catch (FileNotFoundException)
+                {
+                    DSaver(fileName);
+                }
             }
         }
 
-        // Datasyncer could be run throughout the program to sync all data.
-        // If the data is not synced it will sync it.
-        public static void DataSyncer()
+        // Writes info from DataBase to file.
+        public static void DSaver(string fileName)
         {
-            // Store each line in array of strings of the file, to be able to compare with database
-            string[] lines = File.ReadAllLines(@"C:\Users\danie\Desktop\File1.txt");
-
-            // List of string with samevalues, to compare with filelines
-            List<string> sameValues = new List<string>();
-
-            bool ValuesAreSynced = false;
-            int SyncingPoint = 0;
-
-            // foreach line in file, we will compare to every value of a customers properties
-            foreach (string fileLine in lines)
-            {
-                // if the value is found, we have found same value                    
+            StreamWriter sw = new StreamWriter(fileName);
+            // Writes data on matching file
+            // Customer dictionary.
+            if (fileName == "Customers.txt")
+            {    
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
                 {
-                    if (fileLine.Equals("Key: " + item.Key))
+                    sw.Write("Id: {0} Username: {1} " +
+                        "Password: {2} Locked: {3}\n",
+                        item.Value.Id, item.Value.UserName,
+                        item.Value.Password, item.Value.Locked);
+                }
+            }
+            // Each customers bank accounts.
+            else if (fileName == "BankAccounts.txt")
+            {
+                foreach (Customer c in DataBase.CustomerDict.Values)
+                {
+                    foreach (KeyValuePair<int, BankAccount> item in c.BankAccounts)
                     {
-                        sameValues.Add($"Key: {item.Key} is equal");
-                        SyncingPoint++;
-                    }
-                    if (fileLine.Equals("Id: " + item.Value.Id))
-                    {
-                        sameValues.Add($"Id: {item.Value.Id} is equal");
-                        SyncingPoint++;
-                    }
-                    if (fileLine.Equals("Username: " + item.Value.UserName))
-                    {
-                        sameValues.Add($"Username: {item.Value.UserName} is equal");
-                        SyncingPoint++;
-                    }
-                    if (fileLine.Equals("Password: " + item.Value.Password))
-                    {
-                        sameValues.Add($"Password: {item.Value.Password} is equal");
-                        SyncingPoint++;
-                    }
-                    if (fileLine.Equals("Locked: " + item.Value.Locked))
-                    {
-                        sameValues.Add($"Locked: {item.Value.Locked} is equal");
-                        SyncingPoint++;
-                        break;
+                        sw.Write("Customer ID: {0} Account Key: {1} AccountNr: {2} " +
+                            "Name: {3} Amount: {4} Currency: {5} Interest: {6}\n",
+                            c.Id, item.Key, item.Value.AccountNumber,
+                            item.Value.AccountName, item.Value.Amount,
+                            item.Value.Currency, item.Value.Interest);
                     }
                 }
             }
-            // if the value is different the file is not synced with the database
-            if (SyncingPoint == DataBase.CustomerDict.Count*6) // 6 items * 6 properties
+            // Each customers loan accounts.
+            else if (fileName == "LoanAccounts.txt")
             {
-                ValuesAreSynced= true; 
+                foreach (Customer c in DataBase.CustomerDict.Values)
+                {
+                    foreach (KeyValuePair<int, LoanAccount> item in c.LoanAccounts)
+                    {
+                        sw.Write("Customer ID: {0} Account Key: {1} AccountNr: {2} " +
+                            "Name: {3} Amount: {4} Currency: {5} Interest: {6}\n",
+                            c.Id, item.Key, item.Value.AccountNumber,
+                            item.Value.AccountName, item.Value.Amount,
+                            item.Value.Currency, item.Value.Interest);
+                    }
+                }
             }
-            if(ValuesAreSynced)
+            // Admin list.
+            else if (fileName == "Admins.txt")
             {
-                Console.WriteLine("Synkning är färdig!");
+                foreach (Admin ad in DataBase.AdminList)
+                {
+                    sw.Write("Username: " + ad.UserName
+                    + " Password: " + ad.Password);
+                    sw.WriteLine();
+                }
+            }
+            // Currency dictionary.
+            else if (fileName == "ExchangeRates.txt")
+            {
+                foreach (KeyValuePair<string, decimal> item in DataBase.ExchangeRates)
+                { 
+                    sw.Write("Currency: " + item.Key +
+                    " Value: " + item.Value);
+                    sw.WriteLine();
+                }
+            }
+            // Bank account type dictionary.
+            else if (fileName == "BankAccountTypes.txt")
+            {
+                foreach (KeyValuePair<string, decimal> item in DataBase.BankAccountTypes)
+                {
+                    sw.Write("KontoTyp: " + item.Key +
+                    " Ränta: " + item.Value);
+                    sw.WriteLine();
+                }
+            }
+            // Loan account type dictionary.
+            else if (fileName == "LoanAccountTypes.txt")
+            {
+                foreach (KeyValuePair<string, decimal> item in DataBase.LoanAccountTypes)
+                {
+                    sw.Write("KontoTyp: " + item.Key +
+                    " Ränta: " + item.Value);
+                    sw.WriteLine();
+                }
             }
             else
-            {  // If the values are not synced in the file, we delete the file and write them to the file
-                Console.WriteLine("Alla värden är inte synkade ännu");
+            {
+                Console.WriteLine("File doesn't exist.");
+            }
+            // closes stream
+            sw.Close();
+            Console.WriteLine("Fil skapades");
+        }
 
-                string UnsyncedFile = @"C:\Users\danie\Desktop\File1.txt";
-                File.Delete(UnsyncedFile);
-                DSaver();
+        public static void UpdateFromFile(string fileName)
+        {
+            StreamReader sr = new StreamReader(fileName);
+
+            // Writes data on matching file.
+            if (fileName == "Customers.txt")
+            {
+                // Clear dictionary.
+                DataBase.CustomerDict.Clear();
+                // Get each line of document and write to string array.
+                string[] lines = sr.ReadToEnd().Split("\n");
+                foreach (string item in lines)
+                {
+                    // Check if line is empty.
+                    if (item != "")
+                    {
+                        // Split line into new string array
+                        string[] temp = item.Split(" ");
+                        // Write info to DataBase.
+                        DataBase.CustomerDict.Add(Convert.ToInt32(temp[1]),
+                            new Customer(Convert.ToInt32(temp[1]), temp[3],
+                            temp[5], Convert.ToBoolean(temp[7])));
+                    }
+                }
+            }
+            else if (fileName == "BankAccounts.txt")
+            {
+                string[] lines = sr.ReadToEnd().Split("\n");
+                foreach (Customer c in DataBase.CustomerDict.Values)
+                {
+                    // Clear dictionary
+                    c.BankAccounts.Clear();
+                    foreach (string item in lines)
+                    {
+                        if (item != "")
+                        {
+                            string[] temp = item.Split(" ");
+                            // Check that account is owned by Customer and add
+                            // to customers bankAccounts if true.
+                            if (temp[2] == Convert.ToString(c.Id))
+                            {
+                                // Write info to DataBase.
+                                c.BankAccounts.Add(Convert.ToInt32(temp[5]),
+                                    new BankAccount(Convert.ToInt32(temp[7]),
+                                    temp[9], Convert.ToDecimal(temp[11]),
+                                    temp[13], Convert.ToDecimal(temp[15])));
+                            }
+                        }
+                    }
+                }
+            }
+            else if (fileName == "LoanAccounts.txt")
+            {
+                string[] lines = sr.ReadToEnd().Split("\n");
+                foreach (Customer c in DataBase.CustomerDict.Values)
+                {
+                    // Clear dictionary
+                    c.LoanAccounts.Clear();
+                    foreach (string item in lines)
+                    {
+                        if (item != "")
+                        {
+                            string[] temp = item.Split(" ");
+                            // Check that account is owned by Customer and add
+                            // to customers loanAccounts if true.
+                            if (temp[2] == Convert.ToString(c.Id))
+                            {
+                                // Write info to DataBase.
+                                c.LoanAccounts.Add(Convert.ToInt32(temp[5]),
+                                    new LoanAccount(Convert.ToInt32(temp[7]), 
+                                    temp[9], Convert.ToDecimal(temp[11]),
+                                    temp[13], Convert.ToDecimal(temp[15])));
+                            }
+                        }
+                    }
+                }
+            }
+            else if (fileName == "Admins.txt")
+            {
+                // Clear list.
+                DataBase.AdminList.Clear();
+                // Get each line of document and write to string array.
+                string[] lines = sr.ReadToEnd().Split("\n");
+                foreach (string item in lines)
+                {
+                    // Check if line is empty.
+                    if (item != "")
+                    {
+                        // Remove rowbreak "\r" at end of string.
+                        string fix = item.Remove(item.Length - 1);
+                        // Split line into new string array
+                        string[] temp = fix.Split(" ");
+                        // Write info to DataBase.
+                        DataBase.AdminList.Add(new Admin(temp[1], temp[3]));
+                    }
+                }
+            }
+            else if (fileName == "ExchangeRates.txt")
+            {
+                // Clear dictionary.
+                DataBase.ExchangeRates.Clear();
+                // Get each line of document and write to string array.
+                string[] lines = sr.ReadToEnd().Split("\n");
+                foreach (string item in lines)
+                {
+                    // Check if line is empty.
+                    if (item != "")
+                    {
+                        // Split line into new string array
+                        string[] temp = item.Split(" ");
+                        // Write info to DataBase.
+                        DataBase.ExchangeRates.Add(temp[1], Convert.ToDecimal(temp[3]));
+                    }
+                }
+            }
+            else if (fileName == "BankAccountTypes.txt")
+            {
+                // Clear dictionary.
+                DataBase.BankAccountTypes.Clear();
+                // Get each line of document and write to string array.
+                string[] lines = sr.ReadToEnd().Split("\n");
+                foreach (string item in lines)
+                {
+                    // Check if line is empty.
+                    if (item != "")
+                    {
+                        // Split line into new string array
+                        string[] temp = item.Split(" ");
+                        // Write info to DataBase.
+                        DataBase.BankAccountTypes.Add(temp[1], Convert.ToDecimal(temp[3]));
+                    }
+                }
+            }
+            else if (fileName == "LoanAccountTypes.txt")
+            {
+                // Clear dictionary.
+                DataBase.LoanAccountTypes.Clear();
+                // Get each line of document and write to string array.
+                string[] lines = sr.ReadToEnd().Split("\n");
+                foreach (string item in lines)
+                {
+                    // Check if line is empty.
+                    if (item != "")
+                    {
+                        // Split line into new string array
+                        string[] temp = item.Split(" ");
+                        // Write info to DataBase.
+                        DataBase.LoanAccountTypes.Add(temp[1], Convert.ToDecimal(temp[3]));
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("File doesn't exist.");
+            }
+
+            sr.Close();
+        }
+        // Menu for admin, to see the contents of the databasefiles, as chosen
+        public static void ShowFile()
+        {
+            Console.WriteLine("\nFör att se fil, ange en siffra:");
+            Console.WriteLine("1) Adminlista");
+            Console.WriteLine("2) CustomerDictionary");
+            Console.WriteLine("3) Currencies");
+            Console.WriteLine("4) BankaccountTypes");
+            Console.WriteLine("5) LoanAccountTypes");
+            Console.WriteLine("6) Bankaccounts");
+
+            string input = Console.ReadLine();
+            switch (input)
+            {
+                case "1":
+                    DataReading("Admins.txt");
+                    break;
+                case "2":
+                    DataReading("Customers.txt");
+                    break;
+                case "3":
+                    DataReading("Currencies.txt");
+                    break;
+                case "4":
+                    DataReading("BankAccountTypes.txt");
+                    break;
+                case "5":
+                    DataReading("LoanAccountTypes.txt");
+                    break;
+                case "6":
+                    DataReading("BankAccounts.txt");
+                    break;
+                default:
+                    Console.WriteLine("Fel inmatning");
+                    break;
             }
         }
 
-        ///   REMOVE SYNCINGPROCESSEN OCH RADERA/ SKAPA NY FIL HELT ENKELT
-
-        //Tasks:
-        // - primary
-        //    X    Make DataSaver possible for other files than File1
-        //    X    Connect the "DataBase"-Files to each other.
-        //    X    hur välförståeligt behöver detta vara för admin/användare?
-
-        // - secondary
-        //    X    Implement DataReading Method to admin menu, to see files and read them     när den funkar fullständigt
-        //    X    Make DataSaver not public to the user, only workable       efter all testning, när det funkar
-        //    X    Implement DataSaver method in program so that it will sync files during changes and when pressing exit
-        //         på passande platser osv.
 
 
-
-
-
-        // fil 1  customerdictionary  - innehåller 6 st key, id, username, isadmin, locked samt tillhörande värden
-
-        // fil 2
-        /// Customer
-        /// har dictionary bankokonton
-        /// id 4
-        /// username michael
-        /// password  abc
-        /// isadamin false
-        /// locked false
-
-        //if property is changed, write on file 2 and save
-        //press to read whole customerdict, read on file 2
-
-        // fil 3
-        /// Bankaccounts  
-        /// bankaccount
-        /// int accountnr
-        /// string accountname
-        /// decimal amount
-        /// string currency
-        /// decimal interest
-        /// list log
-
-        //if account is added  write on file 3 and save
-        //if property is changed    write on file 3 and save
-        //if log is changed   write on file 3 and save
-        // press to read accounts read on file 3
-
-
-
-
-
-        // Method to read and show data from chosen file.
-        //DataSaver.DataReading("File1");  HOW TO USE
-        public static void DataReading(string name)
+        // DataSaver.DataReading("Customer.txt");  HOW TO USE
+        public static void DataReading(string fileName)
         {
-            // Takes in parameter which is the name of the file. Example, write "File1" 
-            string choice = @"C:\Users\danie\Desktop\" + name + ".txt";
-            StreamReader sr = new StreamReader($"{choice}");
-            Console.WriteLine($"Content of the File ({name}): \n");
+            StreamReader sr = new StreamReader($"{fileName}");
+            Console.WriteLine($"Innehåll av filen '{fileName.ToString()}':");
 
             // This is use to specify from where to start reading input stream
             sr.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -180,12 +341,34 @@ namespace KiwiBankomaten
 
             // To read the whole file line by line
             while (textLine != null)
-            {
+                Console.WriteLine("------------------------");
+                foreach (string line in textLine.Split(' '))
+                {
+                    // If the list starts with any of these fields, it starts with a new line
+                    //if (line == "Username:" || line == "Currency:" || line == "KontoTyp:" || line == "Customer ID:" )
+                    //{
+                    //    Console.WriteLine();
+                    //}
+                    // If the content is data, it will only write the data
+                    if (line == "Username:" || line == "Password:" || line == "Locked:" || line == "Id:" ||
+                        line == "Key:" || line == "Currency:" || line == "Value:" || line == "KontoTyp:"
+                        || line == "Ränta:" || line == "Customer ID:" || line == "AccountNr:"
+                        || line == "Name:" || line == "Lönekonto:" || line == "Amount:" || line == "Interest:"
+                        || line == "Account Key:")
+                    {
+                        Console.Write(line);
+                    }
+                    // Otherwise a new line is written
+                    else
+                    {
+                        Console.Write(line + "\n");
+                    }
+                }
                 Console.WriteLine(textLine);
                 textLine = sr.ReadLine();
             }
-            Console.ReadLine();
-            sr.Close(); // Must close streamreader after use
+            sr.Close();
         }
     }
 }
+

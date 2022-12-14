@@ -6,8 +6,8 @@ namespace KiwiBankomaten
 {
     internal class Customer : User
     {
-        public Dictionary<int, BankAccount> BankAccounts;
-        private Dictionary<int, LoanAccount> LoanAccounts;
+        internal Dictionary<int, BankAccount> BankAccounts;
+        internal Dictionary<int, LoanAccount> LoanAccounts;
 
         // Used for creating test customers.
         public Customer(int id, string username, string password, bool locked)
