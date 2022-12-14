@@ -19,7 +19,7 @@ namespace KiwiBankomaten
                 }
                 else
                 {
-                    if (!(i <= 1))
+                    if (!(i == 0))
                     {
                         UserInterface.CurrentMethod($"Fel lösenord, du har nu {i} försök kvar. Försök igen");
                         PressEnterToContinue();
@@ -27,7 +27,7 @@ namespace KiwiBankomaten
                     }
                     else
                     {
-                        CheckPassWordLimit(userKey, i);
+                        CheckPassWordLimit(userKey, i - 1);
                     }
                 }
             }
@@ -48,7 +48,7 @@ namespace KiwiBankomaten
                 }
                 else
                 {
-                    if (!(i <= 0))
+                    if (!(i == 0))
                     {
                         UserInterface.CurrentMethod($"Fel Lösenord. Du har nu {i} försök kvar, vänligen försök igen");
                         Utility.PressEnterToContinue();
@@ -68,7 +68,7 @@ namespace KiwiBankomaten
         public static void CheckPassWordLimit(int userKey, int tries)
         {
             //if the user is locked, message is displayed and user is returned to mainmenu
-            if (tries <= 0 || DataBase.CustomerDict[userKey].Locked == true)
+            if (tries < 0 || DataBase.CustomerDict[userKey].Locked == true)
             {
                 DataBase.CustomerDict[userKey].Locked = true;//locks user if 3 fails occur
 
