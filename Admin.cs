@@ -75,14 +75,11 @@ namespace KiwiBankomaten
                         break;
                     case "6": 
                         loggedIn = false;
-                        Console.Clear();
                         break;
                     // Loop repeats and switch is run again if none of the
                     // correct values are chosen.
                     default:
-                        Console.WriteLine("Fel input, skriv in ett korrekt värde");
-                        Utility.PressEnterToContinue();
-                        Utility.RemoveLines(5);
+                        UserInterface.CurrentMethod("Fel input, skriv in ett korrekt värde");
                         break;
                 }
 
