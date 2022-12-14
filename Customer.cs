@@ -652,6 +652,7 @@ namespace KiwiBankomaten
             List<Log> reversedList;
             do
             {
+                Console.Clear();
                 BankAccountOverview();
                 Console.WriteLine("Vilket konto vill du se överföringslogg på?");
                 noError = Int32.TryParse(Console.ReadLine(), out accountChoice);
@@ -663,15 +664,23 @@ namespace KiwiBankomaten
             } while (!noError || !BankAccounts.Keys.Contains(accountChoice));
             Console.Clear();
             // We copy the LogList to a new one to ensure we never alter the original.
-            reversedList = new List<Log>(BankAccounts[accountChoice].LogList);
-            // The list is reversed so we print the entries in order of newest to oldest.
-            reversedList.Reverse();
-            foreach (Log l in reversedList)
+            if (BankAccounts[accountChoice].LogList != null)
             {
-                l.PrintLog();
+                reversedList = new List<Log>(BankAccounts[accountChoice].LogList);
+                reversedList.Reverse();
+                foreach (Log l in reversedList)
+                {
+                    l.PrintLog();
+                }
+                // Reversed list is un-reversed so we don't print out the wrong order next time.
+                reversedList.Reverse();
             }
-            // Reversed list is un-reversed so we don't print out the wrong order next time.
-            reversedList.Reverse();
+            else
+            {
+                Console.WriteLine("Listan har inte instansierats. " +
+                    "Du borde inte kunna se det här. Kontakta en admin.");
+            }
+
         }
     }
 }
