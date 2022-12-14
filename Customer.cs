@@ -500,9 +500,9 @@ namespace KiwiBankomaten
             {
                 while ((amountMoney = UserInterface.IsValueNumberCheck()) > CheckLoanLimit())
                 {
-                    Console.WriteLine($"Du kan inte låna mer än {Utility.AmountDecimal(CheckLoanLimit())} kronor");
+                    UserInterface.CurrentMethod($"Du kan inte låna mer än {Utility.AmountDecimal(CheckLoanLimit())} kronor");
                     Utility.PressEnterToContinue();
-                    Utility.RemoveLines(5);
+                    Utility.RemoveLines(6);
                 }
             } while (Utility.YesOrNo($"Du tar nu ett Lån på {Utility.AmountDecimal(amountMoney)} kronor", "Vill du godkänna detta? [J/N]")) ;
 
