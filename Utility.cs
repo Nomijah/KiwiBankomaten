@@ -159,7 +159,7 @@ namespace KiwiBankomaten
                     case "N":
                         return true;
                     default:
-                        UserInterface.CurrentMethod("Felaktig inmatning", "Välj [J] för ja eller N för nej.");
+                        UserInterface.CurrentMethod("Felaktig inmatning", "Välj [J] för ja eller [N] för nej.");
                         PressEnterToContinue();
                         RemoveLines(9);
                         break;

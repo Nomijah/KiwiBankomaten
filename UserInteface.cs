@@ -292,7 +292,6 @@ public class UserInterface
     public static int PromptForInt(out int value)
     {
         value = (int)IsValueNumberCheck();
-        Utility.MoveCursorTo(85);
         return value;
     }
 
