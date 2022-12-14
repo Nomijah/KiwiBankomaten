@@ -37,12 +37,11 @@ namespace KiwiBankomaten
         // Writes info from DataBase to file.
         public static void DSaver(string fileName)
         {
-            // CREATING FILE LOCALLY
             StreamWriter sw = new StreamWriter(fileName);
             // Writes data on matching file
             // Customer dictionary.
             if (fileName == "Customers.txt")
-            {
+            {    
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
                 {
                     sw.Write("Id: {0} Username: {1} " +
@@ -127,6 +126,7 @@ namespace KiwiBankomaten
             }
             // closes stream
             sw.Close();
+            Console.WriteLine("Fil skapades");
         }
 
         public static void UpdateFromFile(string fileName)
@@ -287,7 +287,6 @@ namespace KiwiBankomaten
 
             sr.Close();
         }
-
         // Menu for admin, to see the contents of the databasefiles, as chosen
         public static void ShowFile()
         {
@@ -327,8 +326,8 @@ namespace KiwiBankomaten
         }
 
 
-        // Method to read and show data from chosen file.
-        // Method to read and show data from chosen file.
+
+        // DataSaver.DataReading("Customer.txt");  HOW TO USE
         public static void DataReading(string fileName)
         {
             StreamReader sr = new StreamReader($"{fileName}");
@@ -342,7 +341,6 @@ namespace KiwiBankomaten
 
             // To read the whole file line by line
             while (textLine != null)
-            {
                 Console.WriteLine("------------------------");
                 foreach (string line in textLine.Split(' '))
                 {
@@ -366,6 +364,7 @@ namespace KiwiBankomaten
                         Console.Write(line + "\n");
                     }
                 }
+                Console.WriteLine(textLine);
                 textLine = sr.ReadLine();
             }
             sr.Close();
