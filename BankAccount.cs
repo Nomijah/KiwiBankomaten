@@ -10,7 +10,7 @@ namespace KiwiBankomaten
         private decimal _amount;
         private string _currency;
         private decimal _interest;
-        public List<Log> LogList;
+        public List<Log> LogList = new List<Log>();
         
         public int AccountNumber { get => _accountNumber; set => _accountNumber = value; }
         public string AccountName { get => _accountName; set => _accountName = value; }
@@ -29,7 +29,6 @@ namespace KiwiBankomaten
             this._currency = _currency;
             this._interest = _interest;
             _accountNumber = AccountNumberCounter;
-            LogList = new List<Log>();
             AccountNumberCounter++;
         }
 
@@ -41,7 +40,6 @@ namespace KiwiBankomaten
             this._currency = _currency;
             this._interest = _interest;
             _accountNumber = AccountNumberCounter;
-            LogList = new List<Log>();
             AccountNumberCounter++;
         }
 
