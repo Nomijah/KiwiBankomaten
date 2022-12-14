@@ -378,6 +378,7 @@ namespace KiwiBankomaten
             }
 
         }
+        // Method for selecting which account type you want to edit, bank or loan.
         public static void SelectAccountType()
         {
             string answer;
@@ -385,9 +386,11 @@ namespace KiwiBankomaten
             {
                 Console.Clear();
                 Console.WriteLine("Olika typer av bankkonto, namn och ränta:");
+                // Prints out all bank account types.
                 DataBase.ViewAccountTypes(1);
                 Console.WriteLine("---------------------------");
                 Console.WriteLine("Olika typer av lånekonto, namn och ränta:");
+                // Prints out all loan account types.
                 DataBase.ViewAccountTypes(2);
                 Console.WriteLine("---------------------------");
                 Console.WriteLine("Vilken kontotyp vill du ändra?\n-1 Bankkonto" +
@@ -396,9 +399,13 @@ namespace KiwiBankomaten
                 switch (answer)
                 {
                     case "1":
+                        // Runs method for choosing what to do with the bank account types.
+                        // The true means the user has selected bank account type.
                         UpdateAccountTypes(true);
                         break;
                     case "2":
+                        // Runs method for choosing what to do with the loan account types.
+                        // The false means the user has selected loan account type.
                         UpdateAccountTypes(false);
                         break;
                     case "3":
@@ -410,18 +417,22 @@ namespace KiwiBankomaten
                 }
             }
         }
+        // Method where you choose what to do with the bank account type you've chosen.
         public static void UpdateAccountTypes(bool isBankAccount)
         {
             string answer;
             while (true)
             {
                 Console.Clear();
+                // Checks if user selected bank account type in previous menu.
                 if (isBankAccount)
                 {
+                    // Prints out all bank account types.
                     DataBase.ViewAccountTypes(1);
                 }
                 else
                 {
+                    // Prints out all loan account types.
                     DataBase.ViewAccountTypes(2);
                 }
                 Console.WriteLine("---------------------------");
@@ -430,6 +441,8 @@ namespace KiwiBankomaten
                     "-2 Uppdatera existerande kontotyp\n" +
                     "-3 Återvänd till kontotypsmenyn");
                 answer = Console.ReadLine();
+                // Checks if user selected bank account type in previous method.
+                // If yes, we run a switch for creating new or editing current bank account types.
                 if (isBankAccount)
                 {
                     switch (answer)
@@ -448,6 +461,8 @@ namespace KiwiBankomaten
                             break;
                     }
                 }
+                // If user didn't select bank account types, we instead
+                // create new or edit current loan account types.
                 else
                 {
                     switch (answer)
@@ -468,6 +483,7 @@ namespace KiwiBankomaten
                 }
             }
         }
+        // Method for creating new bank or loan account type.
         public static void CreateNewAccountType(bool isBankAccount)
         {
             bool noError;
@@ -496,6 +512,8 @@ namespace KiwiBankomaten
                 }
             } while (!noError);
 
+            // Asks admin to confirm if they do want to create new bank account type
+            // if no, admin is returned to previous method.
             do
             {
                 Console.Clear();
@@ -510,6 +528,8 @@ namespace KiwiBankomaten
                         $"Godkänner du detta? J/N");
                 }
                 answer = Console.ReadLine().ToUpper();
+                // If admin does confirm they want to create a new account type,
+                // new bank or loan account type is created.
                 switch (answer)
                 {
                     case "J":
@@ -534,6 +554,7 @@ namespace KiwiBankomaten
             Utility.PressEnterToContinue();
 
         }
+        // Method for updating interest of current bank or loan account type.
         public static void UpdateExistingAccountType(bool isBankAccount)
         {
             bool noError;
@@ -544,11 +565,13 @@ namespace KiwiBankomaten
             do
             {
                 Console.Clear();
+                // If user selected bank account type, print out bank account types.
                 if (isBankAccount)
                 {
                     DataBase.PrintAccountTypes();
                     
                 }
+                // If user selected loan account type, print out loan account types.
                 else
                 {
                     DataBase.PrintLoanAccountTypes();
@@ -556,6 +579,7 @@ namespace KiwiBankomaten
                 Console.WriteLine("Vilken kontotyp vill du ändra? Välj genom att skriva in siffra.");
                 noError = Int32.TryParse(Console.ReadLine(), out index);
                 index -= 1;
+                // Gets key from bank or loan account type using its index.
                 if (isBankAccount)
                 {
                     key = DataBase.GetKeyFromBankTypeIndex(index);
@@ -570,6 +594,7 @@ namespace KiwiBankomaten
                     Utility.PressEnterToContinue();
                 }
             } while (!noError || !DataBase.BankAccountTypes.ContainsKey(key) && !DataBase.LoanAccountTypes.ContainsKey(key));
+            // We now have the key, admin is asked to input its new interest rate.
             do
             {
                 Console.Clear();
@@ -581,6 +606,8 @@ namespace KiwiBankomaten
                     Utility.PressEnterToContinue();
                 }
             } while (!noError);
+            // Admin is asked to confirm whether they do want to change the interest rate
+            // of the bank or loan account type.
             do
             {
                 Console.Clear();
