@@ -679,7 +679,6 @@ namespace KiwiBankomaten
                 Console.WriteLine("Listan har inte instansierats. " +
                     "Du borde inte kunna se det här. Kontakta en admin.");
             }
-            // The list is reversed so we print the entries in order of newest to oldest.
 
         }
     }
