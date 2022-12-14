@@ -197,7 +197,7 @@ namespace KiwiBankomaten
                         obj.LoanAccountOverview();
                         break;
                     case "2":
-                        //obj.ViewLog();
+                        obj.ViewLog();
                         break;
                     case "3":
                         // Transfers a value between two accounts the user possesses
