@@ -8,21 +8,28 @@ namespace KiwiBankomaten
         {
             //if the user is locked, message is displayed and user is returned to mainmenu
 
-            for (int i = 0; i <= 3; i++)
+            for (int i = 3 - 1; i >= 0; i--)
             {
-                CheckPassWordLimit(userKey, i);    
+                CheckPassWordLimit(userKey, i);
 
-                if (UserInterface.PromptForString("Enter your password") == DataBase.CustomerDict[userKey].Password)
+                if (UserInterface.QuestionForString("Ange ditt Lösenord", "Lösenord") == DataBase.CustomerDict[userKey].Password)
                 {
-                    Console.WriteLine("Password is correct");
+                    UserInterface.CurrentMethod("Rätt Lösenord. Du loggas nu in");
                     return true;
                 }
                 else
                 {
-                    Console.WriteLine("Wrong password"); //if wrong password is entered
-                    PressEnterToContinue();
-                    RemoveLines(5);
-                } 
+                    if (!(i <= 1))
+                    {
+                        UserInterface.CurrentMethod($"Fel lösenord, du har nu {i} försök kvar. Försök igen");
+                        PressEnterToContinue();
+                        RemoveLines(8);
+                    }
+                    else
+                    {
+                        CheckPassWordLimit(userKey, i);
+                    }
+                }
             }
             return false;
         }
@@ -31,22 +38,29 @@ namespace KiwiBankomaten
         {
             //if the user is locked, message is displayed and user is returned to mainmenu
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 3 - 1; i >= 0; i--)
             {
-                if (UserInterface.PromptForString("Enter your password") == DataBase.AdminList[adminKey].Password)
+
+                if (UserInterface.QuestionForString("Ange ditt Lösenord", "Lösenord") == DataBase.AdminList[adminKey].Password)
                 {
-                    Console.WriteLine("Password is correct");
+                    UserInterface.CurrentMethod("Rätt Lösenord. Du loggas nu in");
                     return true;
                 }
                 else
                 {
-                    Console.WriteLine("Wrong password"); //if wrong password is entered
-                    PressEnterToContinue();
-                    RemoveLines(5);
-                } 
+                    if (!(i <= 0))
+                    {
+                        UserInterface.CurrentMethod($"Fel Lösenord. Du har nu {i} försök kvar, vänligen försök igen");
+                        Utility.PressEnterToContinue();
+                        Utility.RemoveLines(8);
+                    }
+                    else
+                    {
+                        UserInterface.CurrentMethod("Fel Lösenord. Ingen användare med det lösenordet hittades.");
+                        Utility.PressEnterToContinue();
+                    }
+                }
             }
-            UserInterface.DisplayMessage("Du har inte lyckats logga in på 3 försök... fan va du suger på detta...");
-            PressEnterToContinue();
             Program.RunProgram();
             return false;
         }
@@ -54,12 +68,12 @@ namespace KiwiBankomaten
         public static void CheckPassWordLimit(int userKey, int tries)
         {
             //if the user is locked, message is displayed and user is returned to mainmenu
-            if (tries == 3 || DataBase.CustomerDict[userKey].Locked == true)
+            if (tries <= 0 || DataBase.CustomerDict[userKey].Locked == true)
             {
                 DataBase.CustomerDict[userKey].Locked = true;//locks user if 3 fails occur
 
-                UserInterface.DisplayMessage("Du har angett fel lösenord 3 gånger.\nDitt konto är låst\nKontakta admin");
-                
+                UserInterface.CurrentMethod("Du har angett fel lösenord 3 gånger, ditt konto är låst. Kontakta admin");
+
                 PressEnterToContinue();
 
                 Program.RunProgram();
@@ -91,14 +105,14 @@ namespace KiwiBankomaten
         public static bool ContinueOrAbort()
         {
 
-            UserInterface.DisplayMessage("Klicka Enter för att försöka igen eller Esc för" +
+            UserInterface.DisplayMessage(" Klicka Enter för att försöka igen eller Esc för" +
                 " att återgå till huvudmenyn.");
             // Gets the input from the user
             ConsoleKey userInput = Console.ReadKey(true).Key;
             // Loops if the user Presses any button other than "Enter"
             while (userInput != ConsoleKey.Enter && userInput != ConsoleKey.Escape)
             {
-                Console.WriteLine("Felaktig inmatning, välj Enter för att försöka " +
+                UserInterface.DisplayMessage("|Felaktig inmatning, välj Enter för att försöka " +
                     "igen eller Esc för att återgå till huvudmenyn.");
                 userInput = Console.ReadKey(true).Key;
             }
@@ -112,26 +126,46 @@ namespace KiwiBankomaten
             }
         }
 
-        public static bool YesOrNo(string input, string accountName)
+        public static bool YesOrNo(string input, string input2)
         {
-            UserInterface.DisplayMessage($"Ditt konto får {input} {accountName}\n" +
-                $"Vill du godkänna detta? [J/N]");
-            switch (UserInterface.PromptForString().ToUpper())
+            do
             {
-                case "J":
-                    return false;
-                case "N":
-                    RemoveLines(7);
-                    return true;
-                default:
-                    UserInterface.DisplayMessage("Felaktig inmatning\nVälj [J] " +
-                        "för ja eller N för nej.");
-                    PressEnterToContinue();
-                    RemoveLines(10);
-                    YesOrNo(input, accountName);
-                    break;
-            }
-            return false;
+                UserInterface.CurrentMethod(input);
+                switch (UserInterface.QuestionForString(input2).ToUpper())
+                {
+                    case "J":
+                        return false;
+                    case "N":
+                        RemoveLines(8);
+                        return true;
+                    default:
+                        UserInterface.CurrentMethod("Felaktig inmatning", "Välj [J] för ja eller N för nej.");
+                        PressEnterToContinue();
+                        RemoveLines(11);
+                        break;
+
+                }
+            } while (true);
+        }
+        public static bool YesOrNo(string input)
+        {
+
+            do
+            {
+                switch (UserInterface.QuestionForString(input).ToUpper())
+                {
+                    case "J":
+                        return false;
+                    case "N":
+                        return true;
+                    default:
+                        UserInterface.CurrentMethod("Felaktig inmatning", "Välj [J] för ja eller [N] för nej.");
+                        PressEnterToContinue();
+                        RemoveLines(9);
+                        break;
+
+                } 
+            } while (true);
         }
 
         public static void RemoveLines(int lines)
@@ -142,6 +176,21 @@ namespace KiwiBankomaten
                 Console.Write(new string(' ', Console.BufferWidth));
             }
             Console.SetCursorPosition(0, Console.CursorTop);
+        }
+        public static void RemoveLinesVariable(int baseLines, int variable)
+        {
+            for (int i = 0; i < baseLines + variable; i++)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                Console.Write(new string(' ', Console.BufferWidth));
+            }
+            Console.SetCursorPosition(0, Console.CursorTop);
+        }
+
+        public static void MoveCursorTo(int value)
+        {
+            Console.SetCursorPosition(value, Console.CursorTop);
+            Console.WriteLine("|");
         }
     }
 }

@@ -46,9 +46,12 @@ namespace KiwiBankomaten
         // Prints out currrency list with current exchange rates.
         public static void PrintCurrencies()
         {
+            UserInterface.CurrentMethod("Tillgängliga valutor");
+
             foreach (string currency in DataBase.ExchangeRates.Keys)
             {
-                Console.WriteLine($"{currency}");
+                Console.Write($" |{currency}");
+                Utility.MoveCursorTo(85);
             }
         }
 
@@ -75,16 +78,21 @@ namespace KiwiBankomaten
             switch (selection)
             {
                 case 1:
+                    UserInterface.CurrentMethod("Bankonton");
                     foreach (KeyValuePair<string, decimal> type in DataBase.BankAccountTypes)
                     {
-                        Console.WriteLine($"-{i} {type.Key} - {type.Value}");
+                        Console.Write($" |-{i} {type.Key} - {type.Value}");
+                        Utility.MoveCursorTo(85);
                         i++;
                     }
                     break;
                 case 2:
+                    UserInterface.CurrentMethod("Lånkonton");
                     foreach (KeyValuePair<string, decimal> type in DataBase.LoanAccountTypes)
                     {
-                        Console.WriteLine($"-{i} {type.Key} - {type.Value}");
+
+                        Console.Write($" |-{i} {type.Key} - {type.Value}");
+                        Utility.MoveCursorTo(85);
                         i++;
                     }
                     break;
@@ -123,22 +131,26 @@ namespace KiwiBankomaten
         // Prints out account types with interest values.
         public static void PrintAccountTypes()
         {
+            UserInterface.CurrentMethod("Kontotyper:");
             int i = 1;
             foreach (KeyValuePair<string, decimal> type in BankAccountTypes)
             {
-                Console.WriteLine($"{i}. {type.Key}, " +
+                Console.Write($" |-{i}). {type.Key}, " +
                     $"ränta: {type.Value}");
+                Utility.MoveCursorTo(85);
                 i++;
             }
         }
 
         public static void PrintLoanAccountTypes()
         {
+            UserInterface.CurrentMethod("Kontotyper:");
             int i = 1;
             foreach (KeyValuePair<string, decimal> type in LoanAccountTypes)
             {
-                Console.WriteLine($"{i}. {type.Key}, " +
+                Console.Write($" |{i}. {type.Key}, " +
                     $"ränta: {type.Value}");
+                Utility.MoveCursorTo(85);
                 i++;
             }
         }

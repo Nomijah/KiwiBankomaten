@@ -23,52 +23,109 @@ namespace KiwiBankomaten
             UserName = username;
             Password = password;
         }
+        // Menu where admin can select different functions.
+        public static void AdminMenu(int adminKey)
+        {
+            // Used to log admin out if set to false.
+            bool loggedIn = true;
+
+            Utility.RemoveLines(16);
+
+            // Loop that runs so long as the admin has not chosen to log out.
+            while (loggedIn == true)
+            {
+
+                Admin admin = DataBase.AdminList[adminKey];
+
+
+                UserInterface.CurrentMethod($"{DataBase.AdminList[adminKey].UserName}/AdminMenu/");
+                UserInterface.DisplayMenu(new string[] { "Skapa ny användare", 
+                    "Uppdatera växlingskurs","Visa alla användare", 
+                    "Redigera ett användarkonto",
+                    "Uppdatera bankkontotyper","Logga ut" });
+
+                string choice = UserInterface.PromptForString();
+
+                Utility.RemoveLines(12);
+
+                switch (choice)
+                {
+                    case "1":
+                        admin.CreateNewUser();
+                        break;
+                    // Shows list of exchange rates with their values and asks
+                    // if admin wants to change them.
+                    case "2": 
+                        admin.UpdateExchangeRate();
+                        break;
+                    case "3":
+                        UserInterface.CurrentMethod($"{admin.UserName}/AdminMenu/ViewAllUsers/");
+                        admin.ViewAllUsers();
+                        break;
+                    case "4": 
+                        admin.EditUserAccount();
+                        break;
+                    case "5": 
+                        admin.SelectAccountType();
+                        break;
+                    case "6":
+                        loggedIn = false;
+                        break;
+                    // Loop repeats and switch is run again if none of the
+                    // correct values are chosen.
+                    default:
+                        UserInterface.CurrentMethod("Fel input, skriv in ett korrekt värde");
+                        break;
+                }
+
+                Utility.PressEnterToContinue();
+                Console.Clear();
+                UserInterface.DisplayLogoMessage();
+            }
+            // Program.LogOut is called outside the loop and switch because
+            // of possible bugs if it were to be called inside it.
+            Program.LogOut();
+        }
         // Admin method for creating new users.
-        public static void CreateNewUser()
+        public void CreateNewUser() 
         {
             // Used in the do-while loop to repeat if any input errors are detected.
-            bool error;
+            bool error; 
             do
             {
-                string userType;
+                int userType;
                 string userName = "";
                 string passWord = "";
                 error = false;
-                Console.Clear();
 
-                UserInterface.DisplayMessage("Vilken sorts användare vill du skapa?");
-                UserInterface.DisplayMenu(new string[] { "Customer", "Admin" });
+                UserInterface.CurrentMethod($"{UserName}/AdminMenu/CreateNewUser/");
+                UserInterface.CurrentMethod("Vilken sorts användare vill du skapa?");
+                UserInterface.DisplayMenu(new string[] {"Customer", "Admin"});
 
-                while (UserInterface.PromptForString(out userType) != "1" && userType != "2")
+                while (UserInterface.PromptForInt(out userType) != 1 && userType != 2)
                 {
                     UserInterface.DisplayMessage("Fel input, skriv in ett korrekt värde");
                     Utility.PressEnterToContinue();
                 }
 
-                Console.Clear();
-                UserInterface.DisplayMessage("Vilket användarnamn ska den nya användaren ha?");
-                userName = UserInterface.PromptForString();
+                userName = UserInterface.QuestionForString("Vilket användarnamn ska den nya användaren ha?");
 
-                Console.Clear();
-                UserInterface.DisplayMessage("Vilket lösenord ska den nya användaren ha?");
-                passWord = UserInterface.PromptForString();
-
-                Console.Clear();
+                passWord = UserInterface.QuestionForString("Vilket lösenord ska den nya användaren ha?");
 
                 switch (userType)
                 {
                     // Adds customer account to CustomerDict with name and
                     // password set from user input.
-                    case "1":
-                        DataBase.CustomerDict.Add(DataBase.CustomerDict.Last().Key + 1,
+                    case 1: 
+                        DataBase.CustomerDict.Add(DataBase.CustomerDict.Last().Key + 1, 
                             new Customer(userName, passWord));
-                        UserInterface.DisplayMessage($"Customer {userName} har " +
+                        UserInterface.CurrentMethod($"Customer {userName} har " +
                             $"skapats med nyckeln {DataBase.CustomerDict.Last().Key}.");
                         break;
                     // Adds admin account to AdminList with name and password set from user input.
-                    case "2":
+                    case 2: 
                         DataBase.AdminList.Add(new Admin(userName, passWord));
-                        UserInterface.DisplayMessage($"Admin {userName} har skapats.");
+                        UserInterface.CurrentMethod($"Admin {userName} har skapats.");
                         break;
                     // Loop repeats and switch is run again if none of the correct values are chosen.
                     default:
@@ -76,75 +133,23 @@ namespace KiwiBankomaten
                         break;
                 }
             } while (error == true);
-        }
-        // Menu where admin can select different functions.
-        public static void AdminMenu(int adminKey)
-        {
-            // Used to log admin out if set to false.
-            bool loggedIn = true;
-            // Loop that runs so long as the admin has not chosen to log out.
-            while (loggedIn == true)
-            {
-                Console.Clear();
-                UserInterface.DisplayAdminMessageLoggedIn(adminKey);
-                UserInterface.DisplayMenu(new string[] { "Skapa ny användare",
-                    "Uppdatera växlingskurs","Visa alla användare",
-                    "Redigera ett användarkonto",
-                    "Uppdatera bankkontotyper","Logga ut" });
-                switch (UserInterface.PromptForString())
-                {
-                    case "1":
-                        CreateNewUser();
-                        break;
-                    // Shows list of exchange rates with their values and asks
-                    // if admin wants to change them.
-                    case "2":
-                        UpdateExchangeRate();
-                        break;
-                    case "3":
-                        Console.Clear();
-                        ViewAllUsers();
-                        Utility.PressEnterToContinue();
-                        break;
-                    case "4":
-                        Console.Clear();
-                        EditUserAccount();
-                        break;
-                    case "5":
-                        SelectAccountType();
-                        break;
-                    case "6":
-                        loggedIn = false;
-                        Console.Clear();
-                        break;
-                    // Loop repeats and switch is run again if none of the
-                    // correct values are chosen.
-                    default:
-                        Console.WriteLine("Fel input, skriv in ett korrekt värde");
-                        Utility.PressEnterToContinue();
-                        Utility.RemoveLines(5);
-                        break;
-                }
-            }
-            // Program.LogOut is called outside the loop and switch because
-            // of possible bugs if it were to be called inside it.
-            Program.LogOut();
+
         }
         // Method for printing out all currencies and their exchange rates.
-        public static void ListExchangeRates()
+        public void ListExchangeRates()
         {
+            UserInterface.CurrentMethod("Växelkurser");
             foreach (KeyValuePair<string, decimal> exchangeRates in DataBase.ExchangeRates)
             {
-                Console.WriteLine($"{exchangeRates.Key} {exchangeRates.Value}");
+                Console.Write($" |-{exchangeRates.Key}) {exchangeRates.Value}");
+                Utility.MoveCursorTo(85);
             }
         }
         // Method for updating a currency's exchange rate.
-        public static void UpdateExchangeRate()
+        public void UpdateExchangeRate()
         {
             while (true)
             {
-                // Is used to ensure the new value of the exchange rate is valid.
-                bool noError;
                 // Is used to make sure user answers with J/N when confirming options.
                 string answer;
                 // The new value of the exchange rate.
@@ -152,63 +157,77 @@ namespace KiwiBankomaten
                 // Used as key to get currency from database.
                 string currency;
                 // Loops until admin answers whether they want to update a value or not.
+                
+                UserInterface.CurrentMethod($"{UserName}/AdminMenu/UpdateExchangeRate/");
+                ListExchangeRates();
                 do
                 {
-                    Console.Clear();
-                    ListExchangeRates();
-                    Console.WriteLine("Vill du ändra växlingskursen på någon " +
-                        "valuta? J/N");
-                    answer = Console.ReadLine().ToUpper();
+                    answer = UserInterface.QuestionForString("Vill du ändra växlingskursen på någon " +
+                        "valuta? J/N").ToUpper();
+                    if (answer != "J" && answer != "N")
+                    {
+                        UserInterface.CurrentMethod("Men seriöst kan du inte följa dem mest grundläggande instruktioner?");
+                        Utility.PressEnterToContinue();
+                        Utility.RemoveLines(8);
+                    }
                 } while (answer != "J" && answer != "N");
+                
+                    Utility.RemoveLines(4);
+
                 if (answer == "J")
                 {
                     // If admin does want to update a value, loops until they
                     // input a valid currency.
                     do
                     {
-                        Console.Clear();
-                        ListExchangeRates();
-                        Console.WriteLine("Var vänlig skriv in den valuta du " +
-                            "vill ändra. SEK, USD, EUR, etc ");
-                        currency = Console.ReadLine().ToUpper();
+
+                        currency = UserInterface.QuestionForString("Var vänlig skriv in den valuta du " +
+                            "vill ändra. SEK, USD, EUR, etc ").ToUpper();
                         if (!DataBase.ExchangeRates.ContainsKey(currency))
                         {
-                            Console.WriteLine("Ogiltigt värde, skriv in en valuta");
+                            UserInterface.CurrentMethod("Ogiltigt värde, skriv in en valuta");
                             Utility.PressEnterToContinue();
+                            Utility.RemoveLines(8);
                         }
                     } while (!DataBase.ExchangeRates.ContainsKey(currency));
-                    // Loops until admin inputs a valid positive number´as the new exchange rate.
-                    do
-                    {
-                        Console.Clear();
-                        Console.WriteLine($"Växlingskursen för {currency} - " +
-                            $"{DataBase.ExchangeRates[currency]}");
-                        Console.WriteLine("Var vänlig skriv in den nya " +
-                            "växlingskursen för valutan");
-                        noError = Decimal.TryParse(Console.ReadLine(), out newValue);
-                        if (noError == false || newValue < 0)
-                        {
-                            Console.WriteLine("Ogiltigt värde, mata in en positiv siffra");
-                            Utility.PressEnterToContinue();
-                        }
-                    } while (noError == false || newValue < 0);
+                    
+                    UserInterface.CurrentMethod($"Växlingskursen för {currency} - " +
+                        $"{DataBase.ExchangeRates[currency]}");
+                    UserInterface.CurrentMethod("Var vänlig skriv in den nya " +
+                        "växlingskursen för valutan");
+                    newValue = UserInterface.IsValueNumberCheck() ;
+                    
                     // Loops until admin confirms whether or not they want to
                     // apply the changes to the exchange rate.
                     do
                     {
-                        Console.Clear();
-                        Console.WriteLine($"Växlingskursen för {currency} " +
-                            $"kommer ändras till {newValue}. Godkänner du detta? J/N");
-                        answer = Console.ReadLine().ToUpper();
+                        answer = UserInterface.QuestionForString($"Växlingskursen för {currency} " +
+                            $"kommer ändras till {newValue}. Godkänner du detta? J/N").ToUpper();
+                        if (answer != "J" && answer != "N")
+                        {
+                            UserInterface.CurrentMethod("Men seriöst kan du inte följa dem mest grundläggande instruktioner?");
+                            Utility.PressEnterToContinue();
+                            Utility.RemoveLines(8);
+                        }
+                        else if (answer == "J")
+                        {
+                            Utility.RemoveLines(14);
+                            DataBase.ExchangeRates[currency] = newValue;
+                            UserInterface.CurrentMethod($"Växlingskursen för {currency} " +
+                                $"har ändrats till {newValue}");
+                            Utility.PressEnterToContinue();
+                            Utility.RemoveLinesVariable(9, DataBase.ExchangeRates.Count - 1);
+
+                        }
+                        else if (answer == "N")
+                        {
+                            Utility.RemoveLines(14);
+                            UserInterface.CurrentMethod($"Växlingskursen för {currency} " +
+                                $"Kommer inte att ändras till {newValue}");
+                            Utility.PressEnterToContinue();
+                            Utility.RemoveLinesVariable(9, DataBase.ExchangeRates.Count - 1);
+                        }
                     } while (answer != "J" && answer != "N");
-                    // If admin answers yes, exchange rate is updated.
-                    if (answer == "J")
-                    {
-                        DataBase.ExchangeRates[currency] = newValue;
-                        Console.WriteLine($"Växlingskursen för {currency} " +
-                            $"har ändrats till {newValue}");
-                        Utility.PressEnterToContinue();
-                    }
                 }
                 else
                 {
@@ -219,33 +238,35 @@ namespace KiwiBankomaten
         }
         // Method for printing out all customer accounts with their ID,
         // Username, Password and IsLocked status.
-        public static void ViewAllUsers()
+        public void ViewAllUsers()
         {
-            Console.WriteLine("---Alla användarkonton i Kiwibank---");
+            UserInterface.CurrentMethod("---Alla användarkonton i Kiwibank---");
             foreach (KeyValuePair<int, Customer> customer in DataBase.CustomerDict)
             {
-                Console.WriteLine($"ID:{customer.Value.Id} - " +
+                Console.Write($" |-ID:{customer.Value.Id}) - " +
                     $"Användarnamn:{customer.Value.UserName} - " +
                     $"Lösenord:{customer.Value.Password} - " +
                     $"Spärrat:{customer.Value.Locked}");
+                Utility.MoveCursorTo(85);
             }
         }
         // Method for selecting one specific user account and then giving
         // the admin a choice of what to do with the account.
-        public static void EditUserAccount()
+        public void EditUserAccount()
         {
             bool noError;
+            UserInterface.CurrentMethod($"{UserName}/AdminMenu/EditUserAccount/");
+
             do
             {
-                Console.Clear();
                 // Prints all user accounts so admin can see which accounts
                 // they can select.
                 ViewAllUsers();
-                Console.WriteLine("Vilken användare vill du välja? Välj " +
+                UserInterface.CurrentMethod("Vilken användare vill du välja? Välj " +
                     "genom att skriva in ID");
                 // Admin inputs user ID here to select which account
                 // they want to edit.
-                noError = Int32.TryParse(Console.ReadLine(), out int userID);
+                noError = Int32.TryParse(UserInterface.PromptForString(), out int userID);
                 // Checks if admin input is a number and if that number exists
                 // as a key in the customer dictionary.
                 if (noError && DataBase.CustomerDict.ContainsKey(userID))
@@ -253,18 +274,16 @@ namespace KiwiBankomaten
                     // Chosen customer account is saved for access to non-static
                     // methods and easier property access.
                     Customer selectedUser = DataBase.CustomerDict[userID];
+
+                    Utility.RemoveLinesVariable(9, DataBase.CustomerDict.Count - 1);
                     while (true)
                     {
-                        Console.Clear();
-                        Console.WriteLine($"Du har valt användaren ID:" +
-                            $"{selectedUser.Id} - Användarnamn:" +
-                            $"{selectedUser.UserName}" +
-                            $" - Lösenord:{selectedUser.Password}" +
-                            $" - Spärrad:{selectedUser.Locked}");
-                        Console.WriteLine("Vad vill du göra med användaren?\n-1 " +
-                            "Visa bankkonton\n-2 Spärra/Avspärra" +
-                            "\n-3 Ändra lösenord\n-4 Återvänd till adminmenyn");
-                        switch (Console.ReadLine())
+                        UserInterface.CurrentMethod($"{UserName}/AdminMenu/EditUserAccount/{selectedUser.UserName}");
+
+                        UserInterface.DisplayMenu(new string[] {"-1 Visa bankkonton", "-2 Spärra/Avspärra",
+                            "-3 Ändra lösenord", "-4 Återvänd till adminmenyn" });
+
+                        switch (UserInterface.PromptForString())
                         {
                             // Prints all user's bank accounts.
                             case "1":
@@ -275,10 +294,12 @@ namespace KiwiBankomaten
                             // Lets admin lock or unlock user's account.
                             case "2":
                                 LockOrUnlockAccount(selectedUser);
+                                Utility.PressEnterToContinue();
                                 break;
                             // Lets admin change password of user's account.
                             case "3":
                                 ChangeUserPassword(selectedUser);
+                                Utility.PressEnterToContinue();
                                 break;
                             // Returns admin to the main admin menu.
                             case "4":
@@ -287,6 +308,7 @@ namespace KiwiBankomaten
                                 Console.WriteLine("Fel input, skriv in ett korrekt värde");
                                 break;
                         }
+                        UserInterface.DisplayLogoMessage();
                     }
                 }
                 else
@@ -298,24 +320,24 @@ namespace KiwiBankomaten
         }
         // Method for locking user account if it is not locked, or unlocking
         // user account if it is locked.
-        public static void LockOrUnlockAccount(Customer selectedUser)
+        public void LockOrUnlockAccount(Customer selectedUser)
         {
             string answer;
             // Checks if user account is locked or not, asks different question
             // depending on status.
             if (selectedUser.Locked)
             {
-                Console.WriteLine("Kontot är spärrat");
-                Console.WriteLine("Vill du avspärra kontot? J/N");
+                UserInterface.CurrentMethod("Kontot är spärrat");
+                UserInterface.CurrentMethod("Vill du avspärra kontot? J/N");
             }
             else
             {
-                Console.WriteLine("Kontot är inte spärrat");
-                Console.WriteLine("Vill du spärra kontot? J/N");
+                UserInterface.CurrentMethod("Kontot är inte spärrat");
+                UserInterface.CurrentMethod("Vill du spärra kontot? J/N");
             }
             do
             {
-                answer = Console.ReadLine().ToUpper();
+                answer = UserInterface.PromptForString().ToUpper();
                 // If admin confirms that they want to lock/unlock user then we do so.
                 switch (answer)
                 {
@@ -332,63 +354,61 @@ namespace KiwiBankomaten
                     case "N":
                         break;
                     default:
-                        Console.WriteLine("Fel input, välj antingen J/N");
+                        UserInterface.CurrentMethod("Fel input, välj antingen J/N");
+                        Utility.PressEnterToContinue();
+                        Utility.RemoveLines(6);
                         break;
                 }
             } while (answer != "J" && answer != "N");
 
         }
         // Method for changing user account's password.
-        public static void ChangeUserPassword(Customer selectedUser)
+        public void ChangeUserPassword(Customer selectedUser)
         {
             while (true)
             {
-                Console.Clear();
-                Console.WriteLine($"Vill du ändra lösenordet till användaren " +
+                UserInterface.CurrentMethod($"Vill du ändra lösenordet till användaren " +
                     $"{selectedUser.Id} - {selectedUser.UserName}? J/N");
-                if (Console.ReadLine().ToUpper() == "J")
+                if (UserInterface.PromptForString().ToUpper() == "J")
                 {
-                    Console.Clear();
-                    Console.WriteLine($"Skriv in det nya lösenordet till " +
+                    UserInterface.CurrentMethod($"Skriv in det nya lösenordet till " +
                         $"användaren {selectedUser.UserName}");
-                    string newPassWord = Console.ReadLine();
-                    Console.WriteLine("Konfirmera användarens lösenord genom " +
+                    string newPassWord = UserInterface.PromptForString();
+                    UserInterface.CurrentMethod("Konfirmera användarens lösenord genom " +
                         "att skriva in det igen");
                     // Makes user input the password again to confirm that it
                     // is what they want.
-                    if (Console.ReadLine() == newPassWord)
+                    if (UserInterface.PromptForString() == newPassWord)
                     {
                         selectedUser.Password = newPassWord;
                         return;
                     }
                     else
                     {
-                        Console.WriteLine("Du konfirmerade inte lösenordet");
+                        UserInterface.CurrentMethod("Du konfirmerade inte lösenordet");
                         Utility.PressEnterToContinue();
+                        Utility.RemoveLines(16);
                     }
                 }
                 else { return; }
             }
 
         }
+        
         // Method for selecting which account type you want to edit, bank or loan.
-        public static void SelectAccountType()
+        public void SelectAccountType()
         {
             string answer;
             while (true)
             {
-                Console.Clear();
-                Console.WriteLine("Olika typer av bankkonto, namn och ränta:");
                 // Prints out all bank account types.
+                UserInterface.CurrentMethod("Olika typer av bankkonto, namn och ränta:");
                 DataBase.ViewAccountTypes(1);
-                Console.WriteLine("---------------------------");
-                Console.WriteLine("Olika typer av lånekonto, namn och ränta:");
-                // Prints out all loan account types.
+                UserInterface.CurrentMethod("Olika typer av lånekonto, namn och ränta:");
                 DataBase.ViewAccountTypes(2);
-                Console.WriteLine("---------------------------");
-                Console.WriteLine("Vilken kontotyp vill du ändra?\n-1 Bankkonto" +
-                    "\n-2 Lånekonto\n-3 Återvänd till adminmenyn");
-                answer = Console.ReadLine();
+                UserInterface.CurrentMethod("Vilket typ av konto vill du ändra?");
+                UserInterface.DisplayMenu(new string[] { "-1 Bankkonto", "-2 Lånekonto", "-3 Återvänd till adminmenyn" });
+                answer = UserInterface.PromptForString();
                 switch (answer)
                 {
                     case "1":
@@ -404,19 +424,22 @@ namespace KiwiBankomaten
                     case "3":
                         return;
                     default:
-                        Console.WriteLine("Ogiltigt val. Välj alternativ 1-3.");
-                        Utility.PressEnterToContinue();
+                        UserInterface.CurrentMethod("Ogiltigt val. Välj alternativ 1-3.");
                         break;
                 }
+                Utility.PressEnterToContinue();
+                Console.Clear();
+                UserInterface.DisplayLogoMessage();
             }
         }
         // Method where you choose what to do with the bank account type you've chosen.
-        public static void UpdateAccountTypes(bool isBankAccount)
+        public void UpdateAccountTypes(bool isBankAccount)
         {
             string answer;
             while (true)
             {
                 Console.Clear();
+                UserInterface.DisplayLogoMessage();
                 // Checks if user selected bank account type in previous menu.
                 if (isBankAccount)
                 {
@@ -428,12 +451,11 @@ namespace KiwiBankomaten
                     // Prints out all loan account types.
                     DataBase.ViewAccountTypes(2);
                 }
-                Console.WriteLine("---------------------------");
-                Console.WriteLine("Vad vill du göra?");
-                Console.WriteLine("-1 Skapa ny kontotyp\n" +
-                    "-2 Uppdatera existerande kontotyp\n" +
-                    "-3 Återvänd till kontotypsmenyn");
-                answer = Console.ReadLine();
+                UserInterface.CurrentMethod("Vad vill du göra?");
+                UserInterface.DisplayMenu(new string[] {"-1 Skapa ny kontotyp",
+                    "-2 Uppdatera existerande kontotyp",
+                    "-3 Återvänd till kontotypsmenyn"});
+                answer = UserInterface.PromptForString();
                 // Checks if user selected bank account type in previous method.
                 // If yes, we run a switch for creating new or editing current bank account types.
                 if (isBankAccount)
@@ -449,8 +471,7 @@ namespace KiwiBankomaten
                         case "3":
                             return;
                         default:
-                            Console.WriteLine("Ogiltigt val. Välj alternativ 1-3.");
-                            Utility.PressEnterToContinue();
+                            UserInterface.CurrentMethod("Ogiltigt val. Välj alternativ 1-3.");
                             break;
                     }
                 }
@@ -469,58 +490,52 @@ namespace KiwiBankomaten
                         case "3":
                             return;
                         default:
-                            Console.WriteLine("Ogiltigt val. Välj alternativ 1-3.");
-                            Utility.PressEnterToContinue();
+                            UserInterface.CurrentMethod("Ogiltigt val. Välj alternativ 1-3.");
                             break;
                     }
                 }
+                Utility.PressEnterToContinue();
+                Console.Clear();
             }
         }
         // Method for creating new bank or loan account type.
-        public static void CreateNewAccountType(bool isBankAccount)
+        public void CreateNewAccountType(bool isBankAccount)
         {
-            bool noError;
             string name;
             decimal interest;
             string answer;
-            do
+            
+            Console.Clear();
+            UserInterface.DisplayLogoMessage();
+            if (isBankAccount)
             {
-                Console.Clear();
-                if (isBankAccount)
-                {
-                    Console.WriteLine("Skriv in namnet för den nya bankkontotypen");
-                }
-                else
-                {
-                    Console.WriteLine("Skriv in namnet för den nya lånekontotypen");
-                }
-                
-                name = Console.ReadLine();
-                Console.WriteLine("Skriv in procentenheten för räntan av det nya kontot");
-                noError = Decimal.TryParse(Console.ReadLine(), out interest);
-                if (!noError)
-                {
-                    Console.WriteLine("Ogiltigt värde, skriv in en procentenhet för räntan.");
-                    Utility.PressEnterToContinue();
-                }
-            } while (!noError);
+                UserInterface.CurrentMethod("Skriv in namnet för den nya bankkontotypen");
+            }
+            else
+            {
+                UserInterface.CurrentMethod("Skriv in namnet för den nya lånekontotypen");
+            }
+            
+            name = UserInterface.PromptForString();
+            UserInterface.CurrentMethod("Skriv in procentenheten för räntan av det nya kontot");
+            
+            interest = UserInterface.IsValueNumberCheck();
 
             // Asks admin to confirm if they do want to create new bank account type
             // if no, admin is returned to previous method.
             do
             {
-                Console.Clear();
                 if (isBankAccount)
                 {
-                    Console.WriteLine($"Bankkontotypen {name} med räntan {interest}% kommer skapas. " +
-                        $"Godkänner du detta? J/N");
+                    UserInterface.CurrentMethod($"Bankkontotypen {name} med räntan {interest}% kommer skapas");
+                    UserInterface.CurrentMethod($"Godkänner du detta? J/N");
                 }
                 else
                 {
-                    Console.WriteLine($"Lånekontotypen {name} med räntan {interest}% kommer skapas. " +
-                        $"Godkänner du detta? J/N");
+                    UserInterface.CurrentMethod($"Lånekontotypen {name} med räntan {interest}% kommer skapas");
+                    UserInterface.CurrentMethod($"Godkänner du detta? J/N");
                 }
-                answer = Console.ReadLine().ToUpper();
+                answer = UserInterface.PromptForString().ToUpper();
                 // If admin does confirm they want to create a new account type,
                 // new bank or loan account type is created.
                 switch (answer)
@@ -538,17 +553,17 @@ namespace KiwiBankomaten
                     case "N":
                         return;
                     default:
-                        Console.WriteLine("Fel input, välj antingen J/N");
+                        UserInterface.CurrentMethod("Fel input, välj antingen J/N");
                         Utility.PressEnterToContinue();
+                        Utility.RemoveLines(10);
                         break;
                 }
             } while (answer != "J" && answer != "N");
-            Console.WriteLine($"Kontotypen {name} har skapats.");
-            Utility.PressEnterToContinue();
+            UserInterface.CurrentMethod($"Kontotypen {name} har skapats.");
 
         }
         // Method for updating interest of current bank or loan account type.
-        public static void UpdateExistingAccountType(bool isBankAccount)
+        public void UpdateExistingAccountType(bool isBankAccount)
         {
             bool noError;
             int index;
@@ -557,7 +572,7 @@ namespace KiwiBankomaten
             string answer;
             do
             {
-                Console.Clear();
+                UserInterface.DisplayLogoMessage();
                 // If user selected bank account type, print out bank account types.
                 if (isBankAccount)
                 {
@@ -569,7 +584,9 @@ namespace KiwiBankomaten
                 {
                     DataBase.PrintLoanAccountTypes();
                 }
-                Console.WriteLine("Vilken kontotyp vill du ändra? Välj genom att skriva in siffra.");
+                UserInterface.CurrentMethod("Vilken kontotyp vill du ändra? Välj genom att skriva in siffra.");
+                Console.WriteLine(" +-----------------------------------------------------------------------------------+");
+                Console.Write("  Ange ditt val: ");
                 noError = Int32.TryParse(Console.ReadLine(), out index);
                 index -= 1;
                 // Gets key from bank or loan account type using its index.
@@ -583,30 +600,31 @@ namespace KiwiBankomaten
                 }
                 if (!noError || !DataBase.BankAccountTypes.ContainsKey(key) && !DataBase.LoanAccountTypes.ContainsKey(key))
                 {
-                    Console.WriteLine("Ogiltigt val. Skriv in en giltig siffra.");
+                    UserInterface.CurrentMethod("Ogiltigt val. Skriv in en giltig siffra.");
                     Utility.PressEnterToContinue();
                 }
             } while (!noError || !DataBase.BankAccountTypes.ContainsKey(key) && !DataBase.LoanAccountTypes.ContainsKey(key));
             // We now have the key, admin is asked to input its new interest rate.
             do
             {
-                Console.Clear();
-                Console.WriteLine($"Mata in procentenheten av det nya värdet på {key}");
+                UserInterface.CurrentMethod($"Mata in procentenheten av det nya värdet på {key}");
+                Console.WriteLine(" +-----------------------------------------------------------------------------------+");
+                Console.Write("  Ange ditt val: ");
                 noError = Decimal.TryParse(Console.ReadLine(), out newValue);
                 if (!noError)
                 {
-                    Console.WriteLine("Ogiltigt val. Skriv in en giltig procentenhet.");
+                    UserInterface.CurrentMethod("Ogiltigt val. Skriv in en giltig procentenhet.");
                     Utility.PressEnterToContinue();
+                    Utility.RemoveLines(8);
                 }
             } while (!noError);
             // Admin is asked to confirm whether they do want to change the interest rate
             // of the bank or loan account type.
             do
             {
-                Console.Clear();
-                Console.WriteLine($"Räntan på kontotypen {key} kommer ändras till {newValue}. " +
-                    $"Godkänner du detta? J/N");
-                answer = Console.ReadLine().ToUpper();
+                UserInterface.CurrentMethod($"Räntan på kontotypen {key} kommer ändras till {newValue}.");
+                UserInterface.CurrentMethod($"Godkänner du detta? J/N");
+                answer = UserInterface.PromptForString().ToUpper();
                 switch (answer)
                 {
                     case "J":
@@ -622,14 +640,15 @@ namespace KiwiBankomaten
                     case "N":
                         return;
                     default:
-                        Console.WriteLine("Fel input, välj antingen J/N");
+                        UserInterface.CurrentMethod("Fel input, välj antingen J/N");
                         Utility.PressEnterToContinue();
+                        Utility.RemoveLines(10);
+
                         break;
                 }
             } while (answer != "J" && answer != "N");
 
-            Console.WriteLine($"Den nya räntan på {key} är nu {newValue}");
-            Utility.PressEnterToContinue();
+            UserInterface.CurrentMethod($"Den nya räntan på {key} är nu {newValue}");
         }
     }
 }

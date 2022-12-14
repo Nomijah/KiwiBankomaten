@@ -10,6 +10,7 @@ namespace KiwiBankomaten
         private decimal _amount;
         private string _currency;
         private decimal _interest;
+
         public List<Log> LogList = new List<Log>();
         
         public int AccountNumber { get => _accountNumber; set => _accountNumber = value; }
