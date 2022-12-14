@@ -78,16 +78,21 @@ namespace KiwiBankomaten
             switch (selection)
             {
                 case 1:
+                    UserInterface.CurrentMethod("Bankonton");
                     foreach (KeyValuePair<string, decimal> type in DataBase.BankAccountTypes)
                     {
-                        Console.WriteLine($"-{i} {type.Key} - {type.Value}");
+                        Console.Write($" |-{i} {type.Key} - {type.Value}");
+                        Utility.MoveCursorTo(85);
                         i++;
                     }
                     break;
                 case 2:
+                    UserInterface.CurrentMethod("Lånkonton");
                     foreach (KeyValuePair<string, decimal> type in DataBase.LoanAccountTypes)
                     {
-                        Console.WriteLine($"-{i} {type.Key} - {type.Value}");
+
+                        Console.Write($" |-{i} {type.Key} - {type.Value}");
+                        Utility.MoveCursorTo(85);
                         i++;
                     }
                     break;

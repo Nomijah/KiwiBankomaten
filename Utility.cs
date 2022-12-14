@@ -91,7 +91,7 @@ namespace KiwiBankomaten
         // Stops the program until the user presses "Enter"
         public static void PressEnterToContinue()
         {
-            UserInterface.DisplayMessage(" Klicka Enter för att fortsätta.");
+            UserInterface.DisplayMessage("Klicka Enter för att fortsätta.");
             // Gets the input from the user
             ConsoleKey enterPressed = Console.ReadKey(true).Key;
             // Loops if the user Presses any button other than "Enter"

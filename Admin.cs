@@ -66,7 +66,7 @@ namespace KiwiBankomaten
                         admin.EditUserAccount();
                         break;
                     case "5": 
-                        admin.UpdateAccountTypes();
+                        admin.SelectAccountType();
                         break;
                     case "6":
                         loggedIn = false;
@@ -355,6 +355,8 @@ namespace KiwiBankomaten
                         break;
                     default:
                         UserInterface.CurrentMethod("Fel input, välj antingen J/N");
+                        Utility.PressEnterToContinue();
+                        Utility.RemoveLines(6);
                         break;
                 }
             } while (answer != "J" && answer != "N");
@@ -392,18 +394,18 @@ namespace KiwiBankomaten
             }
 
         }
-        public void ViewAccountTypes(int selection)
+        
         // Method for selecting which account type you want to edit, bank or loan.
-        public static void SelectAccountType()
+        public void SelectAccountType()
         {
             string answer;
             while (true)
             {
                 // Prints out all bank account types.
                 UserInterface.CurrentMethod("Olika typer av bankkonto, namn och ränta:");
-                ViewAccountTypes(1);
+                DataBase.ViewAccountTypes(1);
                 UserInterface.CurrentMethod("Olika typer av lånekonto, namn och ränta:");
-                ViewAccountTypes(2);
+                DataBase.ViewAccountTypes(2);
                 UserInterface.CurrentMethod("Vilket typ av konto vill du ändra?");
                 UserInterface.DisplayMenu(new string[] { "-1 Bankkonto", "-2 Lånekonto", "-3 Återvänd till adminmenyn" });
                 answer = UserInterface.PromptForString();
@@ -422,19 +424,22 @@ namespace KiwiBankomaten
                     case "3":
                         return;
                     default:
-                        Console.WriteLine("Ogiltigt val. Välj alternativ 1-3.");
-                        Utility.PressEnterToContinue();
+                        UserInterface.CurrentMethod("Ogiltigt val. Välj alternativ 1-3.");
                         break;
                 }
+                Utility.PressEnterToContinue();
+                Console.Clear();
+                UserInterface.DisplayLogoMessage();
             }
         }
         // Method where you choose what to do with the bank account type you've chosen.
-        public static void UpdateAccountTypes(bool isBankAccount)
+        public void UpdateAccountTypes(bool isBankAccount)
         {
             string answer;
             while (true)
             {
                 Console.Clear();
+                UserInterface.DisplayLogoMessage();
                 // Checks if user selected bank account type in previous menu.
                 if (isBankAccount)
                 {
@@ -446,12 +451,11 @@ namespace KiwiBankomaten
                     // Prints out all loan account types.
                     DataBase.ViewAccountTypes(2);
                 }
-                Console.WriteLine("---------------------------");
-                Console.WriteLine("Vad vill du göra?");
-                Console.WriteLine("-1 Skapa ny kontotyp\n" +
-                    "-2 Uppdatera existerande kontotyp\n" +
-                    "-3 Återvänd till kontotypsmenyn");
-                answer = Console.ReadLine();
+                UserInterface.CurrentMethod("Vad vill du göra?");
+                UserInterface.DisplayMenu(new string[] {"-1 Skapa ny kontotyp",
+                    "-2 Uppdatera existerande kontotyp",
+                    "-3 Återvänd till kontotypsmenyn"});
+                answer = UserInterface.PromptForString();
                 // Checks if user selected bank account type in previous method.
                 // If yes, we run a switch for creating new or editing current bank account types.
                 if (isBankAccount)
@@ -467,8 +471,7 @@ namespace KiwiBankomaten
                         case "3":
                             return;
                         default:
-                            Console.WriteLine("Ogiltigt val. Välj alternativ 1-3.");
-                            Utility.PressEnterToContinue();
+                            UserInterface.CurrentMethod("Ogiltigt val. Välj alternativ 1-3.");
                             break;
                     }
                 }
@@ -487,58 +490,52 @@ namespace KiwiBankomaten
                         case "3":
                             return;
                         default:
-                            Console.WriteLine("Ogiltigt val. Välj alternativ 1-3.");
-                            Utility.PressEnterToContinue();
+                            UserInterface.CurrentMethod("Ogiltigt val. Välj alternativ 1-3.");
                             break;
                     }
                 }
+                Utility.PressEnterToContinue();
+                Console.Clear();
             }
         }
         // Method for creating new bank or loan account type.
-        public static void CreateNewAccountType(bool isBankAccount)
+        public void CreateNewAccountType(bool isBankAccount)
         {
-            bool noError;
             string name;
             decimal interest;
             string answer;
-            do
+            
+            Console.Clear();
+            UserInterface.DisplayLogoMessage();
+            if (isBankAccount)
             {
-                Console.Clear();
-                if (isBankAccount)
-                {
-                    Console.WriteLine("Skriv in namnet för den nya bankkontotypen");
-                }
-                else
-                {
-                    Console.WriteLine("Skriv in namnet för den nya lånekontotypen");
-                }
-                
-                name = Console.ReadLine();
-                Console.WriteLine("Skriv in procentenheten för räntan av det nya kontot");
-                noError = Decimal.TryParse(Console.ReadLine(), out interest);
-                if (!noError)
-                {
-                    Console.WriteLine("Ogiltigt värde, skriv in en procentenhet för räntan.");
-                    Utility.PressEnterToContinue();
-                }
-            } while (!noError);
+                UserInterface.CurrentMethod("Skriv in namnet för den nya bankkontotypen");
+            }
+            else
+            {
+                UserInterface.CurrentMethod("Skriv in namnet för den nya lånekontotypen");
+            }
+            
+            name = UserInterface.PromptForString();
+            UserInterface.CurrentMethod("Skriv in procentenheten för räntan av det nya kontot");
+            
+            interest = UserInterface.IsValueNumberCheck();
 
             // Asks admin to confirm if they do want to create new bank account type
             // if no, admin is returned to previous method.
             do
             {
-                Console.Clear();
                 if (isBankAccount)
                 {
-                    Console.WriteLine($"Bankkontotypen {name} med räntan {interest}% kommer skapas. " +
-                        $"Godkänner du detta? J/N");
+                    UserInterface.CurrentMethod($"Bankkontotypen {name} med räntan {interest}% kommer skapas");
+                    UserInterface.CurrentMethod($"Godkänner du detta? J/N");
                 }
                 else
                 {
-                    Console.WriteLine($"Lånekontotypen {name} med räntan {interest}% kommer skapas. " +
-                        $"Godkänner du detta? J/N");
+                    UserInterface.CurrentMethod($"Lånekontotypen {name} med räntan {interest}% kommer skapas");
+                    UserInterface.CurrentMethod($"Godkänner du detta? J/N");
                 }
-                answer = Console.ReadLine().ToUpper();
+                answer = UserInterface.PromptForString().ToUpper();
                 // If admin does confirm they want to create a new account type,
                 // new bank or loan account type is created.
                 switch (answer)
@@ -556,17 +553,17 @@ namespace KiwiBankomaten
                     case "N":
                         return;
                     default:
-                        Console.WriteLine("Fel input, välj antingen J/N");
+                        UserInterface.CurrentMethod("Fel input, välj antingen J/N");
                         Utility.PressEnterToContinue();
+                        Utility.RemoveLines(10);
                         break;
                 }
             } while (answer != "J" && answer != "N");
-            Console.WriteLine($"Kontotypen {name} har skapats.");
-            Utility.PressEnterToContinue();
+            UserInterface.CurrentMethod($"Kontotypen {name} har skapats.");
 
         }
         // Method for updating interest of current bank or loan account type.
-        public static void UpdateExistingAccountType(bool isBankAccount)
+        public void UpdateExistingAccountType(bool isBankAccount)
         {
             bool noError;
             int index;
@@ -575,7 +572,7 @@ namespace KiwiBankomaten
             string answer;
             do
             {
-                Console.Clear();
+                UserInterface.DisplayLogoMessage();
                 // If user selected bank account type, print out bank account types.
                 if (isBankAccount)
                 {
@@ -587,7 +584,9 @@ namespace KiwiBankomaten
                 {
                     DataBase.PrintLoanAccountTypes();
                 }
-                Console.WriteLine("Vilken kontotyp vill du ändra? Välj genom att skriva in siffra.");
+                UserInterface.CurrentMethod("Vilken kontotyp vill du ändra? Välj genom att skriva in siffra.");
+                Console.WriteLine(" +-----------------------------------------------------------------------------------+");
+                Console.Write("  Ange ditt val: ");
                 noError = Int32.TryParse(Console.ReadLine(), out index);
                 index -= 1;
                 // Gets key from bank or loan account type using its index.
@@ -601,30 +600,31 @@ namespace KiwiBankomaten
                 }
                 if (!noError || !DataBase.BankAccountTypes.ContainsKey(key) && !DataBase.LoanAccountTypes.ContainsKey(key))
                 {
-                    Console.WriteLine("Ogiltigt val. Skriv in en giltig siffra.");
+                    UserInterface.CurrentMethod("Ogiltigt val. Skriv in en giltig siffra.");
                     Utility.PressEnterToContinue();
                 }
             } while (!noError || !DataBase.BankAccountTypes.ContainsKey(key) && !DataBase.LoanAccountTypes.ContainsKey(key));
             // We now have the key, admin is asked to input its new interest rate.
             do
             {
-                Console.Clear();
-                Console.WriteLine($"Mata in procentenheten av det nya värdet på {key}");
+                UserInterface.CurrentMethod($"Mata in procentenheten av det nya värdet på {key}");
+                Console.WriteLine(" +-----------------------------------------------------------------------------------+");
+                Console.Write("  Ange ditt val: ");
                 noError = Decimal.TryParse(Console.ReadLine(), out newValue);
                 if (!noError)
                 {
-                    Console.WriteLine("Ogiltigt val. Skriv in en giltig procentenhet.");
+                    UserInterface.CurrentMethod("Ogiltigt val. Skriv in en giltig procentenhet.");
                     Utility.PressEnterToContinue();
+                    Utility.RemoveLines(8);
                 }
             } while (!noError);
             // Admin is asked to confirm whether they do want to change the interest rate
             // of the bank or loan account type.
             do
             {
-                Console.Clear();
-                Console.WriteLine($"Räntan på kontotypen {key} kommer ändras till {newValue}. " +
-                    $"Godkänner du detta? J/N");
-                answer = Console.ReadLine().ToUpper();
+                UserInterface.CurrentMethod($"Räntan på kontotypen {key} kommer ändras till {newValue}.");
+                UserInterface.CurrentMethod($"Godkänner du detta? J/N");
+                answer = UserInterface.PromptForString().ToUpper();
                 switch (answer)
                 {
                     case "J":
@@ -640,14 +640,15 @@ namespace KiwiBankomaten
                     case "N":
                         return;
                     default:
-                        Console.WriteLine("Fel input, välj antingen J/N");
+                        UserInterface.CurrentMethod("Fel input, välj antingen J/N");
                         Utility.PressEnterToContinue();
+                        Utility.RemoveLines(10);
+
                         break;
                 }
             } while (answer != "J" && answer != "N");
 
-            Console.WriteLine($"Den nya räntan på {key} är nu {newValue}");
-            Utility.PressEnterToContinue();
+            UserInterface.CurrentMethod($"Den nya räntan på {key} är nu {newValue}");
         }
     }
 }
