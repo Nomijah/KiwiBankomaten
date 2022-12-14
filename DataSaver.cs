@@ -41,7 +41,7 @@ namespace KiwiBankomaten
             // Writes data on matching file
             // Customer dictionary.
             if (fileName == "Customers.txt")
-            {    
+            {
                 foreach (KeyValuePair<int, Customer> item in DataBase.CustomerDict)
                 {
                     sw.Write("Id: {0} Username: {1} " +
@@ -94,7 +94,7 @@ namespace KiwiBankomaten
             else if (fileName == "ExchangeRates.txt")
             {
                 foreach (KeyValuePair<string, decimal> item in DataBase.ExchangeRates)
-                { 
+                {
                     sw.Write("Currency: " + item.Key +
                     " Value: " + item.Value);
                     sw.WriteLine();
@@ -129,6 +129,7 @@ namespace KiwiBankomaten
             Console.WriteLine("Fil skapades");
         }
 
+        // Writes from file to DataBase.
         public static void UpdateFromFile(string fileName)
         {
             StreamReader sr = new StreamReader(fileName);
@@ -198,7 +199,7 @@ namespace KiwiBankomaten
                             {
                                 // Write info to DataBase.
                                 c.LoanAccounts.Add(Convert.ToInt32(temp[5]),
-                                    new LoanAccount(Convert.ToInt32(temp[7]), 
+                                    new LoanAccount(Convert.ToInt32(temp[7]),
                                     temp[9], Convert.ToDecimal(temp[11]),
                                     temp[13], Convert.ToDecimal(temp[15])));
                             }
@@ -287,13 +288,14 @@ namespace KiwiBankomaten
 
             sr.Close();
         }
+
         // Menu for admin, to see the contents of the databasefiles, as chosen
         public static void ShowFile()
         {
             Console.WriteLine("\nFör att se fil, ange en siffra:");
             Console.WriteLine("1) Adminlista");
             Console.WriteLine("2) CustomerDictionary");
-            Console.WriteLine("3) Currencies");
+            Console.WriteLine("3) ExchangeRates");
             Console.WriteLine("4) BankaccountTypes");
             Console.WriteLine("5) LoanAccountTypes");
             Console.WriteLine("6) Bankaccounts");
@@ -308,7 +310,7 @@ namespace KiwiBankomaten
                     DataReading("Customers.txt");
                     break;
                 case "3":
-                    DataReading("Currencies.txt");
+                    DataReading("ExchangeRates.txt");
                     break;
                 case "4":
                     DataReading("BankAccountTypes.txt");
@@ -342,31 +344,30 @@ namespace KiwiBankomaten
             // To read the whole file line by line
             while (textLine != null)
                 Console.WriteLine("------------------------");
-                foreach (string line in textLine.Split(' '))
+            foreach (string line in textLine.Split(' '))
+            {
+                // If the list starts with any of these fields, it starts with a new line
+                //if (line == "Username:" || line == "Currency:" || line == "KontoTyp:" || line == "Customer ID:" )
+                //{
+                //    Console.WriteLine();
+                //}
+                // If the content is data, it will only write the data
+                if (line == "Username:" || line == "Password:" || line == "Locked:" || line == "Id:" ||
+                    line == "Key:" || line == "Currency:" || line == "Value:" || line == "KontoTyp:"
+                    || line == "Ränta:" || line == "Customer ID:" || line == "AccountNr:"
+                    || line == "Name:" || line == "Lönekonto:" || line == "Amount:" || line == "Interest:"
+                    || line == "Account Key:")
                 {
-                    // If the list starts with any of these fields, it starts with a new line
-                    //if (line == "Username:" || line == "Currency:" || line == "KontoTyp:" || line == "Customer ID:" )
-                    //{
-                    //    Console.WriteLine();
-                    //}
-                    // If the content is data, it will only write the data
-                    if (line == "Username:" || line == "Password:" || line == "Locked:" || line == "Id:" ||
-                        line == "Key:" || line == "Currency:" || line == "Value:" || line == "KontoTyp:"
-                        || line == "Ränta:" || line == "Customer ID:" || line == "AccountNr:"
-                        || line == "Name:" || line == "Lönekonto:" || line == "Amount:" || line == "Interest:"
-                        || line == "Account Key:")
-                    {
-                        Console.Write(line);
-                    }
-                    // Otherwise a new line is written
-                    else
-                    {
-                        Console.Write(line + "\n");
-                    }
+                    Console.Write(line);
                 }
-                Console.WriteLine(textLine);
-                textLine = sr.ReadLine();
+                // Otherwise a new line is written
+                else
+                {
+                    Console.Write(line + "\n");
+                }
             }
+            Console.WriteLine(textLine);
+            textLine = sr.ReadLine();
             sr.Close();
         }
     }
