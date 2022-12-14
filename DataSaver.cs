@@ -199,7 +199,7 @@ namespace KiwiBankomaten
                             {
                                 // Write info to DataBase.
                                 c.LoanAccounts.Add(Convert.ToInt32(temp[5]),
-                                    new LoanAccount(Convert.ToInt32(temp[7]), 
+                                    new LoanAccount(Convert.ToInt32(temp[7]),
                                     temp[9], Convert.ToDecimal(temp[11]),
                                     temp[13], Convert.ToDecimal(temp[15])));
                             }
@@ -288,6 +288,7 @@ namespace KiwiBankomaten
 
             sr.Close();
         }
+
         // Menu for admin, to see the contents of the databasefiles, as chosen
         public static void ShowFile()
         {
@@ -343,31 +344,30 @@ namespace KiwiBankomaten
             // To read the whole file line by line
             while (textLine != null)
                 Console.WriteLine("------------------------");
-                foreach (string line in textLine.Split(' '))
+            foreach (string line in textLine.Split(' '))
+            {
+                // If the list starts with any of these fields, it starts with a new line
+                //if (line == "Username:" || line == "Currency:" || line == "KontoTyp:" || line == "Customer ID:" )
+                //{
+                //    Console.WriteLine();
+                //}
+                // If the content is data, it will only write the data
+                if (line == "Username:" || line == "Password:" || line == "Locked:" || line == "Id:" ||
+                    line == "Key:" || line == "Currency:" || line == "Value:" || line == "KontoTyp:"
+                    || line == "Ränta:" || line == "Customer ID:" || line == "AccountNr:"
+                    || line == "Name:" || line == "Lönekonto:" || line == "Amount:" || line == "Interest:"
+                    || line == "Account Key:")
                 {
-                    // If the list starts with any of these fields, it starts with a new line
-                    //if (line == "Username:" || line == "Currency:" || line == "KontoTyp:" || line == "Customer ID:" )
-                    //{
-                    //    Console.WriteLine();
-                    //}
-                    // If the content is data, it will only write the data
-                    if (line == "Username:" || line == "Password:" || line == "Locked:" || line == "Id:" ||
-                        line == "Key:" || line == "Currency:" || line == "Value:" || line == "KontoTyp:"
-                        || line == "Ränta:" || line == "Customer ID:" || line == "AccountNr:"
-                        || line == "Name:" || line == "Lönekonto:" || line == "Amount:" || line == "Interest:"
-                        || line == "Account Key:")
-                    {
-                        Console.Write(line);
-                    }
-                    // Otherwise a new line is written
-                    else
-                    {
-                        Console.Write(line + "\n");
-                    }
+                    Console.Write(line);
                 }
-                Console.WriteLine(textLine);
-                textLine = sr.ReadLine();
+                // Otherwise a new line is written
+                else
+                {
+                    Console.Write(line + "\n");
+                }
             }
+            Console.WriteLine(textLine);
+            textLine = sr.ReadLine();
             sr.Close();
         }
     }
