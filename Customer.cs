@@ -460,7 +460,7 @@ namespace KiwiBankomaten
                 }
             }
             //If account is not found, print error message and return false.
-            UserInterface.DisplayMessage("Kontot du har angett finns inte i banken.");
+            UserInterface.CurrentMethod("Kontot du har angett finns inte i banken.");
             return false;
         }
 
@@ -493,16 +493,19 @@ namespace KiwiBankomaten
         {
             // Gets loan type from user            
             string userChoice = ChooseLoanAccountType();
+            decimal amountMoney;
 
-            UserInterface.DisplayMessage("Hur mycket pengar vill du låna?\n" + 
-                $"Du kan max låna {Utility.AmountDecimal(CheckLoanLimit())} kronor.");
-            decimal amountMoney = UserInterface.IsValueNumberCheck();
-            while (amountMoney > CheckLoanLimit())
+            UserInterface.CurrentMethod("Hur mycket pengar vill du låna?" +
+                    $" Du kan max låna {Utility.AmountDecimal(CheckLoanLimit())} kronor.");
+            do
             {
-                Console.WriteLine($"Du kan inte låna mer än {Utility.AmountDecimal(CheckLoanLimit())} kronor.\n" +
-                    $"Hur mycket vill du låna?");
-                amountMoney = UserInterface.IsValueNumberCheck();
-            }
+                while ((amountMoney = UserInterface.IsValueNumberCheck()) > CheckLoanLimit())
+                {
+                    Console.WriteLine($"Du kan inte låna mer än {Utility.AmountDecimal(CheckLoanLimit())} kronor");
+                    Utility.PressEnterToContinue();
+                    Utility.RemoveLines(5);
+                }
+            } while (Utility.YesOrNo($"Du tar nu ett Lån på {Utility.AmountDecimal(amountMoney)} kronor", "Vill du godkänna detta? [J/N]")) ;
 
             // Gets the highest key present and adds one to get new key
             int index;
@@ -520,8 +523,8 @@ namespace KiwiBankomaten
             // Adds the loaned amount to customers standard account
             BankAccounts[1].Amount += amountMoney;
 
-            Console.WriteLine($"Summan har nu anlänt på {BankAccounts[1].AccountName}");
-            Console.WriteLine("Nytt lånekonto har skapats.");
+            UserInterface.CurrentMethod($"Summan har nu anlänt på {BankAccounts[1].AccountName}");
+            UserInterface.CurrentMethod("Nytt lånekonto har skapats.");
 
             LoanAccountOverview();
 
@@ -535,7 +538,7 @@ namespace KiwiBankomaten
 
             UserInterface.CurrentMethod($"{UserName}/CustomerMenu/" +
                     $"LoanMoney/");
-            UserInterface.DisplayMessage("Vilken typ av konto vill du öppna?");
+            UserInterface.CurrentMethod("Vilken typ av konto vill du öppna?");
             DataBase.PrintLoanAccountTypes();
             // Loop until user has entered a valid choice
             while (!DataBase.LoanAccountTypes.ContainsKey(DataBase.GetKeyFromLoanTypeIndex(typeIndex)) || !answer)
