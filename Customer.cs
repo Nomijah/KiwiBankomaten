@@ -615,33 +615,42 @@ namespace KiwiBankomaten
             return 0;
         }
         // User selects which bank account they want to view the log for.
-        //public void ViewLog()
-        //{
-        //    bool noError;
-        //    int accountChoice;
-        //    //List<Log> reversedList;
-        //    do
-        //    {
-        //        BankAccountOverview();
-        //        UserInterface.CurrentMethod("Vilket konto vill du se överföringslogg på?");
-        //        noError = Int32.TryParse(UserInterface.PromptForString(), out accountChoice);
-        //        if (!noError || !BankAccounts.Keys.Contains(accountChoice))
-        //        {
-        //            Console.WriteLine("Kontot du valde existerar inte. Skriv in en giltig siffra.");
-        //            Utility.PressEnterToContinue();
-        //        }
-        //    } while (!noError || !BankAccounts.Keys.Contains(accountChoice));
-        //    Console.Clear();
-        //    // We copy the LogList to a new one to ensure we never alter the original.
-        //    reversedList = new List<Log>(BankAccounts[accountChoice].LogList);
-        //    // The list is reversed so we print the entries in order of newest to oldest.
-        //    reversedList.Reverse();
-        //    foreach (Log l in reversedList)
-        //    {
-        //        l.PrintLog();
-        //    }
-        //    // Reversed list is un-reversed so we don't print out the wrong order next time.
-        //    reversedList.Reverse();
-        ////}
+        public void ViewLog()
+        {
+            bool noError;
+            int accountChoice;
+            List<Log> reversedList;
+            do
+            {
+                Console.Clear();
+                BankAccountOverview();
+                Console.WriteLine("Vilket konto vill du se överföringslogg på?");
+                noError = Int32.TryParse(Console.ReadLine(), out accountChoice);
+                if (!noError || !BankAccounts.Keys.Contains(accountChoice))
+                {
+                    Console.WriteLine("Kontot du valde existerar inte. Skriv in en giltig siffra.");
+                    Utility.PressEnterToContinue();
+                }
+            } while (!noError || !BankAccounts.Keys.Contains(accountChoice));
+            Console.Clear();
+            // We copy the LogList to a new one to ensure we never alter the original.
+            if (BankAccounts[accountChoice].LogList != null)
+            {
+                reversedList = new List<Log>(BankAccounts[accountChoice].LogList);
+                reversedList.Reverse();
+                foreach (Log l in reversedList)
+                {
+                    l.PrintLog();
+                }
+                // Reversed list is un-reversed so we don't print out the wrong order next time.
+                reversedList.Reverse();
+            }
+            else
+            {
+                Console.WriteLine("Listan har inte instansierats. " +
+                    "Du borde inte kunna se det här. Kontakta en admin.");
+            }
+
+        }
     }
 }

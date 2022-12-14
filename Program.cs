@@ -48,7 +48,11 @@ namespace KiwiBankomaten
                     
                     //Exit program
                     case "2":
-                        
+                        // Write all changes to files before exiting.
+                        foreach (string s in DataSaver.fileNames)
+                        {
+                            DataSaver.DSaver(s);
+                        }
                         //closes the program 
                         Environment.Exit(0);
                         break;
