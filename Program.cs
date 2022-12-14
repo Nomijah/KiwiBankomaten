@@ -7,13 +7,8 @@ namespace KiwiBankomaten
     {
         static void Main(string[] args )
         {
-            DataSaver.DSaver("Admins.txt"); //Creates file
-            DataSaver.DSaver("Currencies.txt");//Creates file
-            DataSaver.DSaver("Customers.txt");//Creates file
-            DataSaver.DSaver("BankAccountTypes.txt");//Creates file
-            DataSaver.DSaver("LoanAccountTypes.txt");//Creates file
-
-            //DataSaver.ShowFile();// showfile method, used for adminmenu
+            // Load database before starting program.
+            DataSaver.LoadDataBase();;
             RunProgram();
         }
         public static void RunProgram()

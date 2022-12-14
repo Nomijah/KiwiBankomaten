@@ -6,13 +6,6 @@ namespace KiwiBankomaten
 {
     internal class Admin : User
     {
-        // Used for creating test admins.
-        public Admin(int id, string username, string password)
-        {
-            Id = id;
-            UserName = username;
-            Password = password;
-        }
         // Use this when creating admins in program.
         public Admin(string username, string password)
         {
