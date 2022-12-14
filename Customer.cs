@@ -182,9 +182,9 @@ namespace KiwiBankomaten
                 }
                 else
                 {
-                    UserInterface.DisplayMessage("Det där är inte ett giltigt värde");
+                    UserInterface.CurrentMethod("Det där är inte ett giltigt värde");
                     Utility.PressEnterToContinue();
-                    Utility.RemoveLines(6);
+                    Utility.RemoveLines(8);
                     noError = false;
                 }
             } while (noError == false);
@@ -480,11 +480,10 @@ namespace KiwiBankomaten
                 
                 if (amountMoney > BankAccounts[accountNum].Amount)
                 {
-                    UserInterface.DisplayMessage("|Summan du har angett finns inte på kontot, " +
+                    UserInterface.CurrentMethod("Summan du har angett finns inte på kontot, " +
                         "försök igen.");
-                    Utility.MoveCursorTo(85);
                     Utility.ContinueOrAbort();
-                    Utility.RemoveLines(6);
+                    Utility.RemoveLines(8);
                 }
                 else
                 {
