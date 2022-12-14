@@ -652,6 +652,7 @@ namespace KiwiBankomaten
             List<Log> reversedList;
             do
             {
+
                 BankAccountOverview();
                 Console.WriteLine("Vilket konto vill du se överföringslogg på?");
                 noError = Int32.TryParse(Console.ReadLine(), out accountChoice);
