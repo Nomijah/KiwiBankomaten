@@ -10,7 +10,7 @@ namespace KiwiBankomaten
         private decimal _amount;
         private string _currency;
         private decimal _interest;
-        private List<string> _log;
+        public List<Log> LogList;
         
         public int AccountNumber { get => _accountNumber; set => _accountNumber = value; }
         public string AccountName { get => _accountName; set => _accountName = value; }
@@ -29,6 +29,7 @@ namespace KiwiBankomaten
             this._currency = _currency;
             this._interest = _interest;
             _accountNumber = AccountNumberCounter;
+            LogList = new List<Log>();
             AccountNumberCounter++;
         }
 
@@ -40,7 +41,19 @@ namespace KiwiBankomaten
             this._currency = _currency;
             this._interest = _interest;
             _accountNumber = AccountNumberCounter;
+            LogList = new List<Log>();
             AccountNumberCounter++;
+        }
+
+        // Use this constructor for DataSaver.UpdateFromFile.
+        public BankAccount(int _accountNumber, string _name, decimal _amount,
+            string _currency, decimal _interest)
+        {
+            this._accountName = _name;
+            this._amount = _amount;
+            this._currency = _currency;
+            this._interest = _interest;
+            this._accountNumber = _accountNumber;
         }
 
         public BankAccount()

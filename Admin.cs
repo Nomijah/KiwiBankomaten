@@ -1,18 +1,13 @@
-﻿using System;
+﻿using SlackAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace KiwiBankomaten
 {
     internal class Admin : User
     {
-        // Used for creating test admins.
-        public Admin(int id, string username, string password)
-        {
-            Id = id;
-            UserName = username;
-            Password = password;
-        }
         // Use this when creating admins in program.
         public Admin(string username, string password)
         {
@@ -29,7 +24,7 @@ namespace KiwiBankomaten
             Password = password;
         }
         // Menu where admin can select different functions.
-        public static void AdminMenu(int adminKey) 
+        public static void AdminMenu(int adminKey)
         {
             // Used to log admin out if set to false.
             bool loggedIn = true;
@@ -37,7 +32,7 @@ namespace KiwiBankomaten
             Utility.RemoveLines(16);
 
             // Loop that runs so long as the admin has not chosen to log out.
-            while (loggedIn == true) 
+            while (loggedIn == true)
             {
 
                 Admin admin = DataBase.AdminList[adminKey];
@@ -73,7 +68,7 @@ namespace KiwiBankomaten
                     case "5": 
                         admin.UpdateAccountTypes();
                         break;
-                    case "6": 
+                    case "6":
                         loggedIn = false;
                         break;
                     // Loop repeats and switch is run again if none of the
@@ -89,7 +84,7 @@ namespace KiwiBankomaten
             }
             // Program.LogOut is called outside the loop and switch because
             // of possible bugs if it were to be called inside it.
-            Program.LogOut(); 
+            Program.LogOut();
         }
         // Admin method for creating new users.
         public void CreateNewUser() 
@@ -398,57 +393,261 @@ namespace KiwiBankomaten
 
         }
         public void ViewAccountTypes(int selection)
-        {
-            int i = 1;
-            switch (selection)
-            {
-                case 1: 
-                    foreach (KeyValuePair<string, decimal> type in DataBase.BankAccountTypes)
-                    {
-                        Console.Write($" |-{i} {type.Key} - {type.Value}");
-                        Utility.MoveCursorTo(85);
-                        i++;
-                    }
-                    break;
-                case 2:
-                    foreach (KeyValuePair<string, decimal> type in DataBase.LoanAccountTypes)
-                    {
-                        Console.Write($" |-{i} {type.Key} - {type.Value}");
-                        Utility.MoveCursorTo(85);
-                        i++;
-                    }
-                    break;
-                default:
-                    Console.WriteLine("Ogiltigt värde, det här borde inte kunna hända. Kontakta en admin.");
-                    break;
-            }
-        }
-        public void UpdateAccountTypes()
+        // Method for selecting which account type you want to edit, bank or loan.
+        public static void SelectAccountType()
         {
             string answer;
-            do
+            while (true)
             {
-                UserInterface.CurrentMethod($"{UserName}/AdminMenu/UpdateAccountTypes/");
-
-
+                // Prints out all bank account types.
                 UserInterface.CurrentMethod("Olika typer av bankkonto, namn och ränta:");
                 ViewAccountTypes(1);
                 UserInterface.CurrentMethod("Olika typer av lånekonto, namn och ränta:");
                 ViewAccountTypes(2);
                 UserInterface.CurrentMethod("Vilket typ av konto vill du ändra?");
-                UserInterface.DisplayMenu(new string[] {"-1 Bankkonto","-2 Lånekonto","-3 Återvänd till adminmenyn"});
+                UserInterface.DisplayMenu(new string[] { "-1 Bankkonto", "-2 Lånekonto", "-3 Återvänd till adminmenyn" });
                 answer = UserInterface.PromptForString();
                 switch (answer)
                 {
                     case "1":
-                        UpdateBankAccountTypes();
+                        // Runs method for choosing what to do with the bank account types.
+                        // The true means the user has selected bank account type.
+                        UpdateAccountTypes(true);
+                        break;
+                    case "2":
+                        // Runs method for choosing what to do with the loan account types.
+                        // The false means the user has selected loan account type.
+                        UpdateAccountTypes(false);
+                        break;
+                    case "3":
+                        return;
+                    default:
+                        Console.WriteLine("Ogiltigt val. Välj alternativ 1-3.");
+                        Utility.PressEnterToContinue();
                         break;
                 }
-            } while (answer != "1" && answer != "2" && answer != "3");
+            }
         }
-        public static void UpdateBankAccountTypes()
+        // Method where you choose what to do with the bank account type you've chosen.
+        public static void UpdateAccountTypes(bool isBankAccount)
         {
+            string answer;
+            while (true)
+            {
+                Console.Clear();
+                // Checks if user selected bank account type in previous menu.
+                if (isBankAccount)
+                {
+                    // Prints out all bank account types.
+                    DataBase.ViewAccountTypes(1);
+                }
+                else
+                {
+                    // Prints out all loan account types.
+                    DataBase.ViewAccountTypes(2);
+                }
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("Vad vill du göra?");
+                Console.WriteLine("-1 Skapa ny kontotyp\n" +
+                    "-2 Uppdatera existerande kontotyp\n" +
+                    "-3 Återvänd till kontotypsmenyn");
+                answer = Console.ReadLine();
+                // Checks if user selected bank account type in previous method.
+                // If yes, we run a switch for creating new or editing current bank account types.
+                if (isBankAccount)
+                {
+                    switch (answer)
+                    {
+                        case "1":
+                            CreateNewAccountType(true);
+                            break;
+                        case "2":
+                            UpdateExistingAccountType(true);
+                            break;
+                        case "3":
+                            return;
+                        default:
+                            Console.WriteLine("Ogiltigt val. Välj alternativ 1-3.");
+                            Utility.PressEnterToContinue();
+                            break;
+                    }
+                }
+                // If user didn't select bank account types, we instead
+                // create new or edit current loan account types.
+                else
+                {
+                    switch (answer)
+                    {
+                        case "1":
+                            CreateNewAccountType(false);
+                            break;
+                        case "2":
+                            UpdateExistingAccountType(false);
+                            break;
+                        case "3":
+                            return;
+                        default:
+                            Console.WriteLine("Ogiltigt val. Välj alternativ 1-3.");
+                            Utility.PressEnterToContinue();
+                            break;
+                    }
+                }
+            }
+        }
+        // Method for creating new bank or loan account type.
+        public static void CreateNewAccountType(bool isBankAccount)
+        {
+            bool noError;
+            string name;
+            decimal interest;
+            string answer;
+            do
+            {
+                Console.Clear();
+                if (isBankAccount)
+                {
+                    Console.WriteLine("Skriv in namnet för den nya bankkontotypen");
+                }
+                else
+                {
+                    Console.WriteLine("Skriv in namnet för den nya lånekontotypen");
+                }
+                
+                name = Console.ReadLine();
+                Console.WriteLine("Skriv in procentenheten för räntan av det nya kontot");
+                noError = Decimal.TryParse(Console.ReadLine(), out interest);
+                if (!noError)
+                {
+                    Console.WriteLine("Ogiltigt värde, skriv in en procentenhet för räntan.");
+                    Utility.PressEnterToContinue();
+                }
+            } while (!noError);
 
+            // Asks admin to confirm if they do want to create new bank account type
+            // if no, admin is returned to previous method.
+            do
+            {
+                Console.Clear();
+                if (isBankAccount)
+                {
+                    Console.WriteLine($"Bankkontotypen {name} med räntan {interest}% kommer skapas. " +
+                        $"Godkänner du detta? J/N");
+                }
+                else
+                {
+                    Console.WriteLine($"Lånekontotypen {name} med räntan {interest}% kommer skapas. " +
+                        $"Godkänner du detta? J/N");
+                }
+                answer = Console.ReadLine().ToUpper();
+                // If admin does confirm they want to create a new account type,
+                // new bank or loan account type is created.
+                switch (answer)
+                {
+                    case "J":
+                        if (isBankAccount)
+                        {
+                            DataBase.BankAccountTypes.Add(name, interest);
+                        }
+                        else
+                        {
+                            DataBase.LoanAccountTypes.Add(name, interest);
+                        }
+                        break;
+                    case "N":
+                        return;
+                    default:
+                        Console.WriteLine("Fel input, välj antingen J/N");
+                        Utility.PressEnterToContinue();
+                        break;
+                }
+            } while (answer != "J" && answer != "N");
+            Console.WriteLine($"Kontotypen {name} har skapats.");
+            Utility.PressEnterToContinue();
+
+        }
+        // Method for updating interest of current bank or loan account type.
+        public static void UpdateExistingAccountType(bool isBankAccount)
+        {
+            bool noError;
+            int index;
+            string key;
+            decimal newValue;
+            string answer;
+            do
+            {
+                Console.Clear();
+                // If user selected bank account type, print out bank account types.
+                if (isBankAccount)
+                {
+                    DataBase.PrintAccountTypes();
+                    
+                }
+                // If user selected loan account type, print out loan account types.
+                else
+                {
+                    DataBase.PrintLoanAccountTypes();
+                }
+                Console.WriteLine("Vilken kontotyp vill du ändra? Välj genom att skriva in siffra.");
+                noError = Int32.TryParse(Console.ReadLine(), out index);
+                index -= 1;
+                // Gets key from bank or loan account type using its index.
+                if (isBankAccount)
+                {
+                    key = DataBase.GetKeyFromBankTypeIndex(index);
+                }
+                else
+                {
+                    key = DataBase.GetKeyFromLoanTypeIndex(index);
+                }
+                if (!noError || !DataBase.BankAccountTypes.ContainsKey(key) && !DataBase.LoanAccountTypes.ContainsKey(key))
+                {
+                    Console.WriteLine("Ogiltigt val. Skriv in en giltig siffra.");
+                    Utility.PressEnterToContinue();
+                }
+            } while (!noError || !DataBase.BankAccountTypes.ContainsKey(key) && !DataBase.LoanAccountTypes.ContainsKey(key));
+            // We now have the key, admin is asked to input its new interest rate.
+            do
+            {
+                Console.Clear();
+                Console.WriteLine($"Mata in procentenheten av det nya värdet på {key}");
+                noError = Decimal.TryParse(Console.ReadLine(), out newValue);
+                if (!noError)
+                {
+                    Console.WriteLine("Ogiltigt val. Skriv in en giltig procentenhet.");
+                    Utility.PressEnterToContinue();
+                }
+            } while (!noError);
+            // Admin is asked to confirm whether they do want to change the interest rate
+            // of the bank or loan account type.
+            do
+            {
+                Console.Clear();
+                Console.WriteLine($"Räntan på kontotypen {key} kommer ändras till {newValue}. " +
+                    $"Godkänner du detta? J/N");
+                answer = Console.ReadLine().ToUpper();
+                switch (answer)
+                {
+                    case "J":
+                        if (isBankAccount)
+                        {
+                            DataBase.BankAccountTypes[key] = newValue;
+                        }
+                        else
+                        {
+                            DataBase.LoanAccountTypes[key] = newValue;
+                        }
+                        break;
+                    case "N":
+                        return;
+                    default:
+                        Console.WriteLine("Fel input, välj antingen J/N");
+                        Utility.PressEnterToContinue();
+                        break;
+                }
+            } while (answer != "J" && answer != "N");
+
+            Console.WriteLine($"Den nya räntan på {key} är nu {newValue}");
+            Utility.PressEnterToContinue();
         }
     }
 }

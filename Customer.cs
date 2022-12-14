@@ -176,6 +176,9 @@ namespace KiwiBankomaten
                 {
                     // Adds money into newly created account.
                     BankAccounts[BankAccounts.Keys.Max()].Amount += insertAmount;
+                    // Adds this transfer to the logbook with date, money amount and which account the money was sent to.
+                    BankAccounts[BankAccounts.Keys.Max()].LogList.Add(new Log
+                        (insertAmount, BankAccounts[BankAccounts.Keys.Max()].AccountNumber));
                 }
                 else
                 {
@@ -379,11 +382,15 @@ namespace KiwiBankomaten
                     {
                         // Add converted value to target account.
                         b.Amount += (amountMoney / toRate) * fromRate;
+                        // Adds transaction to log.
+                        b.LogList.Add(new Log(amountMoney, fromAccountNum));
                     }
                     else if (fromAccountNum == b.AccountNumber)
                     {
                         // Withdraw from the source account.
                         b.Amount -= amountMoney;
+                        // Adds transaction to log.
+                        b.LogList.Add(new Log(amountMoney,fromAccountNum, toAccountNum));
                     }
                 }
             }
@@ -525,6 +532,10 @@ namespace KiwiBankomaten
             UserInterface.CurrentMethod($"Summan har nu anlänt på {BankAccounts[1].AccountName}");
             UserInterface.CurrentMethod("Nytt lånekonto har skapats.");
 
+            // Adds transaction to log, first bank account is shown as
+            // having received money from the loan account.
+            BankAccounts[1].LogList.Add(new Log(amountMoney, LoanAccounts[index].AccountNumber));
+
             LoanAccountOverview();
 
         }
@@ -602,6 +613,35 @@ namespace KiwiBankomaten
                 }
             }
             return 0;
+        }
+        // User selects which bank account they want to view the log for.
+        public void ViewLog()
+        {
+            bool noError;
+            int accountChoice;
+            List<Log> reversedList;
+            do
+            {
+                BankAccountOverview();
+                Console.WriteLine("Vilket konto vill du se överföringslogg på?");
+                noError = Int32.TryParse(Console.ReadLine(), out accountChoice);
+                if (!noError || !BankAccounts.Keys.Contains(accountChoice))
+                {
+                    Console.WriteLine("Kontot du valde existerar inte. Skriv in en giltig siffra.");
+                    Utility.PressEnterToContinue();
+                }
+            } while (!noError || !BankAccounts.Keys.Contains(accountChoice));
+            Console.Clear();
+            // We copy the LogList to a new one to ensure we never alter the original.
+            reversedList = new List<Log>(BankAccounts[accountChoice].LogList);
+            // The list is reversed so we print the entries in order of newest to oldest.
+            reversedList.Reverse();
+            foreach (Log l in reversedList)
+            {
+                l.PrintLog();
+            }
+            // Reversed list is un-reversed so we don't print out the wrong order next time.
+            reversedList.Reverse();
         }
     }
 }

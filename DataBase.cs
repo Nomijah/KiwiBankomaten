@@ -72,6 +72,30 @@ namespace KiwiBankomaten
                 { "Billån", 6.3m },
                 { "Blancolån", 12.7m }
             };
+        public static void ViewAccountTypes(int selection)
+        {
+            int i = 1;
+            switch (selection)
+            {
+                case 1:
+                    foreach (KeyValuePair<string, decimal> type in DataBase.BankAccountTypes)
+                    {
+                        Console.WriteLine($"-{i} {type.Key} - {type.Value}");
+                        i++;
+                    }
+                    break;
+                case 2:
+                    foreach (KeyValuePair<string, decimal> type in DataBase.LoanAccountTypes)
+                    {
+                        Console.WriteLine($"-{i} {type.Key} - {type.Value}");
+                        i++;
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Ogiltigt värde, det här borde inte kunna hända. Kontakta en admin.");
+                    break;
+            }
+        }
         // Method returns string key of a bank account type based on its index.
         public static string GetKeyFromBankTypeIndex(int index)
         {

@@ -7,14 +7,8 @@ namespace KiwiBankomaten
     {
         static void Main(string[] args )
         {
-            DataSaver.DSaver("Admins.txt"); //Creates file
-            DataSaver.DSaver("Currencies.txt");//Creates file
-            DataSaver.DSaver("Customers.txt");//Creates file
-            DataSaver.DSaver("BankAccountTypes.txt");//Creates file
-            DataSaver.DSaver("LoanAccountTypes.txt");//Creates file
-
-            Console.WindowWidth = 87;
-            //DataSaver.ShowFile();// showfile method, used for adminmenu
+            // Load database before starting program.
+            DataSaver.LoadDataBase();;
             RunProgram();
         }
         public static void RunProgram()
@@ -181,7 +175,7 @@ namespace KiwiBankomaten
 
                 UserInterface.CurrentMethod($"{obj.UserName}/CustomerMenu/");
 
-                UserInterface.DisplayMenu(new string[] {"Kontoöversikt", 
+                UserInterface.DisplayMenu(new string[] {"Kontoöversikt", "Visa kontologg", 
                     "Överför pengar mellan egna konton", "Öppna nytt konto", 
                     "Överför pengar till annan användare", "Låna pengar", "Logga ut"});
 
@@ -199,21 +193,24 @@ namespace KiwiBankomaten
                         obj.LoanAccountOverview();
                         break;
                     case "2":
+                        obj.ViewLog();
+                        break;
+                    case "3":
                         // Transfers a value between two accounts the user possesses
                         obj.TransferBetweenCustomerAccounts(); 
                         break;
-                    case "3":
+                    case "4":
                         // Opens account for the specific user
                         obj.OpenAccount(); 
                         break;
-                    case "4":
+                    case "5":
                         // Transfer money to other user in bank
                         obj.InternalMoneyTransfer(); 
                         break;
-                    case "5":
+                    case "6":
                         obj.LoanMoney();
                         break;
-                    case "6":
+                    case "7":
                         // Logout
                         LogOut();
 
