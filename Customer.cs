@@ -177,8 +177,8 @@ namespace KiwiBankomaten
                     // Adds money into newly created account.
                     BankAccounts[BankAccounts.Keys.Max()].Amount += insertAmount;
                     // Adds this transfer to the logbook with date, money amount and which account the money was sent to.
-                    //BankAccounts[BankAccounts.Keys.Max()].LogList.Add(new Log
-                    //    (insertAmount, BankAccounts[BankAccounts.Keys.Max()].AccountNumber));
+                    BankAccounts[BankAccounts.Keys.Max()].LogList.Add(new Log
+                        (insertAmount, BankAccounts[BankAccounts.Keys.Max()].AccountNumber));
                 }
                 else
                 {
@@ -383,14 +383,14 @@ namespace KiwiBankomaten
                         // Add converted value to target account.
                         b.Amount += (amountMoney / toRate) * fromRate;
                         // Adds transaction to log.
-                        //b.LogList.Add(new Log(amountMoney, fromAccountNum));
+                        b.LogList.Add(new Log(amountMoney, fromAccountNum));
                     }
                     else if (fromAccountNum == b.AccountNumber)
                     {
                         // Withdraw from the source account.
                         b.Amount -= amountMoney;
                         // Adds transaction to log.
-                        //b.LogList.Add(new Log(amountMoney,fromAccountNum, toAccountNum));
+                        b.LogList.Add(new Log(amountMoney,fromAccountNum, toAccountNum));
                     }
                 }
             }
@@ -533,7 +533,7 @@ namespace KiwiBankomaten
 
             // Adds transaction to log, first bank account is shown as
             // having received money from the loan account.
-            //BankAccounts[1].LogList.Add(new Log(amountMoney, LoanAccounts[index].AccountNumber));
+            BankAccounts[1].LogList.Add(new Log(amountMoney, LoanAccounts[index].AccountNumber));
 
             LoanAccountOverview();
 
