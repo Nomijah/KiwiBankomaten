@@ -179,7 +179,7 @@ namespace KiwiBankomaten
 
                 UserInterface.CurrentMethodMagenta($"{obj.UserName}/CustomerMenu/");
 
-                UserInterface.DisplayMenu(new string[] {"Konto översikt", "Visa kontologg", 
+                UserInterface.DisplayMenu(new string[] {"Kontoöversikt", "Visa kontologg", 
                     "Överför pengar mellan egna konton", "Öppna nytt konto", 
                     "Överför pengar till annan användare", "Låna pengar", "Logga ut"});
 
