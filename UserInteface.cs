@@ -122,22 +122,64 @@ public class UserInterface
     public static void CurrentMethod(string message)
     {
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.Write($" |{message}");
-        Utility.MoveCursorTo(85);
-    }
-    public static void CurrentMethod(string message, string message2)
-    {
-        Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.Write($" |{message}");
-        Utility.MoveCursorTo(85);
-        Console.Write($" |{message2}");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write($"{message}");
+        Console.ForegroundColor = ConsoleColor.White;
         Utility.MoveCursorTo(85);
     }
 
+    public static void CurrentMethodMagenta(string message)
+    {
+        Console.WriteLine(" +-----------------------------------------------------------------------------------+");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.Write($"{message}");
+        Console.ForegroundColor = ConsoleColor.White;
+        Utility.MoveCursorTo(85);
+    }
+
+    public static void CurrentMethodRed(string message)
+    {
+        Console.WriteLine(" +-----------------------------------------------------------------------------------+");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write($"{message}");
+        Console.ForegroundColor = ConsoleColor.White;
+        Utility.MoveCursorTo(85);
+    }
+    public static void CurrentMethodGreen(string message)
+    {
+        Console.WriteLine(" +-----------------------------------------------------------------------------------+");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.DarkGreen;
+        Console.Write($"{message}");
+        Console.ForegroundColor = ConsoleColor.White;
+        Utility.MoveCursorTo(85);
+    }
+
+    public static void CurrentMethodRed(string message, string message2)
+    {
+        Console.WriteLine(" +-----------------------------------------------------------------------------------+");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write($"{message}");
+        Console.ForegroundColor = ConsoleColor.White;
+        Utility.MoveCursorTo(85);
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write($"{message2}");
+        Console.ForegroundColor = ConsoleColor.White;
+        Utility.MoveCursorTo(85);
+    }
+    
     public static void DisplayAdminMessage()
     {
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.Write(" |Admin Menyn! Super Secret!");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.Write("Admin Menyn! Super Secret!");
+        Console.ForegroundColor = ConsoleColor.White;
         Utility.MoveCursorTo(85);
     }
 
@@ -145,14 +187,20 @@ public class UserInterface
     public static void DisplayWelcomeMessageLoggedIn(int userKey)
     {
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.Write(" |Välkommen: {0}", DataBase.CustomerDict[userKey].UserName);
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.Write("Välkommen: {0}", DataBase.CustomerDict[userKey].UserName);
+        Console.ForegroundColor = ConsoleColor.White;
         Utility.MoveCursorTo(85);
     }
 
     public static void DisplayAdminMessageLoggedIn(int adminKey)
     {
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.Write(" |Välkommen Admin: {0}", DataBase.AdminList[adminKey].UserName);
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.Write("Välkommen Admin: {0}", DataBase.AdminList[adminKey].UserName);
+        Console.ForegroundColor = ConsoleColor.White;
         Utility.MoveCursorTo(85);
     }
 
@@ -160,11 +208,17 @@ public class UserInterface
     public static void DisplayMenu(string[] options)
     {
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.Write(" |Välj ett av följande alternativ:");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write("Välj ett av följande alternativ:");
+        Console.ForegroundColor = ConsoleColor.White;
         Utility.MoveCursorTo(85);
         for (int i = 0; i < options.Length; i++)
         {
-            Console.Write($" |-{i + 1}) {options[i]}");
+            Console.Write(" |");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.Write($"-{i + 1}) {options[i]}");
+            Console.ForegroundColor = ConsoleColor.White;
             Utility.MoveCursorTo(85);
         }
 
@@ -179,10 +233,10 @@ public class UserInterface
         // Gets user input => Checks if it's a decimal => Checks if it's larger than 0
         while (!decimal.TryParse(Console.ReadLine(), out selection) || selection <= 0)
         {
-            UserInterface.DisplayMessage("|Ogiltigt inmatning. Inmatningen måste vara ett positivt nummer " +
-                "\n |Vänligen försök igen.");
+            UserInterface.CurrentMethodRed("Ogiltigt inmatning. Inmatningen måste vara ett positivt nummer, " +
+                "försök igen.");
             Utility.PressEnterToContinue();
-            Utility.RemoveLines(6);
+            Utility.RemoveLines(5);
              Console.Write("  Ange ditt val: ");
         }
         return selection;
@@ -198,10 +252,10 @@ public class UserInterface
         // Gets user input => Checks if it's an integer => Checks if it's in the set range
         while (!int.TryParse(Console.ReadLine(), out selection) || selection < min || selection > max)
         {
-            UserInterface.DisplayMessage($"|Ogiltigt inmatning. Inmatningen måste vara inom [{min} - {max}] " +
-               "\n |Vänligen försök igen.");
+            UserInterface.CurrentMethodRed($"Ogiltigt inmatning. Inmatningen måste vara inom [{min} - {max}], " +
+               "försök igen.");
             Utility.PressEnterToContinue();
-            Utility.RemoveLines(6);
+            Utility.RemoveLines(5);
              Console.Write("  Ange ditt val: ");
         }
         return selection;
@@ -217,10 +271,10 @@ public class UserInterface
         // Gets user input => Checks if it's an integer => Checks if it's in the set range
         while (!int.TryParse(Console.ReadLine(), out selection) || selection < min || selection > max)
         {
-            UserInterface.DisplayMessage($"|Ogiltigt inmatning. Inmatningen måste vara inom [{min} - {max}] " +
-                "\n |Vänligen försök igen.");
+            UserInterface.CurrentMethodRed($"Ogiltigt inmatning. Inmatningen måste vara inom [{min} - {max}], " +
+                "försök igen.");
             Utility.PressEnterToContinue();
-            Utility.RemoveLines(6);
+            Utility.RemoveLines(5);
             Console.Write($"  {prompt}: ");
         }
         return selection;
@@ -255,7 +309,10 @@ public class UserInterface
     public static string QuestionForString(string question)
     {
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.Write($" |{question}");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write($"{question}");
+        Console.ForegroundColor = ConsoleColor.White;
         Utility.MoveCursorTo(85);
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
          Console.Write("  Ange ditt val: ");
@@ -267,7 +324,10 @@ public class UserInterface
     public static string QuestionForString(string question, string prompt)
     {
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.Write($" |{question}");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write($"{question}");
+        Console.ForegroundColor = ConsoleColor.White;
         Utility.MoveCursorTo(85);
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
         Console.Write($"  {prompt}: ");
@@ -279,7 +339,10 @@ public class UserInterface
     public static string QuestionForString(string question, out string value)
     {
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.Write($" |{question}");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write($"{question}");
+        Console.ForegroundColor = ConsoleColor.White;
         Utility.MoveCursorTo(85);
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
          Console.Write("  Ange ditt val: ");
@@ -299,7 +362,10 @@ public class UserInterface
     public static decimal QuestionForDecimal(string question, out decimal value)
     {
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.Write($" |{question}");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write($"{question}");
+        Console.ForegroundColor = ConsoleColor.White;
         Utility.MoveCursorTo(85);
 
         value = IsValueNumberCheck();
@@ -310,7 +376,10 @@ public class UserInterface
     public static int QuestionForIntMax(string question, out int value, int max )
     {
         Console.WriteLine(" +-----------------------------------------------------------------------------------+");
-        Console.Write($" |{question}");
+        Console.Write(" |");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write($"{question}");
+        Console.ForegroundColor = ConsoleColor.White;
         Utility.MoveCursorTo(85);
         
         value = IsValueNumberCheck(max);

@@ -76,7 +76,7 @@ namespace KiwiBankomaten
                         
                     //If neither of these options are used the defaultmsg is displayed
                     default:
-                        UserInterface.CurrentMethod("Felaktigt val, försök igen.");
+                        UserInterface.CurrentMethodRed("Felaktigt val, försök igen.");
                         Utility.PressEnterToContinue();
                         Utility.RemoveLines(6);
                         break;
@@ -112,13 +112,13 @@ namespace KiwiBankomaten
                 }
                 if (!(i <= 0))
                 {
-                    UserInterface.CurrentMethod($"Fel Användarnamn. Du har nu {i} försök kvar, vänligen försök igen");
+                    UserInterface.CurrentMethodRed($"Fel Användarnamn. Du har nu {i} försök kvar, vänligen försök igen");
                     Utility.PressEnterToContinue();
                     Utility.RemoveLines(8);
                 }
                 else
                 {
-                    UserInterface.CurrentMethod("Fel Användarnamn. Ingen användare med det namnet hittades.");
+                    UserInterface.CurrentMethodRed("Fel Användarnamn. Ingen användare med det namnet hittades.");
                     Utility.PressEnterToContinue();
                 }
             }
@@ -151,13 +151,13 @@ namespace KiwiBankomaten
                 }
                 if (!(i <= 0))
                 {
-                    UserInterface.CurrentMethod($"Fel Användarnamn. Du har nu {i} försök kvar, vänligen försök igen");
+                    UserInterface.CurrentMethodRed($"Fel Användarnamn. Du har nu {i} försök kvar, vänligen försök igen");
                     Utility.PressEnterToContinue();
                     Utility.RemoveLines(8);
                 }
                 else
                 {
-                    UserInterface.CurrentMethod("Fel Användarnamn. Ingen användare med det namnet hittades.");
+                    UserInterface.CurrentMethodRed("Fel Användarnamn. Ingen användare med det namnet hittades.");
                     Utility.PressEnterToContinue();
                 }
             }
@@ -177,9 +177,9 @@ namespace KiwiBankomaten
                 // Creates an instance of the loggedIn user in database
                 Customer obj = DataBase.CustomerDict[userKey];
 
-                UserInterface.CurrentMethod($"{obj.UserName}/CustomerMenu/");
+                UserInterface.CurrentMethodMagenta($"{obj.UserName}/CustomerMenu/");
 
-                UserInterface.DisplayMenu(new string[] {"Kontoöversikt", "Visa kontologg", 
+                UserInterface.DisplayMenu(new string[] {"Konto översikt", "Visa kontologg", 
                     "Överför pengar mellan egna konton", "Öppna nytt konto", 
                     "Överför pengar till annan användare", "Låna pengar", "Logga ut"});
 
@@ -191,7 +191,7 @@ namespace KiwiBankomaten
                 {
                     case "1":
                         // Overviews the Accounts and their respective balances
-                        UserInterface.CurrentMethod($"{obj.UserName}/CustomerMenu/" +
+                        UserInterface.CurrentMethodMagenta($"{obj.UserName}/CustomerMenu/" +
                     $"AccountOverview/");
                         obj.BankAccountOverview();
                         obj.LoanAccountOverview();
@@ -221,7 +221,7 @@ namespace KiwiBankomaten
                         break;
 
                     default:
-                        Console.WriteLine("Ogiltigt val, ange ett nummer från listan.");
+                        UserInterface.CurrentMethodRed("Ogiltigt val, ange ett nummer från listan.");
                         break;
                 }
                 
