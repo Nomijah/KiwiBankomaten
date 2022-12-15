@@ -12,8 +12,6 @@ Admin functions include being able see the see the complete lists of admins, use
 Further functions in the program include: Users can choose currency when creating accounts. The transfers between accounts with different currencies are converted according to current exchange rates. The currencies are updated by the admins. Login attempts are limited to three tries and blocks the user until admin gives access. The program saves the data from the program database in local textfiles, which can be read as a database. The changes are written in the database between program runs. The users must login using a unique username. The program looks good esthetically with clean menus, coloring and a designed ascii art logo.
 ## Authors and acknowledgment
 The creators are: Charlie (https://github.com/Challeskib), Daniel (https://github.com/DanielDarwiche), Petter (https://github.com/Nomijah), Max (https://github.com/MaxDBerg), Jonathan (https://github.com/JonathanLudvigsson)
-## Kanban Board
-![Skärmavbild 2022-12-15 kl  10 44 20](https://user-images.githubusercontent.com/114058073/207826986-4b8bae78-4022-412a-8265-f127c29abdb3.png)
 ## Project status
 Finished
 ## License
