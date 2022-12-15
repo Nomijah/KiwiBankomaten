@@ -101,6 +101,7 @@ namespace KiwiBankomaten
                     break;
             }
         }
+
         // Method returns string key of a bank account type based on its index.
         public static string GetKeyFromBankTypeIndex(int index)
         {
@@ -114,6 +115,7 @@ namespace KiwiBankomaten
                 return "";
             }
         }
+
         // Method returns string key of a loan account type based on its index.
         public static string GetKeyFromLoanTypeIndex(int index)
         {
