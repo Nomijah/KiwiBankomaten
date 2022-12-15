@@ -1,7 +1,6 @@
 # KiwiBankomaten
 ## Description
 KiwiBankomaten is a object oriented C# program made to function as a digital bank, as a school group project.
-
 ## Visuals 
 Visuals of the main menu and the ascii art logo
 ![Skärmbild_20221215_100722](https://user-images.githubusercontent.com/114058073/207826125-acbc8822-2e5c-47b7-8094-8b58bd270c01.png)
@@ -20,8 +19,7 @@ The creators are: Charlie (https://github.com/Challeskib), Daniel (https://githu
 
 
 ## Kanban Board
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxx
-
+![Skärmavbild 2022-12-15 kl  10 44 20](https://user-images.githubusercontent.com/114058073/207826986-4b8bae78-4022-412a-8265-f127c29abdb3.png)
 ## License
 MIT License
 
