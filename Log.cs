@@ -12,8 +12,21 @@ namespace KiwiBankomaten
         public string Currency { get; set; }
         public int FromWhichAccount { get; set; }
         public int ToWhichAccount { get; set; }
+
         // Is used to see if account is receiving or sending money.
         public bool ReceivingMoney { get; set; }
+
+        // Used when reading from file to DataBase.
+        public Log(decimal amount, string currency, int fromAcc, bool receive,
+            DateTime time, int toAcc)
+        {
+            AmountTransferred = amount;
+            Currency = currency;
+            FromWhichAccount = fromAcc;
+            ReceivingMoney = receive;
+            TimeOfTransfer = time;
+            ToWhichAccount = toAcc;
+        }
 
         // Used when receiving money from another account.
         public Log(decimal amountTransferred, int fromWhichAccount)
@@ -34,6 +47,7 @@ namespace KiwiBankomaten
             FromWhichAccount = fromWhichAccount;
             ReceivingMoney = true;
         }
+
         // Used when sending money to another account.
         public Log(decimal amountTransferred, int fromWhichAccount, int toWhichAccount)
         {
@@ -54,6 +68,7 @@ namespace KiwiBankomaten
             ToWhichAccount = toWhichAccount;
             ReceivingMoney = false;
         }
+
         // Prints out the relevant info from the log, different output
         // depending on whether you received or sent money.
         public void PrintLog()

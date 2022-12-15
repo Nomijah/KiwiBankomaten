@@ -62,6 +62,14 @@ namespace KiwiBankomaten
                             c.Id, item.Key, item.Value.AccountNumber,
                             item.Value.AccountName, item.Value.Amount,
                             item.Value.Currency, item.Value.Interest);
+                        // Add info from log.
+                        foreach (Log l in item.Value.LogList)
+                        {
+                            sw.Write("{0};{1};{2};{3};{4};{5};{6};{7};\n",
+                                item.Value.AccountNumber, l.AmountTransferred,
+                                l.Currency, l.FromWhichAccount, l.ReceivingMoney,
+                                l.TimeOfTransfer, l.ToWhichAccount, c.Id);
+                        }
                     }
                 }
             }
@@ -126,7 +134,6 @@ namespace KiwiBankomaten
             }
             // closes stream
             sw.Close();
-            Console.WriteLine("Fil skapades");
         }
 
         // Writes from file to DataBase.
@@ -158,6 +165,8 @@ namespace KiwiBankomaten
             else if (fileName == "BankAccounts.txt")
             {
                 string[] lines = sr.ReadToEnd().Split("\n");
+                // For current account key to use when writing log info.
+                int tempKey = 0;
                 foreach (Customer c in DataBase.CustomerDict.Values)
                 {
                     // Clear dictionary
@@ -167,15 +176,42 @@ namespace KiwiBankomaten
                         if (item != "")
                         {
                             string[] temp = item.Split(" ");
-                            // Check that account is owned by Customer and add
-                            // to customers bankAccounts if true.
-                            if (temp[2] == Convert.ToString(c.Id))
+                            // Check if row contains bank account info.
+                            if (temp[0] == "Customer")
                             {
-                                // Write info to DataBase.
-                                c.BankAccounts.Add(Convert.ToInt32(temp[5]),
-                                    new BankAccount(Convert.ToInt32(temp[7]),
-                                    temp[9], Convert.ToDecimal(temp[11]),
-                                    temp[13], Convert.ToDecimal(temp[15])));
+                                // Check that account is owned by Customer and add
+                                // to customers bankAccounts if true.
+                                if (temp[2] == Convert.ToString(c.Id))
+                                {
+                                    // Write info to DataBase.
+                                    c.BankAccounts.Add(Convert.ToInt32(temp[5]),
+                                        new BankAccount(Convert.ToInt32(temp[7]),
+                                        temp[9], Convert.ToDecimal(temp[11]),
+                                        temp[13], Convert.ToDecimal(temp[15])));
+                                    tempKey = Convert.ToInt32(temp[5]);
+                                }
+                            }
+                            // Else it is log connected to previous account.
+                            else
+                            {
+                                string[] logSplit = item.Split(";");
+                                // Check that account is owned by Customer and add
+                                // to customers bankAccounts if true.
+                                if (logSplit[7] == Convert.ToString(c.Id))
+                                {
+                                    // Makes sure that the log is linked to correct
+                                    // account number.
+                                    if (Convert.ToInt32(logSplit[0]) ==
+                                    c.BankAccounts[tempKey].AccountNumber)
+                                    {
+                                        c.BankAccounts[tempKey].LogList.Add(
+                                            new Log(Convert.ToDecimal(logSplit[1]),
+                                            logSplit[2], Convert.ToInt32(logSplit[3]),
+                                            Convert.ToBoolean(logSplit[4]),
+                                            Convert.ToDateTime(logSplit[5]),
+                                            Convert.ToInt32(logSplit[6])));
+                                    }
+                                }
                             }
                         }
                     }
@@ -285,7 +321,6 @@ namespace KiwiBankomaten
             {
                 Console.WriteLine("File doesn't exist.");
             }
-
             sr.Close();
         }
 
@@ -326,8 +361,6 @@ namespace KiwiBankomaten
                     break;
             }
         }
-
-
 
         // DataSaver.DataReading("Customer.txt");  HOW TO USE
         public static void DataReading(string fileName)
