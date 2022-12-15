@@ -46,11 +46,14 @@ namespace KiwiBankomaten
         // Prints out currrency list with current exchange rates.
         public static void PrintCurrencies()
         {
-            UserInterface.CurrentMethod("Tillgängliga valutor");
+            UserInterface.CurrentMethod("Tillgängliga valutor:");
 
             foreach (string currency in DataBase.ExchangeRates.Keys)
             {
-                Console.Write($" |{currency}");
+                Console.Write(" |");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.Write($"-{currency})");
+                Console.ForegroundColor = ConsoleColor.White;
                 Utility.MoveCursorTo(85);
             }
         }
@@ -78,26 +81,31 @@ namespace KiwiBankomaten
             switch (selection)
             {
                 case 1:
-                    UserInterface.CurrentMethod("Bankonton");
+                    UserInterface.CurrentMethod("Bankkonton");
                     foreach (KeyValuePair<string, decimal> type in DataBase.BankAccountTypes)
                     {
-                        Console.Write($" |-{i} {type.Key} - {type.Value}");
+                        Console.Write(" |");
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.Write($"-{i} {type.Key} - {type.Value}");
+                        Console.ForegroundColor = ConsoleColor.White;
                         Utility.MoveCursorTo(85);
                         i++;
                     }
                     break;
                 case 2:
-                    UserInterface.CurrentMethod("Lånkonton");
+                    UserInterface.CurrentMethod("Lånekonton");
                     foreach (KeyValuePair<string, decimal> type in DataBase.LoanAccountTypes)
                     {
-
-                        Console.Write($" |-{i} {type.Key} - {type.Value}");
+                        Console.Write(" |");
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.Write($"-{i} {type.Key} - {type.Value}");
+                        Console.ForegroundColor = ConsoleColor.White;
                         Utility.MoveCursorTo(85);
                         i++;
                     }
                     break;
                 default:
-                    Console.WriteLine("Ogiltigt värde, det här borde inte kunna hända. Kontakta en admin.");
+                    UserInterface.CurrentMethod("Ogiltigt värde, det här borde inte kunna hända. Kontakta en admin.");
                     break;
             }
         }
@@ -133,12 +141,15 @@ namespace KiwiBankomaten
         // Prints out account types with interest values.
         public static void PrintAccountTypes()
         {
-            UserInterface.CurrentMethod("Kontotyper:");
+            UserInterface.CurrentMethod("Bankkonton:");
             int i = 1;
             foreach (KeyValuePair<string, decimal> type in BankAccountTypes)
             {
-                Console.Write($" |-{i}). {type.Key}, " +
+                Console.Write(" |");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.Write($"-{i}). {type.Key}, " +
                     $"ränta: {type.Value}");
+                Console.ForegroundColor = ConsoleColor.White;
                 Utility.MoveCursorTo(85);
                 i++;
             }
@@ -146,12 +157,15 @@ namespace KiwiBankomaten
 
         public static void PrintLoanAccountTypes()
         {
-            UserInterface.CurrentMethod("Kontotyper:");
+            UserInterface.CurrentMethod("Lånekonton:");
             int i = 1;
             foreach (KeyValuePair<string, decimal> type in LoanAccountTypes)
             {
-                Console.Write($" |{i}. {type.Key}, " +
+                Console.Write(" |");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.Write($"{i}. {type.Key}, " +
                     $"ränta: {type.Value}");
+                Console.ForegroundColor = ConsoleColor.White;
                 Utility.MoveCursorTo(85);
                 i++;
             }

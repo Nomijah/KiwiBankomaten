@@ -73,19 +73,40 @@ namespace KiwiBankomaten
         // depending on whether you received or sent money.
         public void PrintLog()
         {
+            Console.WriteLine(" +-----------------------------------------------------------------------------------+");
+            Console.Write(" |");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             if (ReceivingMoney)
             {
-                Console.WriteLine($"Datum: {TimeOfTransfer}\n" +
-                    $"Mängd mottaget: {Utility.AmountDecimal(AmountTransferred)} {Currency}\n" +
-                    $"Från konto: {FromWhichAccount}\n" +
-                    $"-------------------------------");
+                Console.Write($"Datum: {TimeOfTransfer}");
+                Console.ForegroundColor = ConsoleColor.White;
+                Utility.MoveCursorTo(85);
+                Console.Write(" |");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.Write($"Mängd mottaget: {Utility.AmountDecimal(AmountTransferred)} {Currency}");
+                Console.ForegroundColor = ConsoleColor.White;
+                Utility.MoveCursorTo(85);
+                Console.Write(" |");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.Write($"Från konto: {FromWhichAccount}");
+                Console.ForegroundColor = ConsoleColor.White;
+                Utility.MoveCursorTo(85);
             }
             else
             {
-                Console.WriteLine($"Datum: {TimeOfTransfer}\n" +
-                    $"Mängd skickat: {Utility.AmountDecimal(AmountTransferred)} {Currency}\n" +
-                    $"Till konto: {ToWhichAccount}\n" +
-                    $"-------------------------------");
+                Console.Write($"Datum: {TimeOfTransfer}");
+                Console.ForegroundColor = ConsoleColor.White;
+                Utility.MoveCursorTo(85);
+                Console.Write(" |");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.Write($"Mängd skickat: {Utility.AmountDecimal(AmountTransferred)} {Currency}");
+                Console.ForegroundColor = ConsoleColor.White;
+                Utility.MoveCursorTo(85);
+                Console.Write(" |");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.Write($"Från konto: {FromWhichAccount}");
+                Console.ForegroundColor = ConsoleColor.White;
+                Utility.MoveCursorTo(85);
             }
 
         }

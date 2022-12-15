@@ -14,14 +14,14 @@ namespace KiwiBankomaten
 
                 if (UserInterface.QuestionForString("Ange ditt Lösenord", "Lösenord") == DataBase.CustomerDict[userKey].Password)
                 {
-                    UserInterface.CurrentMethod("Rätt Lösenord. Du loggas nu in");
+                    UserInterface.CurrentMethodGreen("Rätt Lösenord. Du loggas nu in");
                     return true;
                 }
                 else
                 {
                     if (!(i == 0))
                     {
-                        UserInterface.CurrentMethod($"Fel lösenord, du har nu {i} försök kvar. Försök igen");
+                        UserInterface.CurrentMethodRed($"Fel lösenord, du har nu {i} försök kvar. Försök igen");
                         PressEnterToContinue();
                         RemoveLines(8);
                     }
@@ -43,20 +43,20 @@ namespace KiwiBankomaten
 
                 if (UserInterface.QuestionForString("Ange ditt Lösenord", "Lösenord") == DataBase.AdminList[adminKey].Password)
                 {
-                    UserInterface.CurrentMethod("Rätt Lösenord. Du loggas nu in");
+                    UserInterface.CurrentMethodGreen("Rätt Lösenord. Du loggas nu in");
                     return true;
                 }
                 else
                 {
                     if (!(i == 0))
                     {
-                        UserInterface.CurrentMethod($"Fel Lösenord. Du har nu {i} försök kvar, vänligen försök igen");
+                        UserInterface.CurrentMethodRed($"Fel Lösenord. Du har nu {i} försök kvar, vänligen försök igen");
                         Utility.PressEnterToContinue();
                         Utility.RemoveLines(8);
                     }
                     else
                     {
-                        UserInterface.CurrentMethod("Fel Lösenord. Ingen användare med det lösenordet hittades.");
+                        UserInterface.CurrentMethodRed("Fel Lösenord. Ingen användare med det lösenordet hittades.");
                         Utility.PressEnterToContinue();
                     }
                 }
@@ -72,7 +72,7 @@ namespace KiwiBankomaten
             {
                 DataBase.CustomerDict[userKey].Locked = true;//locks user if 3 fails occur
 
-                UserInterface.CurrentMethod("Du har angett fel lösenord 3 gånger, ditt konto är låst. Kontakta admin");
+                UserInterface.CurrentMethodRed("Du har angett fel lösenord 3 gånger, ditt konto är låst. Kontakta admin");
 
                 PressEnterToContinue();
 
@@ -91,7 +91,10 @@ namespace KiwiBankomaten
         // Stops the program until the user presses "Enter"
         public static void PressEnterToContinue()
         {
-            UserInterface.DisplayMessage("Klicka Enter för att fortsätta.");
+            Console.WriteLine(" +-----------------------------------------------------------------------------------+");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("  Klicka Enter för att fortsätta.");
+            Console.ForegroundColor = ConsoleColor.White;
             // Gets the input from the user
             ConsoleKey enterPressed = Console.ReadKey(true).Key;
             // Loops if the user Presses any button other than "Enter"
@@ -112,7 +115,7 @@ namespace KiwiBankomaten
             // Loops if the user Presses any button other than "Enter"
             while (userInput != ConsoleKey.Enter && userInput != ConsoleKey.Escape)
             {
-                UserInterface.DisplayMessage("|Felaktig inmatning, välj Enter för att försöka " +
+                UserInterface.CurrentMethodRed("Felaktig inmatning, välj Enter för att försöka " +
                     "igen eller Esc för att återgå till huvudmenyn.");
                 userInput = Console.ReadKey(true).Key;
             }
@@ -130,16 +133,35 @@ namespace KiwiBankomaten
         {
             do
             {
-                UserInterface.CurrentMethod(input);
+                UserInterface.CurrentMethodGreen(input);
                 switch (UserInterface.QuestionForString(input2).ToUpper())
                 {
                     case "J":
                         return false;
                     case "N":
-                        RemoveLines(8);
                         return true;
                     default:
-                        UserInterface.CurrentMethod("Felaktig inmatning", "Välj [J] för ja eller N för nej.");
+                        UserInterface.CurrentMethodRed("Felaktig inmatning", "Välj [J] för ja eller N för nej.");
+                        PressEnterToContinue();
+                        RemoveLines(11);
+                        break;
+
+                }
+            } while (true);
+        }
+        public static bool YesOrNoAdmin(string input, string input2)
+        {
+            do
+            {
+                UserInterface.CurrentMethodGreen(input);
+                switch (UserInterface.QuestionForString(input2).ToUpper())
+                {
+                    case "J":
+                        return false;
+                    case "N":
+                        return true;
+                    default:
+                        UserInterface.CurrentMethodRed("Felaktig inmatning", "Välj [J] för ja eller N för nej.");
                         PressEnterToContinue();
                         RemoveLines(11);
                         break;
@@ -159,12 +181,32 @@ namespace KiwiBankomaten
                     case "N":
                         return true;
                     default:
-                        UserInterface.CurrentMethod("Felaktig inmatning", "Välj [J] för ja eller [N] för nej.");
+                        UserInterface.CurrentMethodRed("Men seriöst kan du inte följa dem mest grundläggande instruktioner?");
                         PressEnterToContinue();
-                        RemoveLines(9);
+                        RemoveLines(8);
                         break;
 
                 } 
+            } while (true);
+        }
+        public static bool YesOrNoAdmin(string input)
+        {
+
+            do
+            {
+                switch (UserInterface.QuestionForString(input).ToUpper())
+                {
+                    case "J":
+                        return false;
+                    case "N":
+                        return true;
+                    default:
+                        UserInterface.CurrentMethodRed("Men seriöst kan du inte följa dem mest grundläggande instruktioner?");
+                        PressEnterToContinue();
+                        RemoveLines(8);
+                        break;
+
+                }
             } while (true);
         }
 
