@@ -324,6 +324,9 @@ namespace KiwiBankomaten
             sr.Close();
         }
 
+
+        // This method is not ready yet!!
+
         // Menu for admin, to see the contents of the databasefiles, as chosen
         public static void ShowFile()
         {
