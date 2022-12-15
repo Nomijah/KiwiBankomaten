@@ -17,12 +17,13 @@ namespace KiwiBankomaten
         public bool ReceivingMoney { get; set; }
 
         // Used when reading from file to DataBase.
-        public Log(decimal amount, string currency, int fromAcc, DateTime time,
-            int toAcc)
+        public Log(decimal amount, string currency, int fromAcc, bool receive,
+            DateTime time, int toAcc)
         {
             AmountTransferred = amount;
             Currency = currency;
             FromWhichAccount = fromAcc;
+            ReceivingMoney = receive;
             TimeOfTransfer = time;
             ToWhichAccount = toAcc;
         }
