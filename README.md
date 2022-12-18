@@ -17,6 +17,10 @@ Finished
 ## License
 MIT License
 
+Link to UML: https://lucid.app/lucidchart/b6dd124a-5bc5-4658-99b9-6307e9a6a85a/edit?viewport_loc=323%2C-817%2C3678%2C1808%2C0_0&invitationId=inv_b18fd4bd-22d6-48f8-9f83-558f2eb1e1da
+
+Link to SCRUM Board: https://trello.com/invite/b/AssPe931/ATTIa8ec07cf48d0e7101cc4ba1c6642158d1019BD53/projektuppgift-sut22-grupp-kiwi
+
 Copyright (c) [2022] [KiwiBankomaten]
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
