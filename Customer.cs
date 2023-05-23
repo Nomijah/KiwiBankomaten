@@ -300,6 +300,7 @@ namespace KiwiBankomaten
         //Initalizes the transfer between accounts
         public void TransferBetweenCustomerAccounts()
         {
+            
             decimal amountMoney = 0;
             int transferFrom = 0;
             int transferTo = 0;
@@ -458,6 +459,7 @@ namespace KiwiBankomaten
             UserInterface.CurrentMethodMagenta($"{UserName}/CustomerMenu/" +
                     $"InternalMoneyTransfer/");
 
+            //visar meddelande
             DisplayTransferBetweenCustomerAccounts(transferFrom, amountMoney, transferTo);
 
             UserInterface.QuestionForIntMax("Från vilket konto vill du föra över pengarna?", out transferFrom, BankAccounts.Count);
@@ -475,6 +477,7 @@ namespace KiwiBankomaten
 
                 DisplayTransfer(transferFrom, amountMoney, transferTo);
 
+                //om correctAcountNumber inte är sant
                 correctAccountNumber = CheckIfAccountExists(transferTo);
                 if (!correctAccountNumber)
                 {
@@ -489,6 +492,7 @@ namespace KiwiBankomaten
                 }
             } while (!correctAccountNumber);
 
+            //överföringsmmetod med inparameter (bankkontot)
             TransferMoney(transferTo,
             BankAccounts[transferFrom].AccountNumber, amountMoney);
             
