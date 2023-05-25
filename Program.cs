@@ -8,7 +8,6 @@ namespace KiwiBankomaten
         static void Main(string[] args)
         {
             // Load database before starting program.
-            // Load database before starting program.
             DataSaver.LoadDataBase(); ;
             RunProgram();
         }
