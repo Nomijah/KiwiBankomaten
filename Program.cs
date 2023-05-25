@@ -5,10 +5,11 @@ namespace KiwiBankomaten
 {
     internal class Program
     {
-        static void Main(string[] args )
+        static void Main(string[] args)
         {
             // Load database before starting program.
-            DataSaver.LoadDataBase();;
+            // Load database before starting program.
+            DataSaver.LoadDataBase(); ;
             RunProgram();
         }
         public static void RunProgram()
@@ -19,7 +20,7 @@ namespace KiwiBankomaten
 
             //looping menu, which will run when the program is started 
             UserInterface.DisplayLogoMessage();
-            UserInterface.DisplayMenu(new string[] {"Logga in", "Avsluta"});
+            UserInterface.DisplayMenu(new string[] { "Logga in", "Avsluta" });
             do
             {
                 loggedIn = false;
@@ -28,13 +29,13 @@ namespace KiwiBankomaten
                 {
                     //Logs in the user
                     case "1":
-                        
+
                         //Logs in the user
-                        LogIn(out loggedIn, out userKey); 
+                        LogIn(out loggedIn, out userKey);
                         if (loggedIn)
                         {
                             UserInterface.DisplayWelcomeMessageLoggedIn(userKey);
-                            
+
                             Utility.PressEnterToContinue();
 
                             //if login is successful, leads to CustomerMenu() 
@@ -45,7 +46,7 @@ namespace KiwiBankomaten
                             RunProgram();
                         }
                         break;
-                    
+
                     //Exit program
                     case "2":
                         // Write all changes to files before exiting.
@@ -56,9 +57,9 @@ namespace KiwiBankomaten
                         //closes the program 
                         Environment.Exit(0);
                         break;
-                        
+
                     // Hidden admin login, which leads to AdminLogIn() and AdminMenu()
-                    case "admin": 
+                    case "admin":
                         AdminLogIn(out loggedIn, out adminKey);
                         if (loggedIn)
                         {
@@ -73,7 +74,7 @@ namespace KiwiBankomaten
                             RunProgram();
                         }
                         break;
-                        
+
                     //If neither of these options are used the defaultmsg is displayed
                     default:
                         UserInterface.CurrentMethodRed("Felaktigt val, försök igen.");
@@ -83,11 +84,11 @@ namespace KiwiBankomaten
                 }
             } while (loggedIn != true);
         }
-        
+
         //Checks if user exist, returns userKey
         public static void LogIn(out bool loggedIn, out int userKey)
         {
-            userKey = 0; 
+            userKey = 0;
             loggedIn = false;
             Utility.RemoveLines(6);
             for (int i = 3 - 1; i >= 0; i--)
@@ -108,7 +109,7 @@ namespace KiwiBankomaten
 
                         // if login is successful
                         if (loggedIn) { return; }
-                    }   
+                    }
                 }
                 if (!(i <= 0))
                 {
@@ -165,22 +166,22 @@ namespace KiwiBankomaten
         public static void LogOut()
         {
             // Makes the program go back to the log in menu
-            RunProgram(); 
+            RunProgram();
         }
 
         public static void CustomerMenu(int userKey)
         {
             // Looping menu  
             Utility.RemoveLines(14);
-            do 
+            do
             {
                 // Creates an instance of the loggedIn user in database
                 Customer obj = DataBase.CustomerDict[userKey];
 
                 UserInterface.CurrentMethodMagenta($"{obj.UserName}/CustomerMenu/");
 
-                UserInterface.DisplayMenu(new string[] {"Kontoöversikt", "Visa kontologg", 
-                    "Överför pengar mellan egna konton", "Öppna nytt konto", 
+                UserInterface.DisplayMenu(new string[] {"Kontoöversikt", "Visa kontologg",
+                    "Överför pengar mellan egna konton", "Öppna nytt konto",
                     "Överför pengar till annan användare", "Låna pengar", "Logga ut"});
 
                 string choice = UserInterface.PromptForString();
@@ -201,15 +202,15 @@ namespace KiwiBankomaten
                         break;
                     case "3":
                         // Transfers a value between two accounts the user possesses
-                        obj.TransferBetweenCustomerAccounts(); 
+                        obj.TransferBetweenCustomerAccounts();
                         break;
                     case "4":
                         // Opens account for the specific user
-                        obj.OpenAccount(); 
+                        obj.OpenAccount();
                         break;
                     case "5":
                         // Transfer money to other user in bank
-                        obj.InternalMoneyTransfer(); 
+                        obj.InternalMoneyTransfer();
                         break;
                     case "6":
                         obj.LoanMoney();
@@ -224,13 +225,13 @@ namespace KiwiBankomaten
                         UserInterface.CurrentMethodRed("Ogiltigt val, ange ett nummer från listan.");
                         break;
                 }
-                
+
                 Utility.PressEnterToContinue();
                 Console.Clear();
                 UserInterface.DisplayLogoMessage();
             } while (true);
         }
-            
+
 
     }
 }
